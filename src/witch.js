@@ -17,7 +17,7 @@ class WitchGame {
     for (let i = 0; i < this.rules.hits; i++) { const star = document.createElement('span'); star.textContent = '★'; star.className = i < this.item.hits ? 'filled' : ''; this.$('witch-hit-stars').append(star); }
   }
   position() {
-    if (!this.item || this.state === 'idle') return;
+    if (!this.item || this.state === 'idle' || this.state === 'fleeing') return;
     const machine = this.$('machine').getBoundingClientRect(), small = innerWidth <= 650;
     const width = this.target.offsetWidth || (small ? 88 : 140), height = this.target.offsetHeight || (small ? 116 : 170);
     const side = small ? width / 2 + 3 : 145;
@@ -63,8 +63,18 @@ class WitchGame {
     }
   }
   win() {
-    const reward = this.settle(); // 奖励与移除待处理挑战由世界队列原子保存。
-    this.state = 'won'; this.clock = 0; this.target.disabled = true; this.target.classList.remove('hit'); this.target.classList.add('fleeing');
+    this.reward = this.settle(); // 奖励与移除待处理挑战由世界队列原子保存。
+    this.target.hidden = false; this.position();
+    const bounds = this.target.getBoundingClientRect();
+    this.target.style.setProperty('--escape-x', `${innerWidth - bounds.left + 180}px`);
+    this.target.style.setProperty('--escape-y', `${-bounds.top - 200}px`);
+    this.state = 'fleeing'; this.clock = 0; this.target.disabled = true;
+    this.target.classList.remove('hit'); this.target.classList.add('fleeing');
+    this.stage.dataset.action = 'fleeing'; this.$('witch-title').textContent = '哎呀！女巫落荒而逃！';
+    this.$('witch-instruction').textContent = '扫帚，快快飞起来！'; this.callbacks.sound('witch-flee');
+  }
+  showVictory() {
+    const reward = this.reward; this.state = 'won'; this.clock = 0; this.target.hidden = true;
     this.stage.dataset.action = 'won'; this.$('witch-title').textContent = '女巫被你打跑啦！';
     this.$('witch-instruction').textContent = '守护魔法世界，收到一份礼物！';
     this.$('witch-feedback').textContent = reward.gift.name;
@@ -82,7 +92,7 @@ class WitchGame {
     if (this.rules.image) { const img = document.createElement('img'); img.src = this.rules.image; img.alt = ''; this.$('witch-face').append(img); }
     else this.$('witch-face').textContent = '🧙‍♀️';
     this.updateHits(); this.stage.hidden = false; document.body.classList.add('witch-active');
-    this.$('announcement').textContent = `女巫出现在星空里了！点击她，命中 ${this.rules.hits} 次赶跑她。`; this.callbacks.sound('witch-arrive');
+    this.$('announcement').textContent = `女巫出现在花园里了！点击她，命中 ${this.rules.hits} 次赶跑她。`; this.callbacks.sound('witch-arrive');
     let finish;
     const done = new Promise(resolve => { finish = resolve; });
     this.finish = finish; this.$('witch-continue').onclick = () => { if (this.state === 'won') finish(); };
@@ -94,6 +104,7 @@ class WitchGame {
       else if (this.state === 'hidden' && this.clock >= this.rules.hiddenMs) this.move();
       else if (this.state === 'shot' && this.clock >= 450) this.impact();
       else if (this.state === 'hit' && this.clock >= 500) { this.state = 'hidden'; this.clock = 0; this.target.hidden = true; }
+      else if (this.state === 'fleeing' && this.clock >= 2800) this.showVictory();
       else if (this.state === 'won' && this.clock >= 10000) finish();
       this.frameId = requestAnimationFrame(frame);
     };

@@ -11,7 +11,7 @@
   const rawGameRules = JSON.parse($('game-config').textContent);
   const gameRules = { ...normalizeGameConfig(rawGameRules), world: normalizeWorldRules(rawGameRules.world) };
   let savedEnergy = null, rechargeStation = null, savedWorld = null, world = null;
-  let chamber = null;
+  let chamber = null, garden = null, savedGarden = null;
   let noticeTimer;
   function notice(message) {
     $('notice').textContent = message; $('notice').hidden = false;
@@ -22,7 +22,7 @@
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
     if (saved?.version === 1) {
       history = validHistory(saved.history);
-      savedEnergy = saved.energy; savedWorld = saved.world;
+      savedEnergy = saved.energy; savedWorld = saved.world; savedGarden = saved.garden;
       muted = typeof saved.muted === 'boolean' ? saved.muted : false;
       gentle = reducedMotion.matches || saved.gentle === true;
     }
@@ -39,7 +39,7 @@
   if (!pool.length) { drawButton.disabled = true; $('draw-hint').textContent = '请先在配置中启用一个宝物'; }
   function save() {
     try {
-      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, history, muted, gentle, energy: rechargeStation?.snapshot() ?? normalizeEnergyState(savedEnergy, gameRules), world: world?.snapshot() ?? normalizeWorldState(savedWorld, history, gameRules.world) }));
+      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, history, muted, gentle, energy: rechargeStation?.snapshot() ?? normalizeEnergyState(savedEnergy, gameRules), garden: garden?.snapshot() ?? normalizeGardenState(savedGarden, treasures, history), world: world?.snapshot() ?? normalizeWorldState(savedWorld, history, gameRules.world) }));
       storageAvailable = true;
     } catch {
       storageAvailable = false;
@@ -247,12 +247,19 @@
       $('announcement').textContent = kind === 'flower-bloom' ? '星星种子开出魔法花啦！' : `${treasure.name}和你一起玩！`;
     }
   });
+  garden = new MagicGarden(rawGameRules.weather, savedGarden, treasures, history, {
+    art: makeArt, save, unlock: () => sound.unlock(),
+    canPlay: () => ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
+    canWeather: () => !world.busy && !dialog.open && !rechargeStation.dialog.open,
+    sound: kind => sound.unlock().then(() => { if (!document.hidden && !world.busy) sound.treasureSound(kind); }),
+    weatherSound: kind => sound.weather(kind)
+  }, rawGameRules.dayNight, rawGameRules.seasons);
   // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
   async function draw() {
     if (!['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || world?.state.pending.length || !pool.length) return;
     if (rechargeStation.balance < gameRules.energy.drawCost) { rechargeStation.open(); return; }
     const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
-    treasurePlay.reset();
+    treasurePlay.reset(); garden.choose(null);
     rechargeStation.consume(); rechargeStation.setLocked(true);
     let awarded = false;
     drawButton.disabled = true; drawButton.classList.add('pressed');
@@ -303,7 +310,7 @@
       $('button-text').textContent = '找到宝物啦！'; $('draw-hint').textContent = '这份魔法，属于你！';
       history.push(treasureRecord(winner)); awarded = true; history = history.slice(-1000); world.completedDraw(); save(); updateCount();
       $('announcement').textContent = `恭喜 75，获得${RARITIES[winner.rarity].label}：${winner.name}。${winner.description}`;
-      sound.celebrate(winner.effects.sound); particles.shockwave(winner.appearance.primaryColor); particles.emit(winner);
+      sound.celebrate(winner.effects.sound, true); particles.shockwave(winner.appearance.primaryColor); particles.emit(winner);
       spellPop(winner.rarity === 'super' ? '超级宝物！' : winner.rarity === 'rare' ? '彩虹魔法！' : '找到宝物啦！');
       await wait(420); $('spell-pop').classList.remove('pop');
       particles.emit(winner);
@@ -373,7 +380,7 @@
   function textElement(tag, value, className) { const node = document.createElement(tag); node.textContent = value; if (className) node.className = className; return node; }
   function renderCollection() {
     const collected = new Set(history.map(r => r.prizeId));
-    $('collection-summary').textContent = history.length ? `已经发现 ${collected.size} 种宝物，收获 ${history.length} 次惊喜。` : '宝藏还在星空里等你，去开启第一次魔法吧。';
+    $('collection-summary').textContent = history.length ? `已经发现 ${collected.size} 种宝物，收获 ${history.length} 次惊喜。` : '宝藏还在花园里等你，去开启第一次魔法吧。';
     $('collection-grid').replaceChildren();
     const archived = [...collected].filter(id => !treasures.some(t => t.id === id)).map(id => {
       const last = history.filter(r => r.prizeId === id).at(-1);
@@ -387,6 +394,10 @@
       card.append(...art.childNodes);
       card.append(textElement('span', RARITIES[treasure.rarity].label, 'rarity'), textElement('h3', treasure.name), textElement('p', latest ? treasure.description : '还没发现，下一次也许就是它。', 'card-description'), textElement('span', latest ? `已获得 × ${records.length}` : '等待发现', 'card-count'));
       if (latest) card.append(textElement('time', `最近发现 · ${new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(latest.timestamp)}`, 'last-date'));
+      if (latest && treasures.some(item => item.id === treasure.id)) {
+        const place = textElement('button', '放进花园', 'place-treasure'); place.type = 'button';
+        place.onclick = () => { dialog.close(); garden.choose(treasure); }; card.append(place);
+      }
       $('collection-grid').append(card);
     }
     $('collection-summary').textContent += storageAvailable ? '' : ' 本次收藏暂未保存到浏览器。';
@@ -394,5 +405,5 @@
   $('collection').addEventListener('click', () => { renderCollection(); dialog.showModal(); });
   $('close-collection').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } });
-  dialog.addEventListener('close', () => $('collection').focus());
+  dialog.addEventListener('close', () => { if (garden?.chosen) garden.plots.querySelector('.garden-slot').focus(); else $('collection').focus(); });
 })();

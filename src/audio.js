@@ -1,6 +1,6 @@
 // 使用统一总线与压缩器合成鼓、低音、和弦和旋律，声音跟随每个机器动作。
 class MagicAudio {
-  constructor(isMuted) { this.isMuted = isMuted; this.context = null; this.voices = new Set(); this.warningVoices = new Set(); }
+  constructor(isMuted) { this.isMuted = isMuted; this.context = null; this.level = 'starlight'; this.voices = new Set(); this.warningVoices = new Set(); }
   setup(ctx) {
     this.context = ctx;
     this.master = ctx.createGain(); this.master.gain.value = .65;
@@ -49,13 +49,42 @@ class MagicAudio {
   }
   kick(delay = 0, strong = false) { this.tone(135, .19, delay, strong ? .28 : .16, 'sine', 45); }
   chord(notes, delay = 0, length = .45) { notes.forEach(note => this.tone(note, length, delay, .045)); }
-  start(level = false) { if (level === 'winged' || level === 'castle') { const notes = level === 'castle' ? [392, 523, 659, 784, 1047, 1319] : [659, 784, 1047, 1319, 1568]; notes.forEach((note, i) => this.tone(note, .25, i * .09, .085)); this.chord(level === 'castle' ? [196, 262, 330] : [330, 392, 523], 0, .55); this.kick(0, true); if (level === 'winged') this.noiseHit(.2, .15, .035, 3000); return; } if (level === true || level === 'rainbow') { [523, 659, 784, 1047, 1319].forEach((note, i) => this.tone(note, .2, i * .075, .085)); this.chord([262, 330, 392], 0, .4); this.kick(0, true); return; } this.kick(0, true); [262, 392, 523, 784].forEach((note, i) => this.tone(note, .22, i * .085)); this.tone(180, .5, 0, .055, 'sine', 1000); }
-  mixing(index) { this.kick(); this.noiseHit(.08, .055, .035); this.tone([262, 330, 392, 523][index % 4], .12, .02, .055, 'triangle'); }
-  bounce(index) { this.tone(460 + index * 90, .09, 0, .04, 'sine', 300); }
-  land() { this.kick(0, true); this.tone(380, .15, 0, .1, 'triangle', 170); }
-  knock(index) { this.kick(); this.tone(620 + index * 200, .16, .03, .09, 'triangle'); }
-  charge() { this.tone(220, .6, 0, .09, 'sine', 880); this.chord([262, 330, 392], .1, .5); }
-  celebrate(id) {
+  start(level = false) { this.level = level === true ? 'rainbow' : ['rainbow', 'winged', 'castle'].includes(level) ? level : 'starlight'; if (level === 'winged' || level === 'castle') { const notes = level === 'castle' ? [392, 523, 659, 784, 1047, 1319] : [659, 784, 1047, 1319, 1568]; notes.forEach((note, i) => this.tone(note, .25, i * .09, .085)); this.chord(level === 'castle' ? [196, 262, 330] : [330, 392, 523], 0, .55); this.kick(0, true); if (level === 'winged') this.noiseHit(.2, .15, .035, 3000); return; } if (level === true || level === 'rainbow') { [523, 659, 784, 1047, 1319].forEach((note, i) => this.tone(note, .2, i * .075, .085)); this.chord([262, 330, 392], 0, .4); this.kick(0, true); return; } this.kick(0, true); [262, 392, 523, 784].forEach((note, i) => this.tone(note, .22, i * .085)); this.tone(180, .5, 0, .055, 'sine', 1000); }
+  profile() {
+    return { starlight: { root: 262, type: 'triangle', step: .1 }, rainbow: { root: 330, type: 'sine', step: .075 }, winged: { root: 523, type: 'sine', step: .06 }, castle: { root: 196, type: 'square', step: .12 } }[this.level];
+  }
+  machineNotes(notes, length = .15, delay = 0) {
+    const profile = this.profile(); notes.forEach((ratio, i) => this.tone(profile.root * ratio, length, delay + i * profile.step, profile.type === 'square' ? .035 : .065, profile.type));
+  }
+  mixing(index) {
+    const profile = this.profile();
+    this.kick(0, this.level === 'castle'); this.noiseHit(.08, .055, .035);
+    this.machineNotes([[1, 1.25], [1.25, 1.5], [1.5, 2], [2, 2.5]][index % 4], .12);
+    if (this.level === 'winged') { this.noiseHit(.03, .16, .025, 3500); this.tone(profile.root * 3, .2, .12, .025, 'sine'); }
+    if (this.level === 'castle') { this.tone(98, .22, .04, .1, 'sine'); this.noiseHit(.16, .13, .055, 900); }
+  }
+  bounce(index) { const profile = this.profile(); this.tone(profile.root * 1.5 + index * 55, .09, 0, .035, profile.type, profile.root); }
+  land() { this.kick(0, true); const profile = this.profile(); this.tone(profile.root * 1.5, .2, 0, .075, profile.type, profile.root * .65); if (this.level !== 'starlight') this.machineNotes([1, 1.5, 2], .17, .1); }
+  knock(index) { this.kick(); this.machineNotes([1.5 + index * .25, 2 + index * .25], .16, .03); }
+  charge() {
+    const profile = this.profile(); this.tone(profile.root * .6, .6, 0, .075, 'sine', profile.root * 4);
+    this.machineNotes([1, 1.25, 1.5, 2], .4, .1);
+    if (this.level === 'castle') this.chord([98, 147, 196], .1, .55);
+    if (this.level === 'winged') this.noiseHit(.25, .25, .035, 3500);
+  }
+  levelFinale() {
+    if (this.level === 'starlight') return;
+    const notes = this.level === 'castle' ? [1, 1.5, 2, 2, 3, 4] : this.level === 'winged' ? [1, 1.5, 2, 2.5, 3, 4] : [1, 1.25, 1.5, 2, 2.5];
+    this.machineNotes(notes, .3, .15);
+    if (this.level === 'castle') { this.kick(.15, true); this.kick(.39, true); this.chord([196, 294, 392], .6, .6); }
+    if (this.level === 'winged') { this.noiseHit(.1, .2, .025, 3200); this.noiseHit(.35, .2, .025, 3200); }
+  }
+  weather(kind) {
+    if (kind === 'rain' || kind === 'wind') { for (let i = 0; i < 6; i++) this.noiseHit(i * .18, .28, kind === 'rain' ? .025 : .035, kind === 'rain' ? 2000 : 700); }
+    else (kind === 'snow' ? [1568, 1319, 1047, 784] : [523, 784, 1047, 1568, 2093]).forEach((note, i) => this.tone(note, .4, i * .14, .04, 'sine'));
+  }
+  celebrate(id, machineReward = false) {
+    if (machineReward) this.levelFinale();
     if (INTERACTIONS.includes(id)) { this.treasureSound(id); return; }
     if (id === 'bubble-giggle') {
       [0, .19, .38].forEach((delay, i) => this.tone(120 + i * 25, .16, delay, .08, 'sawtooth', 55));
@@ -86,6 +115,7 @@ class MagicAudio {
     if (kind === 'witch-shot') { this.tone(220, .18, 0, .075, 'sine', 880); this.noiseHit(.03, .06, .035, 2800); return; }
     if (kind === 'witch-hit') { this.kick(0, true); this.tone(784, .16, .04, .085, 'triangle', 392); this.tone(1047, .2, .18, .075); return; }
     if (kind === 'witch-miss') { this.tone(440, .18, 0, .05, 'sine', 330); return; }
+    if (kind === 'witch-flee') { [660, 880, 660, 988, 784, 523, 392].forEach((note, i) => this.tone(note, .14, i * .2, .065, 'triangle', note * .75)); this.noiseHit(1.4, .3, .055, 1500); return; }
     if (kind === 'witch-win') { this.celebrate('royal-fanfare'); return; }
     if (kind === 'ghost') { this.tone(330, .32, 0, .085, 'triangle', 180); this.tone(150, .22, .8, .07, 'sawtooth', 90); this.tone(440, .17, 1.05, .07); return; }
     if (kind.startsWith('upgrade')) { if (kind === 'upgrade-winged') this.treasureSound('rainbow-flight'); else this.celebrate(kind === 'upgrade-castle' ? 'royal-fanfare' : 'rainbow-song'); return; }

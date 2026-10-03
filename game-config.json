@@ -65,5 +65,27 @@
       "hiddenMs": 450,
       "image": "assets/witch.svg"
     }
+  },
+  "weather": {
+    "enabled": true,
+    "firstAfterMs": 12000,
+    "intervalMs": 40000,
+    "durationMs": 16000,
+    "kinds": [
+      "rain",
+      "snow",
+      "wind",
+      "meteors"
+    ]
+  },
+  "dayNight": {
+    "enabled": true,
+    "initial": "day",
+    "durationMs": 180000
+  },
+  "seasons": {
+    "enabled": true,
+    "initial": "spring",
+    "durationMs": 300000
   }
 }

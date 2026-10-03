@@ -56,6 +56,11 @@ try {
   // Enter可以发射；胜利一次只送一份礼物，不改变等级次数。
   await page.waitForFunction(()=>!document.querySelector('#witch-target').hidden&&!document.querySelector('#witch-target').disabled);
   await page.locator('#witch-target').focus();await page.keyboard.press('Enter');
+  await page.waitForSelector('#witch-stage[data-action=fleeing]');
+  assert.equal(await page.locator('#witch-reward').isVisible(),false);
+  await page.waitForTimeout(850);
+  assert.equal(await page.locator('#witch-stage').getAttribute('data-action'),'fleeing');
+  await page.screenshot({path:'artifacts/witch/fleeing.png'});
   await page.waitForSelector('#witch-stage[data-action=won]');
   assert.equal(await page.locator('#witch-hit-count').textContent(),'3 / 3');
   assert.equal(await page.locator('#collection-count').textContent(),'2');
