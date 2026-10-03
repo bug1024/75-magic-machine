@@ -299,6 +299,282 @@
           "particleCount": 65
         }
       }
+    },
+    {
+      "id": "loving-mom",
+      "name": "亲爱的暖暖妈妈",
+      "description": "妈妈张开怀抱，送你一个暖暖的爱心抱抱。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/mom.svg",
+        "icon": "👩",
+        "primaryColor": "#f8a8cf",
+        "accentColor": "#fff0c7"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "super-dad",
+      "name": "超级粑粑",
+      "description": "噗噗出场！戴上眼罩和披风，超级便便也有大大的魔法。",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/super-poop.svg",
+        "icon": "💩",
+        "primaryColor": "#dfab7e",
+        "accentColor": "#ffb4cd"
+      },
+      "effects": {
+        "reveal": "bubble-pop",
+        "ambient": "rainbow-trail",
+        "sound": "bubble-giggle",
+        "params": {
+          "durationMs": 2600,
+          "particleCount": 95
+        }
+      }
+    },
+    {
+      "id": "yaya-calico-cat",
+      "name": "丫丫三花猫",
+      "description": "橘一块、黑一块，丫丫喵喵来撒娇。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/calico-cat.svg",
+        "icon": "🐱",
+        "primaryColor": "#ffc18d",
+        "accentColor": "#fff4db"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "super-scooter",
+      "name": "追风超级滑板车",
+      "description": "小脚一蹬，星星和风一起跟着你跑。",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/scooter.svg",
+        "icon": "🛴",
+        "primaryColor": "#9aeada",
+        "accentColor": "#d1beff"
+      },
+      "effects": {
+        "reveal": "rainbow-ring",
+        "ambient": "rainbow-trail",
+        "sound": "rainbow-song",
+        "params": {
+          "durationMs": 2600,
+          "particleCount": 95
+        }
+      }
+    },
+    {
+      "id": "pink-bicycle",
+      "name": "粉红花篮自行车",
+      "description": "骑上粉红小车，把一路花香装进车篮。",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/pink-bike.svg",
+        "icon": "🚲",
+        "primaryColor": "#ffacd0",
+        "accentColor": "#ffe3b0"
+      },
+      "effects": {
+        "reveal": "rainbow-ring",
+        "ambient": "rainbow-trail",
+        "sound": "rainbow-song",
+        "params": {
+          "durationMs": 2600,
+          "particleCount": 95
+        }
+      }
+    },
+    {
+      "id": "pretty-magic-wand",
+      "name": "美少女星心魔法棒",
+      "description": "星星爱心亮起来，今天的魔法由你来施展！",
+      "rarity": "super",
+      "weight": 1,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/magic-wand.svg",
+        "icon": "🪄",
+        "primaryColor": "#ffb4e0",
+        "accentColor": "#fff0a4"
+      },
+      "effects": {
+        "reveal": "moonrise",
+        "ambient": "golden-rain",
+        "sound": "royal-fanfare",
+        "params": {
+          "durationMs": 3300,
+          "particleCount": 130
+        }
+      }
+    },
+    {
+      "id": "moon-blaster",
+      "name": "月亮泡泡枪",
+      "description": "啵啵啵！月亮小枪吐出一串星光泡泡。",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/moon-blaster.svg",
+        "icon": "🌙",
+        "primaryColor": "#b9c3ff",
+        "accentColor": "#fff0ae"
+      },
+      "effects": {
+        "reveal": "bubble-pop",
+        "ambient": "rainbow-trail",
+        "sound": "rainbow-song",
+        "params": {
+          "durationMs": 2600,
+          "particleCount": 95
+        }
+      }
+    },
+    {
+      "id": "gem-necklace",
+      "name": "星海宝石项链",
+      "description": "把一小片星海，戴在离心最近的地方。",
+      "rarity": "super",
+      "weight": 1,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/gem-necklace.svg",
+        "icon": "💎",
+        "primaryColor": "#96e5f5",
+        "accentColor": "#ffe5a1"
+      },
+      "effects": {
+        "reveal": "moonrise",
+        "ambient": "golden-rain",
+        "sound": "royal-fanfare",
+        "params": {
+          "durationMs": 3300,
+          "particleCount": 130
+        }
+      }
+    },
+    {
+      "id": "flower-headband",
+      "name": "兔耳花花发箍",
+      "description": "小兔耳朵摇呀摇，花朵也来陪你变漂亮。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/flower-headband.svg",
+        "icon": "🎀",
+        "primaryColor": "#d0b0f3",
+        "accentColor": "#ffc1da"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "wiggle-car",
+      "name": "薄荷糖扭扭车",
+      "description": "扭一扭方向盘，像一颗薄荷糖滑出去。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/wiggle-car.svg",
+        "icon": "🚗",
+        "primaryColor": "#9aead7",
+        "accentColor": "#ffcfdf"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "little-alarm",
+      "name": "叮铃微笑小闹钟",
+      "description": "叮铃铃！小闹钟笑着叫醒美好的一天。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/little-alarm.svg",
+        "icon": "⏰",
+        "primaryColor": "#ffb9d5",
+        "accentColor": "#ffe2a3"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "whale-cup",
+      "name": "鲸鲸咕噜水杯",
+      "description": "小鲸鱼陪你咕噜咕噜，把海洋装进水杯里。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/whale-cup.svg",
+        "icon": "🐳",
+        "primaryColor": "#a5e5f4",
+        "accentColor": "#ffb3d4"
+      },
+      "effects": {
+        "reveal": "bubble-pop",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
     }
   ]
 }

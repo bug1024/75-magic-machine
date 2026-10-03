@@ -1,0 +1,46 @@
+import assert from 'node:assert/strict';
+import { pathToFileURL } from 'node:url';
+import { readFile } from 'node:fs/promises';
+const config = JSON.parse(await readFile('treasures.json', 'utf8'));
+const pool = config.treasures.filter(t => t.enabled && t.weight > 0);
+let cursor = .2 * pool.reduce((sum, t) => sum + t.weight, 0);
+const normal = pool.find(t => { cursor -= t.weight; return cursor < 0; });
+const equal = pool[Math.floor(.2 * pool.length)];
+assert.notEqual(normal.id, equal.id);
+const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+try {
+  const page = await browser.newPage();
+  const errors = []; page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => { Math.random = () => .2; });
+  const url = pathToFileURL(`${process.cwd()}/index.html`).href;
+  await page.goto(url);
+  assert.equal(await page.locator('#cheat').getAttribute('aria-pressed'), 'false');
+  await page.locator('#sound').click();
+  await page.keyboard.press('Space');
+  await page.waitForSelector('#machine[data-state="result"]');
+  assert.equal(await page.locator('#prize-name').textContent(), normal.name);
+  await page.locator('#cheat').click();
+  assert.equal(await page.locator('#cheat').getAttribute('aria-pressed'), 'true');
+  await page.keyboard.press('Space'); // 焦点在作弊开关时也只启动抽奖。
+  assert.equal(await page.locator('#cheat').isDisabled(), true);
+  assert.equal(await page.locator('#cheat').getAttribute('aria-pressed'), 'true');
+  await page.waitForSelector('#machine[data-state="selecting"]');
+  assert.equal(await page.locator('.magic-ball.chosen').getAttribute('data-prize-id'), equal.id);
+  await page.waitForSelector('#machine[data-state="result"]');
+  assert.equal(await page.locator('#prize-name').textContent(), equal.name);
+  await page.locator('#cheat').click();
+  assert.equal(await page.locator('#cheat').getAttribute('aria-pressed'), 'false');
+  await page.keyboard.press('Space');
+  await page.waitForSelector('#machine[data-state="result"]');
+  assert.equal(await page.locator('#prize-name').textContent(), normal.name);
+  assert.equal(await page.locator('#collection-count').textContent(), '3');
+  await page.locator('#cheat').click();
+  await page.reload();
+  assert.equal(await page.locator('#cheat').getAttribute('aria-pressed'), 'false');
+  assert.equal(await page.locator('#collection-count').textContent(), '3');
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  assert.deepEqual(errors, []);
+  console.log('通过：默认关闭、等概率抽取、关闭恢复权重、抽奖中锁定、空格不切换作弊开关、刷新重置及收藏保存、手机布局');
+} finally { await browser.close(); }

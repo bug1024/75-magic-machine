@@ -6,6 +6,10 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let treasures = [], history = [], muted = false, gentle = reducedMotion.matches;
   let phase = 'idle', currentTreasure = null, spaceHeld = false, storageAvailable = true;
+  // 每次打开页面都默认关闭，作弊开关不写入持久化设置。
+  let cheatMode = false;
+  const gameRules = normalizeGameConfig(JSON.parse($('game-config').textContent));
+  let savedEnergy = null, rechargeStation = null;
   let chamber = null;
   let noticeTimer;
   function notice(message) {
@@ -17,6 +21,7 @@
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
     if (saved?.version === 1) {
       history = validHistory(saved.history);
+      savedEnergy = saved.energy;
       muted = typeof saved.muted === 'boolean' ? saved.muted : false;
       gentle = reducedMotion.matches || saved.gentle === true;
     }
@@ -26,18 +31,18 @@
       notice('宝物配置无法读取，请检查 treasures.json 后重新构建。');
     } else {
       storageAvailable = false;
-      notice('本地收藏暂时无法读取。这次仍可以玩，刷新后可能无法保留。');
+      notice('本地收藏暂时无法读取。这次仍可以玩，刷新后可能无法保留能量和收藏。');
     }
   }
   const pool = treasures.filter(t => t.enabled && t.weight > 0);
   if (!pool.length) { drawButton.disabled = true; $('draw-hint').textContent = '请先在配置中启用一个宝物'; }
   function save() {
     try {
-      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, history, muted, gentle }));
+      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, history, muted, gentle, energy: rechargeStation?.snapshot() ?? normalizeEnergyState(savedEnergy, gameRules) }));
       storageAvailable = true;
     } catch {
       storageAvailable = false;
-      notice('宝藏留在了这次游戏里，但浏览器未能保存。刷新后可能丢失。');
+      notice('能量和宝藏留在了这次游戏里，但浏览器未能保存。刷新后可能丢失。');
     }
   }
   function setPhase(value, winner) { phase = value; machine.dataset.state = value; chamber?.setPhase(value, winner); }
@@ -53,6 +58,22 @@
   }
   syncPreferences();
   const sound = new MagicAudio(() => muted);
+  function syncDrawAction() {
+    if (!['idle', 'result'].includes(phase) || !pool.length) return;
+    const empty = rechargeStation.balance < gameRules.energy.drawCost;
+    energy(rechargeStation.balance / gameRules.energy.max);
+    $('button-text').textContent = empty ? '补充魔法' : phase === 'result' ? '再来一次' : '开启魔法';
+    $('draw-hint').textContent = empty ? '答一道题，点亮一格能量' : phase === 'result' ? '' : '按空格键，或点一下按钮';
+  }
+  rechargeStation = new RechargeStation(gameRules, savedEnergy, {
+    canOpen: () => ['idle', 'result'].includes(phase) && !dialog.open,
+    onChange: () => { save(); syncDrawAction(); },
+    onReward: full => { sound.unlock().then(() => sound.answerCorrect(full)); },
+    onFailure: () => { sound.unlock().then(() => sound.answerWrong()); }
+  });
+  syncDrawAction();
+  addEventListener('pointerdown', () => sound.unlock(), { once: true, capture: true });
+  rechargeStation.dialog.addEventListener('close', () => { particles.warningClock = 3.2; });
   // 跑马灯沿机舱一圈排布，各灯珠保留独立颜色与错开的追逐节奏。
   const lampColors = ['#ff9add', '#b89aff', '#84c9ff', '#80ffe0', '#ffe29a'];
   for (let i = 0; i < 40; i++) {
@@ -109,7 +130,7 @@
     }
   }
   const particles = {
-    canvas: $('particles'), ctx: $('particles').getContext('2d'), items: [], waves: [], width: 0, height: 0, last: 0, ambientClock: 0,
+    canvas: $('particles'), ctx: $('particles').getContext('2d'), items: [], waves: [], width: 0, height: 0, last: 0, ambientClock: 0, warningClock: 3.2,
     resize() {
       this.width = innerWidth; this.height = innerHeight;
       const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -141,6 +162,12 @@
     },
     frame(now) {
       const dt = Math.min(.04, (now - (this.last || now)) / 1000); this.last = now;
+      const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !document.hidden && !muted;
+      if (warningActive) {
+        this.warningClock += dt;
+        const interval = rechargeStation.balance <= 1 ? 2.4 : 3.2;
+        if (this.warningClock >= interval && sound.warning(rechargeStation.balance)) this.warningClock = 0;
+      } else { this.warningClock = 3.2; sound.stopWarning(); }
       if (this.ctx && !document.hidden) {
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.waves = this.waves.filter(wave => wave.life < 1);
@@ -151,7 +178,7 @@
           this.ctx.strokeStyle = wave.color; this.ctx.lineWidth = 8 * (1 - wave.life) + 1;
           this.ctx.beginPath(); this.ctx.arc(wave.x, wave.y, radius, 0, Math.PI * 2); this.ctx.stroke(); this.ctx.restore();
         }
-        if (phase === 'result' && currentTreasure && !gentle && !dialog.open) {
+        if (phase === 'result' && currentTreasure && !gentle && !dialog.open && !rechargeStation.dialog.open) {
           this.ambientClock += dt;
           if (this.ambientClock > .8) { this.emit(currentTreasure, true); this.ambientClock = 0; }
         }
@@ -172,7 +199,7 @@
   particles.resize(); requestAnimationFrame(time => particles.frame(time));
   addEventListener('resize', () => particles.resize());
   chamber = new GachaChamber($('magic-balls'), pool, makeArt, () => gentle, (treasure, x, y) => {
-    if (dialog.open || !['mixing', 'slowing'].includes(phase)) return;
+    if (dialog.open || rechargeStation.dialog.open || !['mixing', 'slowing'].includes(phase)) return;
     sound.bounce(pool.indexOf(treasure));
     const bounds = $('magic-balls').getBoundingClientRect();
     particles.sparkAt(bounds.left + x, bounds.top + y, [treasure.appearance.primaryColor, '#fff0b7'], 5);
@@ -181,10 +208,14 @@
   updateCount();
   // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
   async function draw() {
-    if (!['idle', 'result'].includes(phase) || dialog.open || !pool.length) return;
-    const winner = drawTreasure(treasures);
+    if (!['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || !pool.length) return;
+    if (rechargeStation.balance < gameRules.energy.drawCost) { rechargeStation.open(); return; }
+    const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
+    rechargeStation.consume(); rechargeStation.setLocked(true);
+    let awarded = false;
     drawButton.disabled = true; drawButton.classList.add('pressed');
-    $('collection').disabled = true; particles.items = []; particles.waves = []; currentTreasure = null;
+    $('collection').disabled = true; $('cheat').disabled = true;
+    particles.items = []; particles.waves = []; currentTreasure = null;
     $('treasure-art').hidden = true; $('jackpot').classList.remove('show');
     machine.style.setProperty('--primary', '#ba9cff'); machine.style.setProperty('--accent', '#ffe1f5');
     setPhase('charging', winner); energy(.05); spellPop('魔法启动！');
@@ -229,7 +260,7 @@
       showTreasure(winner, true); setPhase('celebrating');
       $('button-text').textContent = '找到宝物啦！'; $('draw-hint').textContent = '这份魔法，属于你！';
       const record = { drawId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`, prizeId: winner.id, name: winner.name, icon: winner.appearance.icon, description: winner.description, rarity: winner.rarity, timestamp: Date.now() };
-      history.push(record); history = history.slice(-1000); save(); updateCount();
+      history.push(record); awarded = true; history = history.slice(-1000); save(); updateCount();
       $('announcement').textContent = `恭喜 75，获得${RARITIES[winner.rarity].label}：${winner.name}。${winner.description}`;
       sound.celebrate(winner.effects.sound); particles.shockwave(winner.appearance.primaryColor); particles.emit(winner);
       spellPop(winner.rarity === 'super' ? '超级宝物！' : winner.rarity === 'rare' ? '彩虹魔法！' : '找到宝物啦！');
@@ -239,10 +270,12 @@
       setPhase('result'); $('button-text').textContent = '再来一次';
       $('draw-hint').textContent = '';
     } catch {
+      if (!awarded) rechargeStation.change(gameRules.energy.drawCost);
       setPhase('idle'); energy(0); $('treasure-art').hidden = true; $('button-text').textContent = '开启魔法';
       notice('机器歇了一小会儿，再按一下试试。');
     } finally {
-      drawButton.disabled = false; drawButton.classList.remove('pressed'); $('collection').disabled = false; $('jackpot').classList.remove('show'); $('spell-pop').classList.remove('pop');
+      rechargeStation.setLocked(false); syncDrawAction();
+      drawButton.disabled = false; drawButton.classList.remove('pressed'); $('collection').disabled = false; $('cheat').disabled = false; $('jackpot').classList.remove('show'); $('spell-pop').classList.remove('pop');
     }
   }
   drawButton.addEventListener('click', draw);
@@ -261,6 +294,15 @@
     event.preventDefault(); event.stopPropagation(); spaceHeld = false;
   }, { capture: true });
   addEventListener('blur', () => { spaceHeld = false; });
+  $('cheat').addEventListener('click', () => {
+    if (!['idle', 'result'].includes(phase)) return;
+    cheatMode = !cheatMode;
+    $('cheat').setAttribute('aria-pressed', String(cheatMode));
+    $('cheat').setAttribute('aria-label', cheatMode ? '关闭作弊模式' : '开启作弊模式');
+    $('cheat').title = cheatMode ? '关闭作弊模式，恢复原有权重' : '开启作弊模式，宝物等概率';
+    $('cheat-state').textContent = cheatMode ? '开' : '关';
+    notice(cheatMode ? '作弊模式已开启' : '作弊模式已关闭');
+  });
   $('sound').addEventListener('click', () => {
     muted = !muted;
     if (muted) { sound.stop(); sound.context?.suspend().catch(() => {}); } else { sound.unlock().then(() => sound.tone(660, .18)); }

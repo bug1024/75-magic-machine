@@ -1,0 +1,17 @@
+{
+  "energy": {
+    "initial": 10,
+    "max": 10,
+    "warningThreshold": 3,
+    "drawCost": 1,
+    "correctReward": 1
+  },
+  "math": {
+    "defaultDifficulty": "easy",
+    "difficulties": {
+      "easy": { "label": "简单", "max": 10 },
+      "medium": { "label": "中等", "max": 20 },
+      "hard": { "label": "困难", "max": 100 }
+    }
+  }
+}

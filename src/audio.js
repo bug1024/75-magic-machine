@@ -1,6 +1,6 @@
 // 使用统一总线与压缩器合成鼓、低音、和弦和旋律，声音跟随每个机器动作。
 class MagicAudio {
-  constructor(isMuted) { this.isMuted = isMuted; this.context = null; this.voices = new Set(); }
+  constructor(isMuted) { this.isMuted = isMuted; this.context = null; this.voices = new Set(); this.warningVoices = new Set(); }
   setup(ctx) {
     this.context = ctx;
     this.master = ctx.createGain(); this.master.gain.value = .65;
@@ -23,7 +23,7 @@ class MagicAudio {
   ready() { return !this.isMuted() && !document.hidden && this.context?.state === 'running'; }
   track(source, nodes, end) {
     this.voices.add(source);
-    source.onended = () => { this.voices.delete(source); source.disconnect(); nodes.forEach(node => node.disconnect()); };
+    source.onended = () => { this.voices.delete(source); this.warningVoices.delete(source); source.disconnect(); nodes.forEach(node => node.disconnect()); };
     source.stop(end);
   }
   tone(frequency, length = .16, delay = 0, volume = .08, type = 'triangle', slideTo) {
@@ -36,6 +36,7 @@ class MagicAudio {
     envelope.gain.exponentialRampToValueAtTime(.0001, start + length);
     oscillator.connect(envelope); envelope.connect(this.master); oscillator.start(start);
     this.track(oscillator, [envelope], start + length + .03);
+    return oscillator;
   }
   noiseHit(delay = 0, length = .09, volume = .06, highpass = 2200) {
     if (!this.ready()) return;
@@ -79,5 +80,27 @@ class MagicAudio {
     const end = score.melody.length * step;
     this.chord([523, 659, 784, 1047], end, .6); this.kick(end, true);
   }
+  answerCorrect(full = false) {
+    // 小胜利的上行乐句；满格时追加和弦与一段更长的庆祝旋律。
+    const notes = full ? [523, 659, 784, 1047, 1319, 1568, 1047] : [659, 784, 1047, 1319];
+    notes.forEach((note, i) => this.tone(note, .24, i * .11, .085, 'triangle'));
+    this.chord([262, 330, 392], 0, .35);
+    if (full) { this.kick(.22); this.chord([523, 659, 784, 1047], .66, .65); }
+  }
+  answerWrong() {
+    // 短促的下降音，提醒重试，不盖过孩子的思考。
+    this.tone(330, .18, 0, .08, 'triangle', 262);
+    this.tone(247, .23, .19, .065, 'triangle', 196);
+  }
+  warning(balance) {
+    if (!this.ready()) return false;
+    this.stopWarning();
+    // 一小段下降双音和低频脉冲，和中奖音乐区分；余额越少，音调越低。
+    const pitch = balance <= 1 ? 440 : 523;
+    const sources = [this.tone(pitch, .14, 0, .11, 'triangle'), this.tone(pitch * .75, .22, .18, .1, 'triangle', pitch * .6), this.tone(150, .2, .38, .07, 'sine', 90)];
+    sources.filter(Boolean).forEach(source => this.warningVoices.add(source));
+    return true;
+  }
+  stopWarning() { for (const source of this.warningVoices) { try { source.stop(); } catch {} } this.warningVoices.clear(); }
   stop() { for (const source of this.voices) { try { source.stop(); } catch {} } }
 }

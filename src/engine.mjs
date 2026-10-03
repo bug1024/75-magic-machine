@@ -16,12 +16,13 @@ export function normalizeConfig(config) {
     return { id: item.id, name: String(item.name || '神秘宝物'), description: String(item.description || '一份属于你的魔法。'), rarity: RARITIES[item.rarity] ? item.rarity : 'common', weight: Number.isFinite(item.weight) && item.weight > 0 ? item.weight : 0, enabled: item.enabled !== false, appearance: { image, icon: String(appearance.icon || '✨'), primaryColor: color(appearance.primaryColor, '#ba9cff'), accentColor: color(appearance.accentColor, '#ffe1f5') }, effects: { reveal: REVEALS.includes(effects.reveal) ? effects.reveal : REVEALS[0], ambient: AMBIENTS.includes(effects.ambient) ? effects.ambient : AMBIENTS[0], sound: SOUNDS.includes(effects.sound) ? effects.sound : SOUNDS[0], params: { durationMs: clamp(effects.params?.durationMs, 1500, 4000, 2200), particleCount: Math.round(clamp(effects.params?.particleCount, 10, 160, 60)) } } };
   });
 }
-export function drawTreasure(treasures, random = Math.random) {
+export function drawTreasure(treasures, random = Math.random, { equalProbability = false } = {}) {
   const pool = treasures.filter(t => t.enabled && t.weight > 0);
-  const total = pool.reduce((sum, t) => sum + t.weight, 0);
+  const weightOf = treasure => equalProbability ? 1 : treasure.weight;
+  const total = pool.reduce((sum, t) => sum + weightOf(t), 0);
   if (!pool.length || !Number.isFinite(total)) throw new Error('没有可抽取的宝物');
   let cursor = Math.min(1 - Number.EPSILON, Math.max(0, random())) * total;
-  for (const treasure of pool) { cursor -= treasure.weight; if (cursor < 0) return treasure; }
+  for (const treasure of pool) { cursor -= weightOf(treasure); if (cursor < 0) return treasure; }
   return pool[pool.length - 1];
 }
 export function validHistory(value) {

@@ -1,5 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { normalizeConfig } from './src/engine.mjs';
+import { normalizeGameConfig } from './src/energy.mjs';
+const gameConfig = normalizeGameConfig(JSON.parse(await readFile('game-config.json', 'utf8')));
 const config = { version: 1, treasures: normalizeConfig(JSON.parse(await readFile('treasures.json', 'utf8'))) };
 for (const treasure of config.treasures) {
   if (!treasure.appearance.image || treasure.appearance.image.startsWith('data:')) continue;
@@ -11,8 +13,8 @@ for (const treasure of config.treasures) {
     treasure.appearance.image = '';
   }
 }
-const [template, css, gachaCss, engine, chamber, audio, app] = await Promise.all(['src/template.html', 'src/style.css', 'src/gacha.css', 'src/engine.mjs', 'src/chamber.js', 'src/audio.js', 'src/app.js'].map(path => readFile(path, 'utf8')));
+const [template, css, gachaCss, engine, chamber, audio, energyEngine, recharge, energyCss, app] = await Promise.all(['src/template.html', 'src/style.css', 'src/gacha.css', 'src/engine.mjs', 'src/chamber.js', 'src/audio.js', 'src/energy.mjs', 'src/recharge.js', 'src/energy.css', 'src/app.js'].map(path => readFile(path, 'utf8')));
 const safeConfig = JSON.stringify(config).replace(/</g, '\\u003c');
-const html = template.replace('/* INLINE_STYLES */', () => `${css}\n${gachaCss}`).replace('/* INLINE_CONFIG */', () => safeConfig).replace('/* INLINE_SCRIPT */', () => `${engine.replace(/export /g, '')}\n${chamber}\n${audio}\n${app}`);
+const html = template.replace('/* INLINE_STYLES */', () => `${css}\n${gachaCss}\n${energyCss}`).replace('/* INLINE_GAME_CONFIG */', () => JSON.stringify(gameConfig).replace(/</g, '\\u003c')).replace('/* INLINE_CONFIG */', () => safeConfig).replace('/* INLINE_SCRIPT */', () => `${engine.replace(/export /g, '')}\n${chamber}\n${audio}\n${energyEngine.replace(/export /g, '')}\n${recharge}\n${app}`);
 await writeFile('index.html', html);
 console.log('已生成 index.html：配置、插画、样式与脚本全部内嵌。');
