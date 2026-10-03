@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { normalizeWeatherRules, normalizeGardenState, normalizeDayNightRules, normalizeSeasonRules } from '../src/garden-engine.mjs';
 test('花园恢复只接受已收藏的有效宝物，旧存档保留六块空花圃', () => {
   assert.deepEqual(normalizeGardenState(null, [], []).slots, Array(6).fill(null));
-  assert.deepEqual(normalizeGardenState({ slots: ['a', 'b', 'missing', 3, 'a'] }, [{ id: 'a' }, { id: 'b' }], [{ prizeId: 'a' }]).slots, ['a', null, null, null, 'a', null]);
+  assert.deepEqual(normalizeGardenState({ slots: ['a', 'b', 'missing', 3, 'a'] }, [{ id: 'a' }, { id: 'b' }], [{ prizeId: 'a' }]).slots, ['a', null, null, null, null, null]);
 });
 test('天气参数限幅，非法天气不会执行，禁用设置保留', () => {
   const rules = normalizeWeatherRules({ enabled: false, firstAfterMs: -1, intervalMs: Infinity, durationMs: 999999, kinds: ['snow', 'evil'] });

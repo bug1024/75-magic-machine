@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "stories": [
+    {
+      "id": "forest-concert",
+      "name": "森林音乐会",
+      "icon": "🍄",
+      "hint": "把一位植物伙伴和一位音乐伙伴放在一起。",
+      "requirements": [
+        {
+          "tag": "plant",
+          "count": 1
+        },
+        {
+          "tag": "music",
+          "count": 1
+        }
+      ],
+      "effect": "forest",
+      "durationMs": 6500,
+      "energyReward": 1
+    },
+    {
+      "id": "ocean-party",
+      "name": "海洋派对",
+      "icon": "🐬",
+      "hint": "找两种海洋宝物，一起开派对！",
+      "requirements": [
+        {
+          "tag": "ocean",
+          "count": 2
+        }
+      ],
+      "effect": "ocean",
+      "durationMs": 6500,
+      "energyReward": 1
+    },
+    {
+      "id": "magic-ball",
+      "name": "魔法舞会",
+      "icon": "🦋",
+      "hint": "一件漂亮装扮，再请一位魔法伙伴。",
+      "requirements": [
+        {
+          "tag": "outfit",
+          "count": 1
+        },
+        {
+          "tag": "magic",
+          "count": 1
+        }
+      ],
+      "effect": "ball",
+      "durationMs": 6500,
+      "energyReward": 1
+    },
+    {
+      "id": "prank-party",
+      "name": "噗噗恶作剧",
+      "icon": "💨",
+      "hint": "开心宝宝和超级粑粑，会做什么呢？",
+      "requirements": [
+        {
+          "tag": "baby",
+          "count": 1
+        },
+        {
+          "tag": "toilet",
+          "count": 1
+        }
+      ],
+      "effect": "prank",
+      "durationMs": 6500,
+      "energyReward": 1
+    }
+  ]
+}

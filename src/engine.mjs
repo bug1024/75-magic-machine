@@ -15,7 +15,7 @@ export function normalizeConfig(config) {
     const appearance = item.appearance || {}, effects = item.effects || {};
     const image = typeof appearance.image === 'string' && /^(assets\/[^\s]+\.svg|data:image\/(svg\+xml|png|webp|jpeg);base64,[a-z0-9+/=]+)$/i.test(appearance.image) ? appearance.image : '';
     const interactionImage = typeof appearance.interactionImage === 'string' && /^(assets\/[^\s]+\.svg|data:image\/svg\+xml;base64,[a-z0-9+/=]+)$/i.test(appearance.interactionImage) ? appearance.interactionImage : '';
-    return { id: item.id, name: String(item.name || '神秘宝物'), description: String(item.description || '一份属于你的魔法。'), rarity: RARITIES[item.rarity] ? item.rarity : 'common', weight: Number.isFinite(item.weight) && item.weight > 0 ? item.weight : 0, enabled: item.enabled !== false, appearance: { image, interactionImage, icon: String(appearance.icon || '✨'), primaryColor: color(appearance.primaryColor, '#ba9cff'), accentColor: color(appearance.accentColor, '#ffe1f5') }, effects: { interaction: INTERACTIONS.includes(effects.interaction) ? effects.interaction : '', reveal: REVEALS.includes(effects.reveal) ? effects.reveal : REVEALS[0], ambient: AMBIENTS.includes(effects.ambient) ? effects.ambient : AMBIENTS[0], sound: SOUNDS.includes(effects.sound) ? effects.sound : SOUNDS[0], params: { durationMs: clamp(effects.params?.durationMs, 1500, 4000, 2200), particleCount: Math.round(clamp(effects.params?.particleCount, 10, 160, 60)) } } };
+    return { id: item.id, tags: Array.isArray(item.tags) ? [...new Set(item.tags.filter(tag => typeof tag === 'string' && /^[a-z][a-z0-9-]{0,31}$/.test(tag)))].slice(0, 16) : [], name: String(item.name || '神秘宝物'), description: String(item.description || '一份属于你的魔法。'), rarity: RARITIES[item.rarity] ? item.rarity : 'common', weight: Number.isFinite(item.weight) && item.weight > 0 ? item.weight : 0, enabled: item.enabled !== false, appearance: { image, interactionImage, icon: String(appearance.icon || '✨'), primaryColor: color(appearance.primaryColor, '#ba9cff'), accentColor: color(appearance.accentColor, '#ffe1f5') }, effects: { interaction: INTERACTIONS.includes(effects.interaction) ? effects.interaction : '', reveal: REVEALS.includes(effects.reveal) ? effects.reveal : REVEALS[0], ambient: AMBIENTS.includes(effects.ambient) ? effects.ambient : AMBIENTS[0], sound: SOUNDS.includes(effects.sound) ? effects.sound : SOUNDS[0], params: { durationMs: clamp(effects.params?.durationMs, 1500, 4000, 2200), particleCount: Math.round(clamp(effects.params?.particleCount, 10, 160, 60)) } } };
   });
 }
 export function drawTreasure(treasures, random = Math.random, { equalProbability = false } = {}) {
@@ -29,4 +29,13 @@ export function drawTreasure(treasures, random = Math.random, { equalProbability
 }
 export function validHistory(value) {
   return Array.isArray(value) ? value.filter(r => r && typeof r.prizeId === 'string' && typeof r.name === 'string' && Number.isFinite(r.timestamp) && typeof r.drawId === 'string' && RARITIES[r.rarity]).slice(-1000) : [];
+}
+
+// 数量独立于最近1000条开奖历史，旧存档从已有记录迁移。
+export function normalizeInventory(saved, history) {
+  const result = Object.create(null);
+  if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+    for (const [id, count] of Object.entries(saved)) if (id && Number.isSafeInteger(count) && count > 0) result[id] = count;
+  } else for (const record of history) result[record.prizeId] = (result[record.prizeId] || 0) + 1;
+  return result;
 }

@@ -59,11 +59,14 @@
     "castleAt": 35,
     "witch": {
       "enabled": true,
-      "every": 50,
       "hits": 3,
       "visibleMs": 2800,
       "hiddenMs": 450,
-      "image": "assets/witch.svg"
+      "image": "assets/witch.svg",
+      "chance": 0.25,
+      "minGap": 8,
+      "firstGuaranteeAfter": 4,
+      "guaranteeAfter": 14
     }
   },
   "weather": {

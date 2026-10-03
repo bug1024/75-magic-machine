@@ -79,6 +79,12 @@ class MagicAudio {
     if (this.level === 'castle') { this.kick(.15, true); this.kick(.39, true); this.chord([196, 294, 392], .6, .6); }
     if (this.level === 'winged') { this.noiseHit(.1, .2, .025, 3200); this.noiseHit(.35, .2, .025, 3200); }
   }
+  story(kind, time, weather) {
+    if (kind === 'forest') { this.treasureSound('mushroom-notes'); [523, 659, 784, 1047].forEach((note, i) => this.tone(note, .3, 1.5 + i * .2, .065)); }
+    else if (kind === 'ocean') { this.treasureSound('flower-bloom'); for (let i = 0; i < (weather === 'rain' ? 8 : 5); i++) this.tone(350 + i * 110, .15, 1.2 + i * .17, .055, 'sine', 850 + i * 100); }
+    else if (kind === 'ball') { this.celebrate(time === 'night' ? 'magic-chime' : 'rainbow-song'); }
+    else this.celebrate('bubble-giggle');
+  }
   weather(kind) {
     if (kind === 'rain' || kind === 'wind') { for (let i = 0; i < 6; i++) this.noiseHit(i * .18, .28, kind === 'rain' ? .025 : .035, kind === 'rain' ? 2000 : 700); }
     else (kind === 'snow' ? [1568, 1319, 1047, 784] : [523, 784, 1047, 1568, 2093]).forEach((note, i) => this.tone(note, .4, i * .14, .04, 'sine'));

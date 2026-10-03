@@ -17,9 +17,9 @@ async function hit(page) {
 }
 try {
   const page=await browser.newPage({viewport:{width:1280,height:800}});page.on('pageerror',e=>errors.push(e.message));
-  await page.addInitScript(()=>{Math.random=()=>.5});
-  // 真实第50次开奖，耗尽能量也能打女巫。
-  await seed(page,49,1);await page.keyboard.press('Space');
+  await page.addInitScript(()=>{Math.random=()=>.1});
+  // 城堡解锁后的真实第36次开奖，耗尽能量也能打女巫。
+  await seed(page,35,1);await page.keyboard.press('Space');
   await page.waitForSelector('#witch-stage:not([hidden])');
   assert.equal(await page.locator('#draw').isDisabled(),true);
   assert.equal(await page.locator('#collection-count').textContent(),'1');
@@ -33,7 +33,7 @@ try {
   assert.equal(await page.locator('#witch-hit-count').textContent(),'0 / 3');
   assert.equal(await page.locator('#witch-stage').evaluate(el=>!el.hidden),true);
   // 点击空白发射，但不计命中；连点同一弹道不会多计。
-  await page.mouse.click(1250,770);
+  await page.mouse.click(900,100);
   assert.equal(await page.locator('.witch-shot img').count(),1);
   const from=await page.locator('.witch-shot').evaluate(el=>parseFloat(el.style.getPropertyValue('--from-x')));
   assert.ok(Math.abs(from-(origin.x+origin.width/2-25))<2,'宝物从主抽奖机发射');
@@ -49,7 +49,7 @@ try {
   await page.waitForFunction(()=>document.querySelector('#witch-hit-count').textContent==='1 / 3');
   assert.equal(await page.locator('#power-count').textContent(),'0 / 10');
   const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('75-magic-machine:v1')));
-  assert.equal(before.world.pending[0].hits,1);assert.equal(before.world.completedDraws,50);
+  assert.equal(before.world.pending[0].hits,1);assert.equal(before.world.completedDraws,36);
   await page.reload();await page.waitForSelector('#witch-stage:not([hidden])');
   assert.equal(await page.locator('#witch-hit-count').textContent(),'1 / 3');
   await hit(page);assert.equal(await page.locator('#witch-hit-count').textContent(),'2 / 3');
@@ -66,7 +66,7 @@ try {
   assert.equal(await page.locator('#collection-count').textContent(),'2');
   assert.equal(await page.locator('#power-count').textContent(),'0 / 10');
   const won=await page.evaluate(()=>JSON.parse(localStorage.getItem('75-magic-machine:v1')));
-  assert.equal(won.world.pending.length,0);assert.equal(won.world.completedDraws,50);assert.equal(won.history.at(-1).eventId,'witch');
+  assert.equal(won.world.pending.length,0);assert.equal(won.world.completedDraws,36);assert.equal(won.history.at(-1).eventId,'witch');
   await page.waitForTimeout(900);await page.screenshot({path:'artifacts/witch/victory.png'});
   await page.locator('#witch-continue').click();await page.waitForFunction(()=>!document.body.classList.contains('world-busy'));
   await page.reload();assert.equal(await page.locator('#collection-count').textContent(),'2');assert.equal(await page.locator('#witch-stage').evaluate(el=>!el.hidden),false);
@@ -103,5 +103,5 @@ try {
     assert.ok(result.peak>.01&&result.peak<.98);assert.equal(result.voices,0);
   }
   assert.deepEqual(errors,[]);
-  console.log('通过：真实第50次触发、0能量可玩、三次命中、打空/连点保护、宝物弹道、键盘空格与Enter、刷新续战、奖励仅一次、入口切换、手机触摸/柔和动画、专属音效及节点回收');
+  console.log('通过：城堡后随机触发、0能量可玩、三次命中、打空/连点保护、宝物弹道、键盘空格与Enter、刷新续战、奖励仅一次、入口切换、手机触摸/柔和动画、专属音效及节点回收');
 } finally {await browser.close()}
