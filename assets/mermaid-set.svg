@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" fill="none"><defs><linearGradient id="body" x1="100" y1="80" x2="245" y2="295" gradientUnits="userSpaceOnUse"><stop stop-color="#dfb0ff"/><stop offset="1" stop-color="#79e8d4"/></linearGradient><radialGradient id="glow"><stop stop-color="#79e8d4" stop-opacity=".25"/><stop offset="1" stop-color="#79e8d4" stop-opacity="0"/></radialGradient></defs><circle cx="180" cy="183" r="152" fill="url(#glow)"/><ellipse cx="180" cy="316" rx="94" ry="10" fill="#100d35" opacity=".25"/><g stroke-linecap="round" stroke-linejoin="round">
+<defs><pattern id="scales" width="24" height="16" patternUnits="userSpaceOnUse"><path d="M0 1q12 20 24 0" fill="none" stroke="#ecffef" stroke-opacity=".55" stroke-width="1.5"/></pattern><linearGradient id="tail" x1="180" y1="145" x2="230" y2="301"><stop stop-color="#a4f4cf"/><stop offset=".55" stop-color="#76d8cf"/><stop offset="1" stop-color="#99b9ef"/></linearGradient></defs>
+<path d="M136 151h85c-2 45-5 67-28 103 42-21 61-4 60 32-39 8-60-1-73-24-13 26-34 35-73 27-1-36 19-53 62-35-24-36-29-60-33-103Z" fill="url(#tail)" stroke="#cbfff0" stroke-width="3"/>
+<path d="M136 151h85c-2 45-5 67-28 103l-24 0c-24-36-29-60-33-103Z" fill="url(#scales)"/>
+<path d="m180 265-58 16m58-16 58 13m-58-13-42 1m42-1 43-2" stroke="#dbfff1" stroke-width="2"/>
+<path d="M122 121c-18-7-16-29-1-36 12-14 27-7 31 3 19 0 25 23 17 36Z" fill="#c6a6ef" stroke="#f0d8ff" stroke-width="3"/><path d="M189 124c-8-13-2-36 17-36 4-10 19-17 31-3 15 7 17 29-1 36Z" fill="#c6a6ef" stroke="#f0d8ff" stroke-width="3"/>
+<path d="m126 88 8 30m10-28 5 29m78-31-8 30m-10-28-5 29m-35 2h20" stroke="#f0daff" stroke-width="2"/>
+<path d="m149 53 7-17 13 10 11-23 11 23 13-10 7 17q-31 15-62 0Z" fill="#ffe3a0" stroke="#fff1c8" stroke-width="2"/><circle cx="180" cy="46" r="6" fill="#8be7d3"/>
+<g fill="#dcfff4"><circle cx="93" cy="181" r="5"/><circle cx="274" cy="204" r="8"/><circle cx="93" cy="214" r="10"/></g>
+</g><g fill="#dfb0ff"><path d="m64 130 3-10 3 10 10 3-10 3-3 10-3-10-10-3Zm223-47 4-12 4 12 12 4-12 4-4 12-4-12-12-4Z"/><circle cx="84" cy="284" r="3"/><circle cx="274" cy="278" r="3"/></g></svg>

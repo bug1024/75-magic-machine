@@ -1,0 +1,304 @@
+{
+  "version": 1,
+  "treasures": [
+    {
+      "id": "starlight-dress",
+      "name": "星光公主裙",
+      "description": "转个圈，裙摆就会洒出小星星。",
+      "rarity": "common",
+      "weight": 6,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/dress.svg",
+        "icon": "👗",
+        "primaryColor": "#ba9cff",
+        "accentColor": "#ffe1f5"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "rainbow-unicorn",
+      "name": "彩虹独角兽",
+      "description": "抱紧它，一起去彩虹的另一头。",
+      "rarity": "rare",
+      "weight": 3,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/unicorn.svg",
+        "icon": "🦄",
+        "primaryColor": "#83eadc",
+        "accentColor": "#ffb4da"
+      },
+      "effects": {
+        "reveal": "rainbow-ring",
+        "ambient": "rainbow-trail",
+        "sound": "rainbow-song",
+        "params": {
+          "durationMs": 2600,
+          "particleCount": 95
+        }
+      }
+    },
+    {
+      "id": "moon-castle",
+      "name": "月亮城堡",
+      "description": "今晚，整片星空都是你的花园。",
+      "rarity": "super",
+      "weight": 1,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/castle.svg",
+        "icon": "🏰",
+        "primaryColor": "#ffe5a0",
+        "accentColor": "#adbcff"
+      },
+      "effects": {
+        "reveal": "moonrise",
+        "ambient": "golden-rain",
+        "sound": "royal-fanfare",
+        "params": {
+          "durationMs": 3300,
+          "particleCount": 130
+        }
+      }
+    },
+    {
+      "id": "cloud-dolphin",
+      "name": "云朵小海豚",
+      "description": "抱着软乎乎的小海豚，游进蓝色梦里。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/dolphin.svg",
+        "icon": "🐬",
+        "primaryColor": "#a5baff",
+        "accentColor": "#ecf2ff"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "zizi-owl",
+      "name": "吱吱猫头鹰",
+      "description": "吱吱睁大眼睛，陪你发现夜晚的小秘密。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/owl.svg",
+        "icon": "🦉",
+        "primaryColor": "#b39bff",
+        "accentColor": "#e9ffa9"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "snow-king-wobbler",
+      "name": "摇摇雪王",
+      "description": "左摇右摇，戴着皇冠的雪王永远站得稳！",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/snow-king.svg",
+        "icon": "⛄",
+        "primaryColor": "#d5efff",
+        "accentColor": "#ff9ab5"
+      },
+      "effects": {
+        "reveal": "rainbow-ring",
+        "ambient": "rainbow-trail",
+        "sound": "rainbow-song",
+        "params": {
+          "durationMs": 2600,
+          "particleCount": 95
+        }
+      }
+    },
+    {
+      "id": "bubble-bottle-brush",
+      "name": "泡泡魔法刷",
+      "description": "荧黄小刷子一挥，洗出一串亮晶晶的泡泡。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/bottle-brush.svg",
+        "icon": "🫧",
+        "primaryColor": "#ddf653",
+        "accentColor": "#efffc0"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "heart-piggy-bank",
+      "name": "爱心小猪存钱罐",
+      "description": "把小小愿望，存进蓝白色的小猪肚子里。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/piggy-bank.svg",
+        "icon": "🐷",
+        "primaryColor": "#9be7f4",
+        "accentColor": "#fff29d"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    },
+    {
+      "id": "crane-hanfu",
+      "name": "丹鹤流云汉服裙",
+      "description": "酒红裙摆轻轻转，白鹤踏着云朵飞起来。",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/hanfu.svg",
+        "icon": "👘",
+        "primaryColor": "#d66c8c",
+        "accentColor": "#ffe5b8"
+      },
+      "effects": {
+        "reveal": "rainbow-ring",
+        "ambient": "rainbow-trail",
+        "sound": "rainbow-song",
+        "params": {
+          "durationMs": 2600,
+          "particleCount": 95
+        }
+      }
+    },
+    {
+      "id": "rainbow-cape",
+      "name": "追彩虹披风",
+      "description": "披上七彩的风，向着彩虹出发！",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/rainbow-cape.svg",
+        "icon": "🌈",
+        "primaryColor": "#a4b5ff",
+        "accentColor": "#ffc2df"
+      },
+      "effects": {
+        "reveal": "rainbow-ring",
+        "ambient": "rainbow-trail",
+        "sound": "rainbow-song",
+        "params": {
+          "durationMs": 2600,
+          "particleCount": 95
+        }
+      }
+    },
+    {
+      "id": "pearl-mermaid-set",
+      "name": "珍珠美人鱼套装",
+      "description": "贝壳小上衣、闪亮鱼尾，还有一顶海洋皇冠。",
+      "rarity": "super",
+      "weight": 1,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/mermaid-set.svg",
+        "icon": "🧜‍♀️",
+        "primaryColor": "#79e8d4",
+        "accentColor": "#dfb0ff"
+      },
+      "effects": {
+        "reveal": "moonrise",
+        "ambient": "golden-rain",
+        "sound": "royal-fanfare",
+        "params": {
+          "durationMs": 3300,
+          "particleCount": 130
+        }
+      }
+    },
+    {
+      "id": "winged-fairy-gem",
+      "name": "翅膀精灵宝石",
+      "description": "宝石长出小翅膀，偷偷送你一份森林魔法。",
+      "rarity": "super",
+      "weight": 1,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/fairy-gem.svg",
+        "icon": "💎",
+        "primaryColor": "#93ffd1",
+        "accentColor": "#fff1b6"
+      },
+      "effects": {
+        "reveal": "moonrise",
+        "ambient": "golden-rain",
+        "sound": "royal-fanfare",
+        "params": {
+          "durationMs": 3300,
+          "particleCount": 130
+        }
+      }
+    },
+    {
+      "id": "giggle-baby",
+      "name": "噗噗开心宝宝",
+      "description": "噗——！宝宝的小屁屁，放出一团开心泡泡。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/giggle-baby.svg",
+        "icon": "👶",
+        "primaryColor": "#ffbca5",
+        "accentColor": "#bcf4d8"
+      },
+      "effects": {
+        "reveal": "bubble-pop",
+        "ambient": "floating-stars",
+        "sound": "bubble-giggle",
+        "params": {
+          "durationMs": 2200,
+          "particleCount": 65
+        }
+      }
+    }
+  ]
+}

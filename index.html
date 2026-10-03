@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#12132d"><title>75's MAGIC MACHINE · 王卿梧的魔法抽奖机</title><style>:root{color-scheme:dark;--night:#12132d;--lavender:#ba9cff;--cream:#ffe5b0;--mint:#83eadc;--pink:#ffb4da;--ink:#f0eaff;--muted:#aba5cd;--primary:#ba9cff;--accent:#ffe1f5;font-family:"Avenir Next","Trebuchet MS","PingFang SC","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--night);color:var(--ink);min-height:100svh;overflow-x:hidden}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;color:inherit;cursor:pointer;border:0}button:focus-visible,a:focus-visible{outline:3px solid var(--cream);outline-offset:5px}button{transition:transform .15s ease,background .2s ease,box-shadow .2s ease}button:active{transform:scale(.96)}button:disabled{cursor:default}button[hidden],[hidden]{display:none!important}a{color:inherit;text-decoration:none}.sky{position:fixed;inset:0;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at 50% 58%,#39316b66,transparent 58%),radial-gradient(ellipse at 20% 10%,#25395444,transparent 50%),#12132d}.sky:after{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,#e4d5ff 1px,transparent 1.5px),radial-gradient(circle,#cabafa80 1px,transparent 1.5px),radial-gradient(circle,#ffe5b077 1px,transparent 1.5px);background-size:137px 151px,211px 193px,307px 269px;background-position:15px 40px,69px 18px,125px 110px;opacity:.45}.nebula{position:absolute;width:700px;height:700px;border-radius:50%;left:50%;top:40%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,#7853a217,transparent 65%)}.orbit{position:absolute;left:50%;top:47%;border:1px solid #b19ee415;border-radius:50%;transform:translate(-50%,-50%) rotate(-25deg)}.orbit-one{width:1080px;height:520px}.orbit-two{width:1320px;height:740px;transform:translate(-50%,-50%) rotate(20deg)}.planet{position:absolute;border-radius:50%}.planet-one{width:42px;height:42px;top:32%;left:12%;background:linear-gradient(135deg,#9b86c0,#453e6d 65%);box-shadow:inset -7px -6px 10px #11132e}.planet-one:after{content:"";position:absolute;inset:13px -13px;border:3px solid #afa0d555;border-radius:50%;transform:rotate(-25deg)}.planet-two{width:22px;height:22px;right:15%;top:65%;background:linear-gradient(130deg,#8ebcbb,#314557)}#particles{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}.topbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:24px 38px}.wordmark{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:800;letter-spacing:.08em}.wordmark>span:last-child{font-size:10px;color:var(--muted);letter-spacing:.14em;font-weight:600}.brand-star{color:var(--cream);font-size:25px}.utilities{display:flex;gap:9px}.icon-button{width:42px;height:42px;border-radius:50%;background:#ffffff06;box-shadow:inset 0 0 0 1px #ffffff14;color:#cfc4e9;font-size:24px;position:relative;display:grid;place-items:center}.icon-button:hover{background:#ffffff12}.icon-button[aria-pressed=true]{color:var(--cream);background:#ffe5b00c}.mute-slash{position:absolute;left:19px;top:8px;font-size:23px;color:#cfc4e9;transform:rotate(12deg)}main{position:relative;z-index:1;margin:0 auto;max-width:1100px;padding:3px 24px 22px}.intro{text-align:center}.eyebrow{font-size:11px;font-weight:600;letter-spacing:.23em;color:#b8acd9;display:flex;align-items:center;justify-content:center;gap:12px;margin:8px 0 17px}.eyebrow>span{height:1px;width:25px;background:#b8acd94d}h1{position:relative;display:inline-block;margin:0;font-size:clamp(25px,3.3vw,45px);line-height:1.1;font-weight:900;letter-spacing:-.03em;color:#fff2d9;text-shadow:0 2px 0 #c3915833}h1 span{color:#ece2ff}h1 i{font-style:normal;position:absolute;right:-33px;top:-14px;font-size:26px;color:var(--cream)}.subtitle{font-size:15px;letter-spacing:.21em;color:#b9b0d6;margin:13px 0 0}.game{position:relative;display:flex;justify-content:center;padding:31px 0 25px}.machine{width:440px;position:relative;padding:15px 27px 18px;border-radius:46px 46px 32px 32px;background:linear-gradient(135deg,#8479aa,#4a4269 12%,#363049 55%,#66577c);border:2px solid #beb0db66;box-shadow:inset 0 2px 2px #f3deff55,inset 0 -8px 0 #17142d88,0 12px 0 #0e1029,0 15px 0 2px #cbb1f71a,0 24px 50px #07091d99,0 0 60px #c496ff13;z-index:2}.machine:before{content:"";position:absolute;inset:6px;border-radius:39px 39px 25px 25px;border:1px solid #eee0ff1f;pointer-events:none}.machine-top{display:flex;justify-content:space-between;align-items:center;height:30px;padding:0 9px 8px;font-size:10px;letter-spacing:.15em}.machine-label{display:flex;gap:8px;align-items:center;color:#e2d1f4;font-weight:600}.status-dot{width:5px;height:5px;border-radius:50%;background:var(--mint);box-shadow:0 0 7px var(--mint)}.tiny-stars{font-size:13px;color:#ceb6ef;letter-spacing:4px}.window{height:338px;border-radius:26px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 37%,#51457466,transparent 68%),linear-gradient(#17182f,#252039);box-shadow:inset 0 3px 12px #080916cc,0 0 0 2px #c1a8dc44,0 0 0 6px #221e35,0 0 0 7px #a595c22b}.window:after{content:"";position:absolute;inset:0;border-radius:26px;box-shadow:inset 0 0 35px #11132666;pointer-events:none}.window-grid{position:absolute;inset:0;background-image:radial-gradient(circle,#e9d7ff66 1px,transparent 1px);background-size:37px 41px;opacity:.35}.halo{position:absolute;left:50%;top:40%;width:224px;height:224px;border:1px solid #d5b9f32e;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 22px #bf9de805,0 0 0 23px #bf9de812}.halo:before,.halo:after{content:"✦";position:absolute;font-size:18px;color:var(--cream);top:24px;left:18px}.halo:after{top:auto;left:auto;bottom:14px;right:25px;font-size:10px}.idle-art{position:absolute;top:4px;left:50%;width:235px;transform:translateX(-50%);animation:bob 4s ease-in-out infinite}.idle-art svg{width:100%;height:225px;filter:drop-shadow(0 0 25px #af8df13b)}.treasure-art{position:absolute;left:50%;top:-9px;transform:translateX(-50%);width:255px;height:255px;z-index:2;display:grid;place-items:center}.treasure-art img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 20px color-mix(in srgb,var(--primary) 20%,transparent))}.fallback-art{font-size:105px}.window-caption{position:absolute;left:10px;right:10px;bottom:24px;text-align:center;z-index:3}.rarity{color:#d0b7ed;font-size:11px;letter-spacing:.14em;display:inline-block;min-height:18px}.window-caption h2{font-size:24px;letter-spacing:.03em;margin:8px 0 8px;line-height:1.2;color:#f5edff}.window-caption p{font-size:13px;margin:0;color:#b9afcc;line-height:1.5}.light-strip{position:absolute;top:75px;bottom:148px;width:5px;border-radius:3px;background:repeating-linear-gradient(to bottom,#dec5fc 0 6px,transparent 6px 18px);filter:drop-shadow(0 0 4px #c092ff);opacity:.7;animation:breathe 3s ease-in-out infinite}.light-strip.left{left:12px}.light-strip.right{right:12px}.control-deck{padding:24px 0 2px;display:grid;grid-template-columns:23px 1fr 23px;gap:10px;align-items:center}.deck-star{font-size:17px;color:#c3acd4;text-align:center}.draw-button{height:64px;border-radius:19px;display:flex;align-items:center;justify-content:center;gap:18px;background:linear-gradient(#ffeac2,#ebc585);color:#493344;font-size:20px;font-weight:800;box-shadow:inset 0 2px 1px #fff4e7,0 5px 0 #986c4b,0 7px 0 #241b31,0 9px 20px #0c102b66,0 0 25px #ffe5b01a;position:relative}.draw-button:hover:not(:disabled){background:linear-gradient(#fff1d8,#f4d393);box-shadow:inset 0 2px 1px #fff4e7,0 5px 0 #986c4b,0 7px 0 #241b31,0 9px 20px #0c102b66,0 0 30px #ffe5b030}.draw-button:active,.draw-button.pressed{transform:translateY(3px) scale(.96);box-shadow:inset 0 2px 1px #fff4e7,0 2px 0 #986c4b,0 4px 0 #241b31}.keycap{font-size:10px;font-weight:800;letter-spacing:.07em;padding:6px 8px;border-radius:6px;border:1px solid #7d5b5344;box-shadow:0 2px 0 #7d5b5333}.keycap span{margin-left:3px}.control-deck p{grid-column:1/-1;text-align:center;font-size:11px;color:#cec0dc;margin:4px 0 0;letter-spacing:.08em}.machine-foot{position:absolute;width:51px;height:17px;bottom:-26px;background:linear-gradient(#75617f,#44384e);border-radius:0 0 8px 8px;z-index:-1;border:1px solid #b494cf44}.left-foot{left:55px}.right-foot{right:55px}.ground-glow{position:absolute;bottom:-6px;width:510px;height:45px;border-radius:50%;background:radial-gradient(ellipse,#b894e32b,transparent 70%);filter:blur(8px)}.floating-spark{position:absolute;color:#d8c7ef;animation:bob 5s ease-in-out infinite}.spark-left{left:calc(50% - 298px);top:105px;font-size:42px;transform:rotate(-10deg)}.spark-right{right:calc(50% - 294px);top:300px;font-size:30px;color:#f1d5a0;animation-delay:-2s}.bottom{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:25px auto 0;max-width:900px}.collection-button{display:flex;gap:12px;align-items:center;padding:13px 19px;background:#b59ce810;border-radius:15px;box-shadow:inset 0 0 0 1px #ccb4ef26;font-size:14px;color:#e1d5f6}.collection-button>span:first-child{font-size:24px;color:var(--cream)}.collection-button:hover{background:#b59ce821}.count{font-size:11px;color:#dbcced;min-width:24px;text-align:center;padding:4px;border-radius:7px;background:#bda3e419;font-variant-numeric:tabular-nums}.bottom p{font-size:11px;color:#9991b7;letter-spacing:.09em}.bottom p span{color:#c3ad84;margin-left:10px}.edition{font-size:9px;color:#9388ad;letter-spacing:.12em}.notice{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);padding:12px 20px;background:#322b48;border:1px solid #cbb2e64d;border-radius:12px;z-index:20;font-size:13px;max-width:calc(100vw - 30px);text-align:center}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.machine[data-state=starting]{animation:wake .4s ease-out}.machine[data-state=rolling] .light-strip,.machine[data-state=slowing] .light-strip{animation:breathe .45s ease-in-out infinite}.machine[data-state=rolling] .halo{animation:spin 2s linear infinite}.machine[data-state=slowing] .halo{animation:spin 5s linear infinite}.machine[data-state=rolling] .treasure-art{animation:shuffle .17s ease-in-out infinite}.machine[data-state=anticipation] .window{box-shadow:inset 0 0 70px #120f2b,0 0 0 2px #e3bdff66,0 0 0 6px #221e35}.machine[data-state=celebrating] .treasure-art{animation:reveal .7s cubic-bezier(.2,.7,.2,1) both}.machine[data-state=result] .treasure-art{animation:bob-art 4s ease-in-out infinite}.machine[data-state=celebrating] .rarity,.machine[data-state=result] .rarity{color:var(--primary)}.effect-ring{position:absolute;top:38%;left:50%;width:210px;height:210px;border-radius:50%;transform:translate(-50%,-50%) scale(.8);opacity:0;pointer-events:none}.machine[data-state=celebrating][data-reveal=sparkle-bloom] .effect-ring{box-shadow:0 0 45px var(--primary),inset 0 0 40px var(--primary);border:1px solid var(--accent);animation:bloom 2s ease-out both}.machine[data-reveal=rainbow-ring] .effect-ring{border:8px solid transparent;background:linear-gradient(#252039,#252039) padding-box,conic-gradient(#ffb4da,#ffe5a0,#83eadc,#9ebdff,#cba3ff,#ffb4da) border-box}.machine[data-state=celebrating][data-reveal=rainbow-ring] .effect-ring{animation:rainbow 2.6s ease-out both}.moon-disc{position:absolute;top:0;left:50%;height:180px;width:180px;border-radius:50%;opacity:0;background:radial-gradient(circle,#ffe4a133,#ffe4a100 70%);transform:translate(-50%,70px)}.machine[data-state=celebrating][data-reveal=moonrise] .moon-disc{animation:moonrise 3s ease-out both}.jackpot{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;letter-spacing:.08em;color:var(--cream);background:radial-gradient(ellipse,#363053fa,#17182ff2);line-height:1.2;opacity:0;pointer-events:none;text-shadow:0 0 20px #ffe5b066}.jackpot b{font-size:54px}.jackpot.show{animation:jackpot 1.1s ease both}
+dialog{width:min(790px,calc(100% - 32px));max-height:85svh;border:1px solid #b79bd64d;border-radius:30px;padding:30px;background:linear-gradient(135deg,#29223f,#1a1931);color:var(--ink);box-shadow:0 30px 100px #0008}dialog::backdrop{background:#090c23b8;backdrop-filter:blur(8px)}.dialog-header{display:flex;justify-content:space-between;align-items:center}.dialog-header .eyebrow{justify-content:flex-start;font-size:10px;margin:0 0 10px}.dialog-header h2{font-size:29px;margin:0}.dialog-header h2 span{color:var(--cream);font-size:22px}.collection-summary{color:var(--muted);font-size:13px;margin:20px 0}.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.treasure-card{border:1px solid #c5afe32b;border-radius:20px;background:#ffffff04;padding:14px;text-align:center;position:relative}.treasure-card img{width:100%;aspect-ratio:1;object-fit:contain}.treasure-card h3{font-size:17px;margin:0 0 8px}.treasure-card .rarity{font-size:10px}.treasure-card .card-description{font-size:12px;color:var(--muted);line-height:1.6;min-height:39px}.treasure-card .card-count{display:inline-block;border-radius:20px;background:#c4a8ed16;padding:5px 12px;color:#ebd9ff;font-size:12px}.treasure-card .last-date{display:block;margin-top:12px;color:#a89dbd;font-size:10px}.treasure-card.uncollected img{opacity:.3;filter:grayscale(.6)}.treasure-card.uncollected h3{color:#a397b4}.collection-note{font-size:11px;color:#9c92b1;text-align:center;margin:24px 0 0}
+.collection-button>svg{color:var(--cream);flex-shrink:0}.treasure-card>.fallback-art{grid-column:1;grid-row:1/7;align-self:center;text-align:center;font-size:70px}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}@keyframes bob-art{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}@keyframes breathe{0%,100%{opacity:.45}50%{opacity:1}}@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}@keyframes wake{0%,100%{transform:translateY(0)}40%{transform:translateY(2px)}70%{transform:translateY(-2px)}}@keyframes shuffle{0%,100%{transform:translateX(-50%) scale(.91) rotate(-3deg);opacity:.65}50%{transform:translateX(-50%) scale(.98) rotate(3deg);opacity:1}}@keyframes reveal{0%{transform:translateX(-50%) scale(.7);opacity:.2}100%{transform:translateX(-50%) scale(1);opacity:1}}@keyframes bloom{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}25%{opacity:.55}100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)}}@keyframes rainbow{0%{opacity:0;transform:translate(-50%,-50%) scale(.5) rotate(-40deg)}25%{opacity:.6}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6) rotate(40deg)}}@keyframes moonrise{0%{opacity:0;transform:translate(-50%,90px)}40%,80%{opacity:1;transform:translate(-50%,-20px)}100%{opacity:0;transform:translate(-50%,-20px)}}@keyframes jackpot{0%{opacity:0;transform:scale(.95)}20%,75%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.03)}}
+body.gentle *,body.gentle *:before,body.gentle *:after{animation:none!important;transition-duration:0s!important}body.gentle .jackpot.show{opacity:1}body.gentle .machine[data-state=celebrating] .effect-ring{opacity:.2;transform:translate(-50%,-50%) scale(1)}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition-duration:0s!important}.jackpot.show{opacity:1}}
+@media(min-width:800px) and (max-height:800px){.topbar{padding:16px 30px}main{padding-top:0}.eyebrow{margin-bottom:11px}h1{font-size:36px}.game{padding-top:23px;padding-bottom:20px}.window{height:295px}.idle-art{width:215px;top:-9px}.idle-art svg{height:212px}.treasure-art{width:230px;height:230px;top:-16px}.window-caption{bottom:18px}.window-caption h2{font-size:22px}.machine{width:410px}.bottom{margin-top:19px}.control-deck{padding-top:20px}.draw-button{height:58px}.subtitle{margin-top:10px}}
+@media(max-width:650px){.topbar{padding:17px 18px}.wordmark>span:last-child{display:none}.utilities{gap:6px}.icon-button{width:38px;height:38px}main{padding:10px 18px 25px}.eyebrow{font-size:10px;letter-spacing:.13em}h1{font-size:25px}h1 i{right:-20px;font-size:18px}.subtitle{font-size:12px}.game{padding-top:28px}.machine{width:min(100%,400px);padding:15px 24px 16px;border-radius:40px 40px 30px 30px}.window{height:325px}.window-caption h2{font-size:22px}.draw-button{gap:13px;font-size:18px}.control-deck{grid-template-columns:15px 1fr 15px;gap:7px}.bottom{justify-content:center;flex-wrap:wrap;gap:10px;margin-top:22px}.bottom p{width:100%;text-align:center;margin:6px 0}.edition{display:none}.planet-one{left:4%;top:23%;width:26px;height:26px}.planet-two,.floating-spark{display:none}.ground-glow{width:100%}.collection-grid{grid-template-columns:1fr}.treasure-card{display:grid;grid-template-columns:110px 1fr;text-align:left;column-gap:12px;align-items:center}.treasure-card img{grid-column:1;grid-row:1/7}.treasure-card h3,.treasure-card p,.treasure-card .last-date{grid-column:2}.treasure-card h3{margin:0 0 6px}.treasure-card .card-description{min-height:0;margin:6px 0}.treasure-card .card-count{justify-self:start}.treasure-card .last-date{margin-top:8px}dialog{padding:22px;border-radius:25px}.collection-note{line-height:1.6}.window-caption p{font-size:12px}}
+@media(max-height:600px) and (min-width:800px){main{padding-top:0}.topbar{padding-top:10px;padding-bottom:8px}.intro .eyebrow{display:none}h1{font-size:28px}.subtitle{font-size:11px;margin-top:5px}.game{padding-top:16px;padding-bottom:14px}.machine{width:345px;padding:12px 24px}.window{height:240px}.machine-top{height:25px}.idle-art{width:180px;top:-20px}.treasure-art{width:185px;height:185px;top:-21px}.idle-art svg{height:188px}.window-caption h2{font-size:19px;margin:4px 0}.window-caption{bottom:13px}.window-caption p{font-size:11px}.halo{width:150px;height:150px}.control-deck{padding-top:16px}.draw-button{height:48px;font-size:17px}.bottom{margin-top:10px}.collection-button{padding:8px 13px}.light-strip{bottom:125px}.effect-ring{width:150px;height:150px}}
+
+/* 第二版：彩色灯珠、透明魔法舱、扭蛋出口和动作反馈。 */
+.sky{background:radial-gradient(ellipse at 50% 45%,#66349a60,transparent 57%),radial-gradient(ellipse at 18% 70%,#164b6950,transparent 48%),radial-gradient(ellipse at 88% 25%,#65345f30,transparent 43%),#0d102b}
+.orbit{border-color:#c6a0fa24}.planet-one{background:linear-gradient(135deg,#f6b6f0,#8163c0 65%)}
+.topbar{padding-top:18px;padding-bottom:18px}.intro .eyebrow{margin-bottom:12px}h1{font-size:clamp(25px,3.1vw,41px);text-shadow:0 0 30px #ba8bff44,0 3px 0 #5b4376}h1 span{color:#f3d8ff}.subtitle{margin-top:10px}
+.game{padding-top:26px;padding-bottom:25px}
+.machine{--lamp-speed:2.3s;width:460px;padding:19px 35px 19px;border-radius:65px 65px 35px 35px;border-color:#d3b5ff99;background:linear-gradient(120deg,#b2a0e2 0%,#7663a6 9%,#554177 38%,#654580 75%,#a372a7 100%);box-shadow:inset 0 3px 1px #f5d8ff99,inset 0 -8px 0 #31213c,0 12px 0 #19152e,0 15px 0 2px #ffbbef40,0 25px 60px #08091e99,-12px 0 55px #74f8db20,12px 0 55px #ff94e730}
+.machine:before{inset:7px;border-radius:58px 58px 28px 28px;border-color:#f3b6ff4d}.machine:after{content:"✦";position:absolute;top:-17px;left:50%;transform:translateX(-50%);color:#fff0b8;font-size:34px;text-shadow:0 0 15px #ffda70,0 0 40px #ffd76a;z-index:3}
+.machine-top{height:29px;padding:0 12px 9px}.machine-label{color:#fbdeff;letter-spacing:.17em}.tiny-stars{color:#ffe6ae}
+.window{height:350px;border-radius:65px 65px 26px 26px;background:radial-gradient(ellipse at 35% 20%,#72438888,transparent 60%),radial-gradient(ellipse at 75% 55%,#2d796333,transparent 65%),linear-gradient(#232047,#121c38);box-shadow:inset 0 3px 20px #080c2199,0 0 0 2px #e3aafa77,0 0 0 7px #291d42,0 0 0 8px #e2b2f94d}
+.window:after{border-radius:65px 65px 26px 26px;box-shadow:inset 0 0 30px #11132655}.window-grid{opacity:.55}.halo{width:235px;height:235px;top:36%;border:2px dashed #bbacff44;box-shadow:0 0 0 16px #c583ff09,0 0 35px #925ced22}.halo:before{color:#83ffe3}.halo:after{color:#ffbee8}
+.marquee{position:absolute;left:12px;right:12px;top:35px;bottom:121px;z-index:4;pointer-events:none}
+.lamp{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--lamp-color);border:1px solid #ffffffa0;box-shadow:0 0 6px var(--lamp-color),0 0 13px var(--lamp-color),inset 0 1px 2px #fff;transform:translate(-50%,-50%);animation:lamp-chase var(--lamp-speed) linear infinite;animation-delay:var(--lamp-delay)}
+.energy-system{position:relative;height:24px;margin-top:15px}.energy-meter{position:absolute;inset:2px 59px 2px;border-radius:10px;border:1px solid #a692c666;background:#1c1730;overflow:hidden;box-shadow:inset 0 2px 5px #0b1026}
+.energy-meter>div{position:absolute;inset:0;transform:scaleX(var(--energy,0));transform-origin:left;background:linear-gradient(90deg,#71ffe2,#82b9ff,#cd86ff,#ff9ed8,#ffe09e);transition:transform .25s ease;box-shadow:0 0 16px #b5f7ed}
+.energy-meter>span{position:absolute;inset:0;display:grid;place-items:center;color:#f3edff;font-size:8px;letter-spacing:.2em;text-shadow:0 1px 4px #10132e}
+.energy-pipe{position:absolute;top:-296px;bottom:2px;width:9px;border-radius:8px;background:#211a39;border:1px solid #a8c8ef33;overflow:hidden}.pipe-left{left:-21px}.pipe-right{right:-21px}
+.energy-pipe:after{content:"";position:absolute;left:0;right:0;bottom:0;height:65px;opacity:.4;border-radius:6px;background:linear-gradient(transparent,#9fffea,#fff3c3);box-shadow:0 0 8px #94ffe5}
+.control-deck{padding-top:12px}.draw-button{height:61px;color:#5a2b59;background:linear-gradient(#fff1c8,#ffd08c);box-shadow:inset 0 2px 1px #fff7e7,0 5px 0 #a96748,0 7px 0 #241b31,0 9px 20px #0c102b66,0 0 28px #ffda9333}.deck-star{color:#8bffdf;font-size:20px}.draw-button:before{content:"";position:absolute;inset:-6px;border:1px solid #ffdfb26b;border-radius:24px;pointer-events:none}.control-deck p{margin-top:6px;font-size:12px}.machine-foot{background:linear-gradient(#cb91ba,#644468);border-color:#edb6f055}.ground-glow{bottom:-8px;width:650px;height:60px;background:radial-gradient(ellipse,#c680ff40,#66d9ed15,transparent 70%)}
+.chamber{position:absolute;left:12px;right:12px;top:10px;height:64%;border-radius:70px 70px 35px 35px;overflow:hidden;transition:opacity .4s ease,transform .5s ease}
+.magic-balls{position:absolute;inset:7px 10px 26px;--ball-size:68px}.magic-ball{position:absolute;left:0;top:0;width:var(--ball-size);height:var(--ball-size);border-radius:50%;border:1px solid color-mix(in srgb,var(--ball-color) 70%,white);background:radial-gradient(circle at 25% 20%,#ffffffe0 0%,#ffffff2b 16%,transparent 35%),radial-gradient(circle at 45% 40%,color-mix(in srgb,var(--ball-color) 55%,transparent),color-mix(in srgb,var(--ball-color) 80%,#271238) 82%);box-shadow:inset -4px -6px 10px #13153277,inset 1px 2px 3px #ffffff99,0 0 15px color-mix(in srgb,var(--ball-color) 25%,transparent),0 6px 8px #090e2944;transition:opacity .4s ease;overflow:hidden}
+.magic-ball:after{content:"";position:absolute;left:1px;right:1px;top:50%;height:3px;background:color-mix(in srgb,var(--ball-color) 70%,white);box-shadow:0 1px 2px #27113877}.magic-ball:before{content:"";position:absolute;top:12%;left:17%;width:28%;height:13%;border-radius:50%;background:#ffffff66;transform:rotate(-35deg);z-index:2}.magic-ball img{width:100%;height:100%;object-fit:contain;transform:scale(1.2);opacity:.95;transition:opacity .2s ease}.magic-ball .fallback-art{font-size:34px;position:absolute;inset:0;display:grid;place-items:center}.magic-ball.bump{filter:drop-shadow(0 0 9px #e2fffa)}
+.glass-shine{position:absolute;left:13px;top:22px;width:18px;height:101px;background:linear-gradient(#f0eaff66,transparent);border-radius:80%;transform:rotate(17deg);pointer-events:none}.chamber-floor{position:absolute;bottom:5px;left:12%;right:12%;height:22px;border-radius:50%;border:2px solid #cbb7ff66;background:radial-gradient(ellipse,#ae6eff55,#39236b);box-shadow:0 0 15px #ce9bff55}
+.vortex{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(from 0deg,#8dffe500 0deg,#8dffe520 10deg,#ce93ff00 25deg,#ce93ff20 35deg,#ffb5da00 50deg);mask-image:radial-gradient(ellipse,transparent 15%,#000 50%,transparent 73%);opacity:.25}
+.capsule-stage{position:absolute;top:13px;left:50%;width:240px;height:230px;transform:translateX(-50%);opacity:0;pointer-events:none;z-index:3;transition:opacity .18s ease}
+.pedestal{position:absolute;left:44px;right:44px;bottom:16px;height:28px;border-radius:50%;background:radial-gradient(ellipse,#eeccff66,#764396 65%);border:2px solid #f7c1ff88;box-shadow:0 7px 0 #38234d,0 0 25px var(--primary)}
+.capsule{position:absolute;left:55px;top:42px;width:130px;height:130px;filter:drop-shadow(0 0 18px color-mix(in srgb,var(--primary) 45%,transparent))}
+.capsule-half{position:absolute;left:0;right:0;height:65px;overflow:hidden;border:2px solid color-mix(in srgb,var(--primary) 50%,white);background:radial-gradient(ellipse at 25% 20%,#ffffffaa,transparent 50%),linear-gradient(135deg,color-mix(in srgb,var(--primary) 75%,white),color-mix(in srgb,var(--primary) 65%,#30194e));box-shadow:inset -7px -5px 15px #1c183e55;transition:transform .65s cubic-bezier(.2,.7,.2,1),opacity .65s ease}
+.capsule-lid{top:0;border-radius:70px 70px 0 0}.capsule-lid span{display:block;text-align:center;padding-top:17px;font-size:32px;color:#fff0b7;text-shadow:0 0 10px #ffe88c}.capsule-base{top:65px;border-radius:0 0 70px 70px}.capsule-seam{position:absolute;left:-2px;right:-2px;top:63px;height:5px;border-radius:3px;background:var(--accent);box-shadow:0 0 8px var(--primary);transition:opacity .3s ease}
+.capsule-crack{position:absolute;left:58px;top:12px;bottom:8px;width:13px;background:#fff9cd;clip-path:polygon(40% 0,100% 22%,32% 38%,100% 55%,25% 70%,65% 100%,0 77%,35% 54%,0 38%,70% 21%);opacity:0;filter:drop-shadow(0 0 8px #fff2a8)}
+.capsule-aura{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle,#ffe5a055,transparent 65%);opacity:0}
+.spell-pop{position:absolute;left:0;right:0;top:20px;z-index:5;text-align:center;font-size:26px;font-weight:900;color:#fff2bd;text-shadow:0 3px 0 #945cba,0 0 18px #d59bff;opacity:0;pointer-events:none}.spell-pop.pop{animation:spell-pop .62s ease both}
+.window-caption{bottom:20px;left:8px;right:8px}.window-caption h2{font-size:23px;margin:7px 0}.window-caption p{color:#d1bde7}.rarity{color:#e6bffd}.treasure-art{top:-7px;width:255px;height:255px;z-index:4}.treasure-art img{filter:drop-shadow(0 0 25px color-mix(in srgb,var(--primary) 50%,transparent))}
+.reveal-rays{position:absolute;left:50%;top:37%;width:470px;height:470px;border-radius:50%;transform:translate(-50%,-50%);opacity:0;background:repeating-conic-gradient(from 5deg,transparent 0deg 12deg,color-mix(in srgb,var(--primary) 40%,transparent) 12deg 20deg,transparent 20deg 36deg);mask-image:radial-gradient(circle,transparent 5%,#000 30%,transparent 68%)}
+.machine[data-state=charging]{--lamp-speed:.7s;animation:wake .5s ease-out}.machine[data-state=charging] .energy-pipe:after,.machine[data-state=mixing] .energy-pipe:after{animation:energy-flow .65s ease-in infinite;opacity:1}.machine[data-state=charging] .halo{animation:power-ring .8s ease-out infinite}
+.machine[data-state=mixing]{--lamp-speed:.42s;animation:machine-rock .55s ease-in-out infinite}.machine[data-state=mixing] .vortex{animation:vortex-spin .65s linear infinite;opacity:1}.machine[data-state=mixing] .halo{animation:spin 1s linear infinite}.machine[data-state=slowing]{--lamp-speed:.8s}.machine[data-state=slowing] .vortex{animation:vortex-spin 3s linear infinite;opacity:.5}
+.machine[data-state=selecting] .magic-ball:not(.chosen){opacity:.13}.machine[data-state=selecting] .magic-ball.chosen{z-index:3;box-shadow:0 0 30px var(--primary)}.machine[data-state=selecting] .magic-ball.chosen img{opacity:0}
+.machine:is([data-state=landing],[data-state=cracking],[data-state=anticipation],[data-state=overload],[data-state=celebrating],[data-state=result]) .chamber{opacity:0;transform:scale(.8)}
+.machine:is([data-state=landing],[data-state=cracking],[data-state=anticipation],[data-state=overload],[data-state=celebrating]) .capsule-stage{opacity:1}.machine[data-state=landing] .capsule{animation:capsule-drop .55s cubic-bezier(.3,.6,.4,1) both}.machine[data-state=cracking] .capsule{animation:capsule-wiggle .95s ease-in-out both}.machine[data-state=cracking] .capsule-crack{animation:crack-light .95s ease-out both}.machine[data-state=cracking] .capsule-aura{animation:crack-light .95s ease-out both}
+.machine[data-state=anticipation] .capsule-crack,.machine[data-state=anticipation] .capsule-aura{opacity:1}.machine[data-state=anticipation]{--lamp-speed:1.4s}.machine[data-state=anticipation] .capsule{transform:scale(1.18)}
+.machine[data-state=overload]{--lamp-speed:.42s;border-color:#fff2c5;box-shadow:0 0 65px #ffdc8566,inset 0 0 20px #ffe4a633,0 12px 0 #19152e}.machine[data-state=overload] .capsule-aura{opacity:1;animation:power-ring .55s ease-in-out infinite}.machine[data-state=overload] .capsule-crack{opacity:1}.jackpot{background:radial-gradient(ellipse,#563a5c88,transparent 70%);color:#fff1a7;font-size:35px;text-shadow:0 0 25px #ffd877,0 4px 0 #875e80}.jackpot b{font-size:58px}
+.machine[data-state=celebrating]{--lamp-speed:.6s;animation:win-bounce .75s ease-out}.machine[data-state=celebrating] .lamp{background:var(--primary);box-shadow:0 0 8px var(--primary),0 0 19px var(--accent)}.machine[data-state=celebrating] .capsule-lid{transform:translate(-95px,-140px) rotate(-95deg);opacity:0}.machine[data-state=celebrating] .capsule-base{transform:translate(95px,90px) rotate(85deg);opacity:0}.machine[data-state=celebrating] .capsule-seam,.machine[data-state=celebrating] .capsule-crack{opacity:0}.machine[data-state=celebrating] .treasure-art{animation:treasure-rise .95s cubic-bezier(.16,.75,.25,1) both}.machine[data-state=celebrating] .reveal-rays{animation:reveal-rays 2.4s ease-out both}
+.machine[data-state=result] .reveal-rays{opacity:.3;animation:rays-turn 25s linear infinite}.machine[data-state=result] .halo{border-color:color-mix(in srgb,var(--primary) 60%,transparent);box-shadow:0 0 40px color-mix(in srgb,var(--primary) 25%,transparent)}
+.bottom{margin-top:18px}.collection-button{background:#a378e421;box-shadow:inset 0 0 0 1px #d1a8f64d}.floating-spark{color:#92ffe2;text-shadow:0 0 20px #7dffd955}.spark-right{color:#ffaedc;text-shadow:0 0 25px #ff9fd455}
+@keyframes lamp-chase{0%,100%{opacity:.4;filter:brightness(.8)}30%,50%{opacity:1;filter:brightness(1.3)}}
+@keyframes energy-flow{from{transform:translateY(30px)}to{transform:translateY(-330px)}}
+@keyframes vortex-spin{to{rotate:360deg}}
+@keyframes power-ring{0%{opacity:.45;scale:.95}65%{opacity:1;scale:1.07}100%{opacity:.45;scale:1}}
+@keyframes spell-pop{0%{opacity:0;transform:translateY(12px) scale(.85)}25%,65%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-15px) scale(1.04)}}
+@keyframes capsule-drop{0%{transform:translateY(-65px) scale(.55)}60%{transform:translateY(29px) scale(1.25,.75)}78%{transform:translateY(-24px) scale(.88,1.16)}92%{transform:translateY(9px) scale(1.09,.93)}100%{transform:translateY(0) scale(1)}}
+@keyframes capsule-wiggle{0%,32%,64%,100%{transform:rotate(0) scale(1.06)}8%,41%,75%{transform:translateX(-13px) rotate(-22deg) scale(1.14)}18%,51%,85%{transform:translateX(13px) rotate(22deg) scale(1.14)}}
+@keyframes crack-light{0%{opacity:0}35%{opacity:.3}65%{opacity:.65}100%{opacity:1}}
+@keyframes treasure-rise{0%{transform:translateX(-50%) translateY(90px) scale(.15) rotate(-15deg);opacity:0}25%{opacity:1}55%{transform:translateX(-50%) translateY(-20px) scale(1.4) rotate(8deg)}78%{transform:translateX(-50%) translateY(8px) scale(.93) rotate(-4deg)}100%{transform:translateX(-50%) translateY(0) scale(1) rotate(0);opacity:1}}
+@keyframes reveal-rays{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-20deg)}20%{opacity:.85}100%{opacity:.25;transform:translate(-50%,-50%) scale(1.3) rotate(35deg)}}
+@keyframes rays-turn{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes win-bounce{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-14px) rotate(-1.5deg)}50%{transform:translateY(6px) rotate(1deg)}75%{transform:translateY(-4px) rotate(-.5deg)}}
+@keyframes machine-rock{0%,100%{transform:translateY(0) rotate(-.8deg)}50%{transform:translateY(-4px) rotate(.8deg)}}
+body.gentle .spell-pop.pop{opacity:1}body.gentle .capsule-crack,body.gentle .capsule-aura{transition:none}body.gentle .machine[data-state=celebrating] .reveal-rays{opacity:.25}body.gentle .machine[data-state=celebrating] .treasure-art{opacity:1}body.gentle .machine[data-state=result] .reveal-rays{opacity:.2}
+body.background-paused *,body.background-paused *:before,body.background-paused *:after{animation-play-state:paused!important}
+@media(min-width:800px) and (max-height:800px){.topbar{padding:12px 30px}.intro .eyebrow{font-size:10px;margin-top:0;margin-bottom:8px}h1{font-size:33px}.subtitle{font-size:12px;margin-top:7px}.game{padding-top:21px;padding-bottom:20px}.machine{width:420px;padding:17px 33px 15px}.window{height:308px}.treasure-art{width:230px;height:230px;top:-13px}.window-caption{bottom:15px}.window-caption h2{font-size:21px}.capsule-stage{top:0;scale:.9;transform-origin:0 0}.control-deck{padding-top:10px}.draw-button{height:55px}.energy-system{margin-top:12px;height:22px}.energy-pipe{top:-260px}.marquee{bottom:115px}.bottom{margin-top:13px}.collection-button{padding:10px 16px}.halo{width:205px;height:205px}.energy-meter{left:45px;right:45px}}
+@media(min-width:800px) and (min-height:601px) and (max-height:740px){.topbar{padding:8px 30px}.intro .eyebrow{display:none}h1{font-size:31px}.game{padding-top:20px;padding-bottom:15px}.machine .window{height:287px}.energy-system{margin-top:10px}.bottom{margin-top:10px}}
+@media(max-width:650px){.topbar{padding:14px 18px}main{padding-top:5px}h1{font-size:25px}.intro .eyebrow{margin-bottom:12px}.game{padding-top:24px}.machine{width:min(100%,400px);padding:19px 27px 17px;border-radius:52px 52px 30px 30px}.machine:before{border-radius:45px 45px 23px 23px}.window{height:330px;border-radius:50px 50px 23px 23px}.window:after{border-radius:50px 50px 23px 23px}.machine-top{padding-left:7px;padding-right:7px;font-size:9px}.tiny-stars{letter-spacing:2px}.marquee{left:9px;right:9px;top:35px;bottom:123px}.lamp{width:7px;height:7px}.energy-pipe{width:7px}.pipe-left{left:-17px}.pipe-right{right:-17px}.energy-meter{left:35px;right:35px}.draw-button{font-size:18px}.control-deck{padding-top:12px}.window-caption h2{font-size:21px}.window-caption p{font-size:12px}.treasure-art{top:-5px;width:245px;height:245px}.capsule-stage{top:0}.bottom{margin-top:16px}.ground-glow{width:100%}.capsule{width:120px;height:120px;left:60px;top:50px}.capsule-half{height:60px}.capsule-base{top:60px}.capsule-seam{top:58px}}
+@media(max-height:600px) and (min-width:800px){.topbar{padding:8px 30px}.intro .eyebrow{display:none}h1{font-size:27px}.game{padding-top:15px;padding-bottom:13px}.machine{width:350px;padding:12px 28px 12px}.machine-top{height:24px}.window{height:238px}.treasure-art{width:185px;height:185px;top:-20px}.window-caption{bottom:10px}.window-caption h2{font-size:18px;margin:4px 0}.window-caption p{font-size:10px}.rarity{font-size:9px}.draw-button{height:45px;font-size:16px}.control-deck{padding-top:8px}.control-deck p{font-size:10px}.energy-system{height:19px;margin-top:10px}.capsule-stage{top:0;scale:.7;transform-origin:0 0}.marquee{top:26px;bottom:101px}.lamp{width:7px;height:7px}.energy-pipe{top:-193px}.halo{width:155px;height:155px}.bottom{margin-top:8px}.collection-button{padding:7px 12px}.spell-pop{font-size:21px}}
+
+.bottom{justify-content:center}.control-deck p{min-height:18px}
+/* 噗噗宝宝：气泡光环和短促弹跳，柔和模式只呈现静态泡泡。 */
+.machine[data-reveal=bubble-pop] .effect-ring{border:3px solid var(--accent);box-shadow:45px -30px 0 -18px #bcf4d855,-50px 15px 0 -23px #ffbca566,25px 50px 0 -24px #fff1b644}
+.machine[data-state=celebrating][data-reveal=bubble-pop] .effect-ring{animation:bubble-ring 2s ease-out both}
+.machine[data-state=result][data-reveal=bubble-pop] .treasure-art{animation:baby-bounce 2s ease-in-out infinite}
+@keyframes bubble-ring{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}30%{opacity:.7;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-65%) scale(1.45)}}
+@keyframes baby-bounce{0%,45%,100%{transform:translateX(-50%) translateY(0) rotate(0)}15%{transform:translateX(-50%) translateY(-12px) rotate(-4deg)}30%{transform:translateX(-50%) translateY(3px) rotate(3deg)}}
+</style></head>
+<body>
+<div class="sky" aria-hidden="true"><div class="nebula"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="planet planet-one"></div><div class="planet planet-two"></div></div>
+<canvas id="particles" aria-hidden="true"></canvas>
+<header class="topbar"><a class="wordmark" href="#" aria-label="75 的魔法世界"><span class="brand-star">✦</span> 75's <span>MAGIC WORLD</span></a><div class="utilities"><button id="sound" class="icon-button" aria-label="打开音效" aria-pressed="false">♪<span class="mute-slash">/</span></button><button id="motion" class="icon-button" aria-label="开启柔和动画" aria-pressed="false">✧</button><button id="fullscreen" class="icon-button" aria-label="进入全屏">⛶</button></div></header>
+<main>
+<div class="intro"><h1>75's <span>MAGIC MACHINE</span><i>✦</i></h1><p class="subtitle">王卿梧的魔法抽奖机</p></div>
+<section class="game" aria-label="魔法抽奖机">
+<div class="floating-spark spark-left" aria-hidden="true">✧</div><div class="floating-spark spark-right" aria-hidden="true">✦</div>
+<div class="machine" id="machine" data-state="idle" data-reveal="sparkle-bloom">
+<div class="machine-top" aria-hidden="true"><span class="status-dot"></span><span class="tiny-stars">✦ ✧ ✦</span></div>
+<div class="marquee" id="marquee" aria-hidden="true"></div>
+<div class="window" id="window"><div class="window-grid" aria-hidden="true"></div><div class="halo" aria-hidden="true"></div><div class="effect-ring" aria-hidden="true"></div><div class="moon-disc" aria-hidden="true"></div>
+<div class="chamber" id="chamber" aria-hidden="true"><div class="vortex"></div><div class="magic-balls" id="magic-balls"></div><div class="glass-shine"></div><div class="chamber-floor"></div></div>
+<div class="spell-pop" id="spell-pop" aria-hidden="true">✦ MAGIC! ✦</div>
+<div class="capsule-stage" id="capsule-stage" aria-hidden="true"><div class="pedestal"></div><div class="capsule" id="capsule"><div class="capsule-aura"></div><div class="capsule-half capsule-lid"><span>✦</span></div><div class="capsule-half capsule-base"></div><div class="capsule-seam"></div><div class="capsule-crack"></div></div></div>
+<div class="reveal-rays" aria-hidden="true"></div>
+<div id="treasure-art" class="treasure-art" hidden></div>
+<div class="window-caption"><span id="rarity" class="rarity"></span><h2 id="prize-name">你的魔法，准备好啦！</h2><p id="prize-description">按一下，让小球跳起舞。</p></div>
+<div id="jackpot" class="jackpot" aria-hidden="true">SUPER<br><b>LUCKY!</b></div></div>
+<div class="energy-system" aria-hidden="true"><div class="energy-pipe pipe-left"></div><div class="energy-pipe pipe-right"></div><div class="energy-meter"><div id="energy-fill"></div></div></div>
+<div class="control-deck"><div class="deck-star" aria-hidden="true">✦</div><button id="draw" class="draw-button"><span id="button-text">开启魔法</span><span class="keycap">SPACE <span>↵</span></span></button><div class="deck-star" aria-hidden="true">✦</div><p id="draw-hint">按空格键，或点一下按钮</p></div>
+<div class="machine-foot left-foot"></div><div class="machine-foot right-foot"></div>
+</div><div class="ground-glow" aria-hidden="true"></div>
+</section>
+<footer class="bottom"><button id="collection" class="collection-button"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 7V5a4 4 0 0 1 8 0v2M5 7h14l2 14H3L5 7Z" stroke-linejoin="round"/><path d="m12 10 1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4L12 10Z" stroke-linejoin="round"/></svg> 我的宝藏 <span id="collection-count" class="count">0</span></button></footer>
+</main>
+<p id="notice" class="notice" role="status" hidden></p><div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+<dialog id="collection-dialog"><div class="dialog-header"><div><p class="eyebrow">MY LITTLE WONDERS</p><h2>我的宝藏 <span>✦</span></h2></div><button id="close-collection" class="icon-button" aria-label="关闭我的宝藏">×</button></div><p id="collection-summary" class="collection-summary"></p><div id="collection-grid" class="collection-grid"></div><p class="collection-note">这是你的魔法收藏，每一次惊喜都会留在这里。</p></dialog>
+<script id="treasure-config" type="application/json">{"version":1,"treasures":[{"id":"starlight-dress","name":"星光公主裙","description":"转个圈，裙摆就会洒出小星星。","rarity":"common","weight":6,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj4KPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJza2lydCIgeDE9IjEzMCIgeTE9IjEyMCIgeDI9IjI0MCIgeTI9IjMxNSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmNWRlZmYiLz48c3RvcCBvZmZzZXQ9Ii40NiIgc3RvcC1jb2xvcj0iI2M3OWNmNSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzgzNjFkZCIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJib2RpY2UiIHgxPSIxNTAiIHkxPSI4MCIgeDI9IjIxMCIgeTI9IjE3MCI+PHN0b3Agc3RvcC1jb2xvcj0iI2ZmZWRmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2IzODVlYiIvPjwvbGluZWFyR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGlkPSJnbG93Ij48c3RvcCBzdG9wLWNvbG9yPSIjYmE5Y2ZmIiBzdG9wLW9wYWNpdHk9Ii40Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjYmE5Y2ZmIiBzdG9wLW9wYWNpdHk9IjAiLz48L3JhZGlhbEdyYWRpZW50PjwvZGVmcz4KPGVsbGlwc2UgY3g9IjE4MCIgY3k9IjIwMyIgcng9IjE0OSIgcnk9IjE0NSIgZmlsbD0idXJsKCNnbG93KSIvPjxlbGxpcHNlIGN4PSIxODAiIGN5PSIzMTMiIHJ4PSIxMDMiIHJ5PSIxMiIgZmlsbD0iIzEwMGQzNSIgb3BhY2l0eT0iLjM1Ii8+CjxwYXRoIGQ9Ik0xNTIgOTkgMTMxIDExMmwtMTkgNDAgMzQgMTcgMTUtMjZoMzhsMTUgMjYgMzQtMTctMTktNDAtMjEtMTMtMjggMTh6IiBmaWxsPSJ1cmwoI2JvZGljZSkiIHN0cm9rZT0iI2Y1ZDdmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Im0xNTMgMTA0IDEwIDQ1aDM0bDEwLTQ1LTI3IDE1eiIgZmlsbD0idXJsKCNib2RpY2UpIiBzdHJva2U9IiNlOWM5ZmYiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNMTYwIDE0OEMxNDcgMTc5IDExOSAyMDAgODMgMjk0cTk3IDM4IDE5NCAwYy0zNy05NC02NC0xMTUtODAtMTQ2eiIgZmlsbD0idXJsKCNza2lydCkiIHN0cm9rZT0iI2U1YzdmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik0xNjcgMTYwYy0yMSA1NS00NSAxMDgtNTAgMTQxbTU4LTE0MC0xMyAxNTFtMjUtMTUxIDE3IDE1MW0tMTAtMTUyYzIyIDY0IDQ0IDExMCA0OCAxNDIiIHN0cm9rZT0iI2ZiZTlmZiIgc3Ryb2tlLW9wYWNpdHk9Ii4zOCIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0xNDMgMTg2cTM3IDMyIDc0IDBtLTkyIDM2cTU2IDM5IDExMiAwbS0xMzEgMzdxNzMgNDMgMTQ3IDAiIHN0cm9rZT0iI2Y1ZDdmZiIgc3Ryb2tlLW9wYWNpdHk9Ii40NSIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik0xNTcgMTQ5aDQ1djExaC00NXoiIGZpbGw9IiNmZmU3YjAiLz48cGF0aCBkPSJtMTgwIDE0MyA5IDEyLTkgMTItOS0xMnoiIGZpbGw9IiNmZmY4ZDgiIHN0cm9rZT0iI2U3YmFmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Im0xNzggNTIgNS0xNCA1IDE0IDE0IDUtMTQgNS01IDE0LTUtMTQtMTQtNXoiIGZpbGw9IiNmZmU5YjYiLz48cGF0aCBkPSJtNzQgMTQ3IDMtMTAgMyAxMCAxMCAzLTEwIDMtMyAxMC0zLTEwLTEwLTN6bTIwNyA2OCA0LTEyIDQgMTIgMTIgNC0xMiA0LTQgMTItNC0xMi0xMi00eiIgZmlsbD0iI2ZmZTdiMCIvPgo8ZyBmaWxsPSIjZmZmMWM5Ij48cGF0aCBkPSJtMTQ1IDIyNyAzLTcgMyA3IDggMS02IDUgMiA4LTctNC03IDQgMi04LTYtNXptNjQgMzUgMy03IDMgNyA4IDEtNiA1IDIgOC03LTQtNyA0IDItOC02LTV6bS0yOS02OCAyLTUgMiA1IDYgMS01IDMgMiA2LTUtMy01IDMgMi02LTUtM3oiLz48Y2lyY2xlIGN4PSIyMjgiIGN5PSIxMDgiIHI9IjMiLz48Y2lyY2xlIGN4PSIxMDYiIGN5PSIyMzkiIHI9IjMiLz48Y2lyY2xlIGN4PSIyNDkiIGN5PSIyNzMiIHI9IjIiLz48Y2lyY2xlIGN4PSIxMzIiIGN5PSI4MiIgcj0iMiIvPjwvZz4KPC9zdmc+Cg==","icon":"👗","primaryColor":"#ba9cff","accentColor":"#ffe1f5"},"effects":{"reveal":"sparkle-bloom","ambient":"floating-stars","sound":"magic-chime","params":{"durationMs":2200,"particleCount":65}}},{"id":"rainbow-unicorn","name":"彩虹独角兽","description":"抱紧它，一起去彩虹的另一头。","rarity":"rare","weight":3,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMjAiIHkxPSIxMjAiIHgyPSIyNDAiIHkyPSIyOTAiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmY3ZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjZmQxZmEiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0ibWFuZSIgeDE9IjIxNiIgeTE9IjExOSIgeDI9IjI5MSIgeTI9IjIzOCI+PHN0b3Agc3RvcC1jb2xvcj0iI2ZmYTlkYSIvPjxzdG9wIG9mZnNldD0iLjQiIHN0b3AtY29sb3I9IiNjNWE5ZmYiLz48c3RvcCBvZmZzZXQ9Ii43IiBzdG9wLWNvbG9yPSIjOWJkOGZhIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjODNlYWRjIi8+PC9saW5lYXJHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3ciPjxzdG9wIHN0b3AtY29sb3I9IiM4YmVkZGMiIHN0b3Atb3BhY2l0eT0iLjI2Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGJlZGRjIiBzdG9wLW9wYWNpdHk9IjAiLz48L3JhZGlhbEdyYWRpZW50PjwvZGVmcz4KPGNpcmNsZSBjeD0iMTgwIiBjeT0iMTg1IiByPSIxNDciIGZpbGw9InVybCgjZ2xvdykiLz48cGF0aCBkPSJNNjMgMTg0YTExOCAxMTggMCAwIDEgMjMzIDAiIHN0cm9rZT0iI2Y4YWRjZSIgc3Ryb2tlLXdpZHRoPSI4IiBvcGFjaXR5PSIuNSIvPjxwYXRoIGQ9Ik03NCAxODRhMTA3IDEwNyAwIDAgMSAyMTEgMCIgc3Ryb2tlPSIjZjdkNDlkIiBzdHJva2Utd2lkdGg9IjYiIG9wYWNpdHk9Ii41Ii8+PHBhdGggZD0iTTgzIDE4NGE5OCA5OCAwIDAgMSAxOTQgMCIgc3Ryb2tlPSIjYjRlOGUwIiBzdHJva2Utd2lkdGg9IjYiIG9wYWNpdHk9Ii41Ii8+CjxlbGxpcHNlIGN4PSIxODAiIGN5PSIzMDUiIHJ4PSI5OSIgcnk9IjExIiBmaWxsPSIjMTAwZDM1IiBvcGFjaXR5PSIuMyIvPgo8cGF0aCBkPSJNMTE3IDIwM2MtNDQtMzctNTYtMTQtNDcgNXMzNyAxNiAzNiA0N2MyNi0xNSAzNS0zMSAxMS01MnoiIGZpbGw9InVybCgjbWFuZSkiIHN0cm9rZT0iI2U3YjlmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Im0xMjAgMjMzLTkgNTdxMTIgOSAyNCAwbDE2LTQ5bTUyLTQgMTAgNTNxMTMgNyAyNC0ybC00LTY1IiBmaWxsPSJ1cmwoI2JvZHkpIiBzdHJva2U9IiNlZWUyZmYiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNMTAzIDIxOGMwLTI5IDMzLTQyIDcwLTMwbDI0LTUyYzEyLTIzIDI5LTIyIDQ3LTlsMjMgMjEgMjIgMTJjMTIgOCA2IDIyLTEwIDI1bC0zNy0zLTExIDQ4Yy01IDM4LTQ0IDM2LTgwIDMyLTI5LTMtNDgtMTYtNDgtNDR6IiBmaWxsPSJ1cmwoI2JvZHkpIiBzdHJva2U9IiNmZmYxZmYiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJtMjIwIDEyNi0yLTMzIDIzIDI2IiBmaWxsPSIjZWVlMmZmIiBzdHJva2U9IiNmZmYxZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Im0yNDcgMTM0IDI0LTUzIDIgNjYiIGZpbGw9IiNmZmU2YTUiIHN0cm9rZT0iI2ZmZjNjYSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0ibTI1NyAxMTkgMTYgNW0tMTItMTYgMTIgNCIgc3Ryb2tlPSIjZGFhNmNhIiBzdHJva2Utd2lkdGg9IjMiLz4KPHBhdGggZD0iTTIxOSAxMjFjLTI1LTYtMzggMTUtMzEgMzYgMTEtOCAyMS02IDE3IDktNyAyMC0zIDM1IDE1IDQzLTMtMjQgMjItMjcgMTgtNDktMi0xMS0xMy0xNy0xOS0zOXoiIGZpbGw9InVybCgjbWFuZSkiIHN0cm9rZT0iI2VkYzRmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik0yMzIgMTc4cTExIDExIDIwLTIiIHN0cm9rZT0iIzYyNjA4YSIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZWxsaXBzZSBjeD0iMjYwIiBjeT0iMTc0IiByeD0iNyIgcnk9IjQiIGZpbGw9IiNmNWI0ZDAiLz48cGF0aCBkPSJtMTExIDI4NS0xIDhxMTIgOCAyNS0xbDEtN203NyAwIDEgOXExMiA1IDI0LTRsLTItNyIgZmlsbD0iI2FiOTJlMSIvPgo8ZyBmaWxsPSIjZmZmMGM4Ij48cGF0aCBkPSJtODUgMTEwIDQtMTIgNCAxMiAxMiA0LTEyIDQtNCAxMi00LTEyLTEyLTR6bTIwNCAxMjIgNC0xMiA0IDEyIDEyIDQtMTIgNC00IDEyLTQtMTItMTItNHoiLz48Y2lyY2xlIGN4PSIxNTEiIGN5PSI4MSIgcj0iMyIvPjxjaXJjbGUgY3g9IjY3IiBjeT0iMjQwIiByPSIzIi8+PGNpcmNsZSBjeD0iMjcyIiBjeT0iMjg0IiByPSIyIi8+PC9nPjwvc3ZnPgo=","icon":"🦄","primaryColor":"#83eadc","accentColor":"#ffb4da"},"effects":{"reveal":"rainbow-ring","ambient":"rainbow-trail","sound":"rainbow-song","params":{"durationMs":2600,"particleCount":95}}},{"id":"moon-castle","name":"月亮城堡","description":"今晚，整片星空都是你的花园。","rarity":"super","weight":1,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9IndhbGwiIHgxPSIxMTUiIHkxPSIxNTEiIHgyPSIyMzkiIHkyPSIyOTgiPjxzdG9wIHN0b3AtY29sb3I9IiNlZWU0ZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM4ZDk0ZGEiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0icm9vZiIgeDE9IjE0NSIgeTE9IjEwNyIgeDI9IjIxMCIgeTI9IjE5MCI+PHN0b3Agc3RvcC1jb2xvcj0iI2IzYTVlZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzY4NmFiYyIvPjwvbGluZWFyR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGlkPSJtb29uIj48c3RvcCBzdG9wLWNvbG9yPSIjZmZlY2NhIiBzdG9wLW9wYWNpdHk9Ii4zOCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmZWNjYSIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+CjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE2MiIgcj0iMTQ2IiBmaWxsPSJ1cmwoI21vb24pIi8+PHBhdGggZD0iTTIzMCAzOWE2MSA2MSAwIDEgMCA0OSA5MyA1NSA1NSAwIDAgMS00OS05M3oiIGZpbGw9IiNmZmU3YTgiIHN0cm9rZT0iI2ZmZjRkNSIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxlbGxpcHNlIGN4PSIxODAiIGN5PSIzMTAiIHJ4PSIxMTIiIHJ5PSIxMyIgZmlsbD0iIzEzMGYzNSIgb3BhY2l0eT0iLjMiLz48cGF0aCBkPSJNODEgMjk2cTEwMS0yNCAxOTggMGwtMTQgMTZIOTV6IiBmaWxsPSIjODg4MmM4Ii8+CjxwYXRoIGQ9Ik0xMTMgMTk2aDEzM3YxMDBIMTEzeiIgZmlsbD0idXJsKCN3YWxsKSIgc3Ryb2tlPSIjZDJjZGZmIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTYwIDE0N2g0MnYxNDloLTQyeiIgZmlsbD0idXJsKCN3YWxsKSIgc3Ryb2tlPSIjZTZkYWZmIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0ibTE1MCAxNTMgMzEtNTkgMzEgNTl6IiBmaWxsPSJ1cmwoI3Jvb2YpIiBzdHJva2U9IiNkZGQyZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0xNzkgOTVWNjVsMjggOS0yOCAxMyIgc3Ryb2tlPSIjZmZlNWEwIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9IiNmZmQ5OTgiLz4KPHBhdGggZD0iTTkzIDIxMWgzN3Y4NUg5M3ptMTM3IDBoMzd2ODVoLTM3eiIgZmlsbD0idXJsKCN3YWxsKSIgc3Ryb2tlPSIjZTJkNmZmIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJtODQgMjE1IDI4LTUxIDI3IDUxem0xMzcgMCAyNy01MSAyOCA1MXoiIGZpbGw9InVybCgjcm9vZikiIHN0cm9rZT0iI2Q2Y2FmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik0xMTEgMTYzdi0yM2wyMSA3LTIxIDdtMTM3IDEwdi0yNWwyMiA3LTIyIDciIHN0cm9rZT0iI2ZmZTVhMCIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSIjZmZkOTk4Ii8+CjxwYXRoIGQ9Ik0xNjggMjk2di0yOGExMyAxMyAwIDAgMSAyNiAwdjI4eiIgZmlsbD0iIzU1NWE5OSIgc3Ryb2tlPSIjZmZlMmFjIiBzdHJva2Utd2lkdGg9IjIiLz4KPGcgZmlsbD0iI2ZmZWFiOSIgc3Ryb2tlPSIjZmZmM2QzIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0xNzQgMTkxdi0xMmE3IDcgMCAwIDEgMTQgMHYxMnptMCA0MnYtMTJhNyA3IDAgMCAxIDE0IDB2MTJ6bS02OSAxN3YtMTFhNiA2IDAgMCAxIDEyIDB2MTF6bTEzNyAwdi0xMWE2IDYgMCAwIDEgMTIgMHYxMXoiLz48L2c+CjxwYXRoIGQ9Ik0xMzMgMjQ3aDIwbS0yMCAyNWgyMG01NC0yNWgxOG0tMTggMjVoMThtLTEwNCA1aDEybTEyNCAwaDEzIiBzdHJva2U9IiNlY2UwZmYiIHN0cm9rZS1vcGFjaXR5PSIuNSIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik01OSAyOTRxMjUtMTggNDIgMm0xNTMgMHEyMi0yMCA0OC0zIiBzdHJva2U9IiNjNGM1ZjQiIHN0cm9rZS13aWR0aD0iOSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxnIGZpbGw9IiNmZmYwYzgiPjxwYXRoIGQ9Im03OCA5MyA0LTEyIDQgMTIgMTIgNC0xMiA0LTQgMTItNC0xMi0xMi00em0yMTEgMTAzIDQtMTIgNCAxMiAxMiA0LTEyIDQtNCAxMi00LTEyLTEyLTR6Ii8+PGNpcmNsZSBjeD0iMTMxIiBjeT0iNTkiIHI9IjMiLz48Y2lyY2xlIGN4PSI1OCIgY3k9IjIxOCIgcj0iMyIvPjxjaXJjbGUgY3g9IjMwNyIgY3k9IjExNCIgcj0iMiIvPjwvZz48L3N2Zz4K","icon":"🏰","primaryColor":"#ffe5a0","accentColor":"#adbcff"},"effects":{"reveal":"moonrise","ambient":"golden-rain","sound":"royal-fanfare","params":{"durationMs":3300,"particleCount":130}}},{"id":"cloud-dolphin","name":"云朵小海豚","description":"抱着软乎乎的小海豚，游进蓝色梦里。","rarity":"common","weight":4,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNhOGJmZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM4ODljZGEiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iI2E1YmFmZiIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNhNWJhZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxnIHRyYW5zZm9ybT0icm90YXRlKC0xMyAxODAgMTgwKSI+PHBhdGggZD0iTTIyMyAyNTZjMzUgNSA1OS00IDcxLTI3LTI3LTEtNDMgNS01NiAxNy0zLTIxLTE0LTQwLTM1LTQ3LTExIDI4LTQgNDMgMjAgNTdaIiBmaWxsPSIjOWNhZWU2IiBzdHJva2U9IiNkYWU1ZmYiLz4KPHBhdGggZD0iTTE1NSAxMTljMy0yNyAyMC01MCAzOC01NyAxNyAzMiAxMCA1OC03IDc1IiBmaWxsPSIjYWViZmYxIiBzdHJva2U9IiNkYmU1ZmYiLz4KPHBhdGggZD0iTTI0NSAxODBjLTMtNTYtNDUtOTItMTAwLTcwLTM5IDE1LTYzIDQ5LTg0IDY4LTE0IDEzLTMgMjYgMTcgMjJsMjQtNmMtMiA0MiAyMyA3NSA3MiA4NSA0MiA5IDgyLTMwIDcxLTk5WiIgZmlsbD0idXJsKCNib2R5KSIgc3Ryb2tlPSIjZGVlYmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KPHBhdGggZD0iTTEwMyAxOTRjMSA0MCAyNyA2OCA2OSA3MiAxOSAyIDQwLTkgNDktMjYtNDYgNy03Ni04LTk0LTQ3WiIgZmlsbD0iI2VkZjJmZiIgb3BhY2l0eT0iLjc1Ii8+CjxwYXRoIGQ9Ik0xNjcgMTk5YzgtMTQgMjMtMTYgMzMtNiAxNCAxNCAxNiAzMSA3IDUwLTI0LTYtNDMtMjAtNDAtNDRaIiBmaWxsPSIjYWZiZWVlIiBzdHJva2U9IiNlMGU5ZmYiLz4KPGVsbGlwc2UgY3g9IjExNCIgY3k9IjE2MSIgcng9IjYiIHJ5PSI4IiBmaWxsPSIjNDI0Yjc4Ii8+PGNpcmNsZSBjeD0iMTEyIiBjeT0iMTU4IiByPSIyIiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik04MiAxOTFxMTUgNiAyOC0zIiBzdHJva2U9IiM2ODdkYWIiIHN0cm9rZS13aWR0aD0iMyIvPjxlbGxpcHNlIGN4PSIxMTkiIGN5PSIxNzgiIHJ4PSI5IiByeT0iNSIgZmlsbD0iI2U3YmFkOCIvPgo8cGF0aCBkPSJtMTQzIDEyNSA2LTUgNSA3bTUwIDM3IDggNG0tNTEgNzYgNiA1IiBzdHJva2U9IiNlZWYyZmYiIHN0cm9rZS1vcGFjaXR5PSIuNyIvPgo8L2c+PGcgc3Ryb2tlPSIjYmZkZmZmIiBmaWxsPSIjYWZkMWZmMjIiPjxjaXJjbGUgY3g9IjY4IiBjeT0iMTA3IiByPSIxMCIvPjxjaXJjbGUgY3g9IjI4MiIgY3k9IjE2MSIgcj0iMTMiLz48Y2lyY2xlIGN4PSIyNzAiIGN5PSI5OCIgcj0iNiIvPjwvZz48L2c+PGcgZmlsbD0iI2VjZjJmZiI+PHBhdGggZD0ibTY0IDEzMCAzLTEwIDMgMTAgMTAgMy0xMCAzLTMgMTAtMy0xMC0xMC0zWm0yMjMtNDcgNC0xMiA0IDEyIDEyIDQtMTIgNC00IDEyLTQtMTItMTItNFoiLz48Y2lyY2xlIGN4PSI4NCIgY3k9IjI4NCIgcj0iMyIvPjxjaXJjbGUgY3g9IjI3NCIgY3k9IjI3OCIgcj0iMyIvPjwvZz48L3N2Zz4=","icon":"🐬","primaryColor":"#a5baff","accentColor":"#ecf2ff"},"effects":{"reveal":"sparkle-bloom","ambient":"floating-stars","sound":"magic-chime","params":{"durationMs":2200,"particleCount":65}}},{"id":"zizi-owl","name":"吱吱猫头鹰","description":"吱吱睁大眼睛，陪你发现夜晚的小秘密。","rarity":"common","weight":4,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNkM2I1ZjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNhNDgxZDgiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iI2IzOWJmZiIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNiMzliZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxlbGxpcHNlIGN4PSIxODAiIGN5PSIyMDYiIHJ4PSI4OCIgcnk9Ijg5IiBmaWxsPSJ1cmwoI2JvZHkpIiBzdHJva2U9IiNlMWM3ZmYiIHN0cm9rZS13aWR0aD0iMyIvPjxlbGxpcHNlIGN4PSIxODAiIGN5PSIyNDEiIHJ4PSIzOSIgcnk9IjM0IiBmaWxsPSIjZmFmMGZjIi8+CjxlbGxpcHNlIGN4PSI5NyIgY3k9IjIxOSIgcng9IjMwIiByeT0iNDgiIHRyYW5zZm9ybT0icm90YXRlKC0yMiA5NyAyMTkpIiBmaWxsPSIjOTQ3MGQ5IiBzdHJva2U9IiNkMWIwZmYiLz48ZWxsaXBzZSBjeD0iMjYzIiBjeT0iMjE5IiByeD0iMzAiIHJ5PSI0OCIgdHJhbnNmb3JtPSJyb3RhdGUoMjIgMjYzIDIxOSkiIGZpbGw9IiM5NDcwZDkiIHN0cm9rZT0iI2QxYjBmZiIvPgo8cGF0aCBkPSJNMTI4IDI3OHEtMjAgMTktOSAyOWgzOHExMi0xNC00LTI5bTU0IDBxLTE3IDE2LTcgMjloMzlxMTAtMTMtOS0yOSIgZmlsbD0iI2Y4YzU4MiIgc3Ryb2tlPSIjZmZlNWIyIi8+CjxwYXRoIGQ9Ik0xODAgMTE3Yy00MS01Mi05Ni00NS0xMTggMjItMTAgMjYgMjIgNDQgNTEgMzBtNjctNTJjNDEtNTIgOTYtNDUgMTE4IDIyIDEwIDI2LTIyIDQ0LTUxIDMwIiBmaWxsPSIjNDEzZWFhIiBzdHJva2U9IiM3ZTg1ZGYiIHN0cm9rZS13aWR0aD0iMyIvPgo8ZyBmaWxsPSIjOGVkNWZhIj48ZWxsaXBzZSBjeD0iMTA0IiBjeT0iMTI2IiByeD0iMTEiIHJ5PSIyNCIgdHJhbnNmb3JtPSJyb3RhdGUoLTQ0IDEwNCAxMjYpIi8+PGVsbGlwc2UgY3g9IjE1MiIgY3k9IjExNiIgcng9IjEwIiByeT0iMjIiIHRyYW5zZm9ybT0icm90YXRlKC0xNSAxNTIgMTE2KSIvPjxlbGxpcHNlIGN4PSIyNTUiIGN5PSIxMjYiIHJ4PSIxMSIgcnk9IjI0IiB0cmFuc2Zvcm09InJvdGF0ZSg0NCAyNTUgMTI2KSIvPjxlbGxpcHNlIGN4PSIyMDciIGN5PSIxMTYiIHJ4PSIxMCIgcnk9IjIyIiB0cmFuc2Zvcm09InJvdGF0ZSgxNSAyMDcgMTE2KSIvPjwvZz4KPGcgZmlsbD0iI2I5OThlZiI+PGVsbGlwc2UgY3g9IjEyNSIgY3k9IjExMSIgcng9IjExIiByeT0iMjYiIHRyYW5zZm9ybT0icm90YXRlKC0yNyAxMjUgMTExKSIvPjxlbGxpcHNlIGN4PSIyMzIiIGN5PSIxMTEiIHJ4PSIxMSIgcnk9IjI2IiB0cmFuc2Zvcm09InJvdGF0ZSgyNyAyMzIgMTExKSIvPjwvZz48ZyBmaWxsPSIjZjM5MmI4Ij48ZWxsaXBzZSBjeD0iMTIwIiBjeT0iOTQiIHJ4PSI4IiByeT0iOSIvPjxlbGxpcHNlIGN4PSIyMzciIGN5PSI5NCIgcng9IjgiIHJ5PSI5Ii8+PC9nPgo8cGF0aCBkPSJNOTkgMTQ2cTI5LTE3IDcyIDhsOSAyOCA5LTI4cTQzLTI1IDcyLTh2NDRxLTIzIDMyLTY1IDIwaC0zMnEtNDIgMTItNjUtMjBaIiBmaWxsPSIjZDhlZjk3Ii8+CjxlbGxpcHNlIGN4PSIxMzciIGN5PSIxNjUiIHJ4PSIzMSIgcnk9IjM2IiBmaWxsPSIjZmZmZGYwIiBzdHJva2U9IiNmZmUxNmYiIHN0cm9rZS13aWR0aD0iNCIvPjxlbGxpcHNlIGN4PSIyMjMiIGN5PSIxNjUiIHJ4PSIzMSIgcnk9IjM2IiBmaWxsPSIjZmZmZGYwIiBzdHJva2U9IiNmZmUxNmYiIHN0cm9rZS13aWR0aD0iNCIvPgo8ZWxsaXBzZSBjeD0iMTQyIiBjeT0iMTY2IiByeD0iMTIiIHJ5PSIxNiIgZmlsbD0iIzI5MjY0NyIvPjxlbGxpcHNlIGN4PSIyMTgiIGN5PSIxNjYiIHJ4PSIxMiIgcnk9IjE2IiBmaWxsPSIjMjkyNjQ3Ii8+PGcgZmlsbD0id2hpdGUiPjxjaXJjbGUgY3g9IjE0NiIgY3k9IjE2MCIgcj0iNSIvPjxjaXJjbGUgY3g9IjIyMiIgY3k9IjE2MCIgcj0iNSIvPjwvZz4KPHBhdGggZD0iTTE2NiAxOTBxMTQtMjUgMjggMGwtNiAyN3EtOCAxMS0xNiAwWiIgZmlsbD0iI2Y3Yjc1ZiIgc3Ryb2tlPSIjZmZkYmEwIi8+PHBhdGggZD0iTTE2NyAyMDNoMjYiIHN0cm9rZT0iI2RmYTY1OSIvPgo8L2c+PGcgZmlsbD0iI2U5ZmZhOSI+PHBhdGggZD0ibTY0IDEzMCAzLTEwIDMgMTAgMTAgMy0xMCAzLTMgMTAtMy0xMC0xMC0zWm0yMjMtNDcgNC0xMiA0IDEyIDEyIDQtMTIgNC00IDEyLTQtMTItMTItNFoiLz48Y2lyY2xlIGN4PSI4NCIgY3k9IjI4NCIgcj0iMyIvPjxjaXJjbGUgY3g9IjI3NCIgY3k9IjI3OCIgcj0iMyIvPjwvZz48L3N2Zz4=","icon":"🦉","primaryColor":"#b39bff","accentColor":"#e9ffa9"},"effects":{"reveal":"sparkle-bloom","ambient":"floating-stars","sound":"magic-chime","params":{"durationMs":2200,"particleCount":65}}},{"id":"snow-king-wobbler","name":"摇摇雪王","description":"左摇右摇，戴着皇冠的雪王永远站得稳！","rarity":"rare","weight":2,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkYmU5ZjciLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iI2Q1ZWZmZiIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkNWVmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik0xMjEgMTcycS0zMCAxMS0yOCA0MmwyMCAxMG0xMjYtNTJxMzAgMTEgMjggNDJsLTIwIDEwIiBmaWxsPSIjZWVmNGZmIiBzdHJva2U9IiNhOWM5ZWIiLz4KPGVsbGlwc2UgY3g9IjE4MCIgY3k9IjIzMiIgcng9Ijc4IiByeT0iNzAiIGZpbGw9InVybCgjYm9keSkiIHN0cm9rZT0iI2U0ZjFmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0xMTIgMTUzcS04IDUwIDI0IDY0bDIzLTktNy00MG05Ni0xNXE4IDUwLTI0IDY0bC0yMy05IDctNDAiIGZpbGw9IiNlNzQ1NzMiIHN0cm9rZT0iI2ZmOTBhNSIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0xNTAgMTgxcTMxIDE2IDYyIDBsLTIgMTdxLTMwIDE2LTU5LTFaIiBmaWxsPSIjZDkzMzYzIi8+CjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE0MyIgcj0iNjUiIGZpbGw9IiNmNWY4ZmYiIHN0cm9rZT0iI2QzZWFmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Im0xNDMgNzctOC0zMiAyNCAxMSAyMS0yMiAyMSAyMiAyNC0xMS04IDMycS0zNiAxOC03NCAwWiIgZmlsbD0iI2VmZjRmZiIgc3Ryb2tlPSIjZDllNmZmIiBzdHJva2Utd2lkdGg9IjMiLz4KPGcgZmlsbD0iI2Y5ZmNmZiIgc3Ryb2tlPSIjZDVlNGY4Ij48Y2lyY2xlIGN4PSIxMzUiIGN5PSI0NSIgcj0iNyIvPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjM0IiByPSI3Ii8+PGNpcmNsZSBjeD0iMjI1IiBjeT0iNDUiIHI9IjciLz48Y2lyY2xlIGN4PSIxODAiIGN5PSI3NyIgcj0iOCIvPjwvZz4KPGVsbGlwc2UgY3g9IjE1MSIgY3k9IjE0NSIgcng9IjkiIHJ5PSIxMyIgZmlsbD0iIzMzNGE5ZCIvPjxwYXRoIGQ9Im0yMTggMTM1LTE0IDEwIDE0IDltLTEzLTkgMTYtMiIgc3Ryb2tlPSIjMzM0YTlkIiBzdHJva2Utd2lkdGg9IjQiLz48cGF0aCBkPSJNMTgwIDE0MXEtMTUgMjMgMCAyNCAxNS0xIDAtMjRaIiBmaWxsPSIjZjViNTRhIi8+CjxwYXRoIGQ9Ik0xNjIgMTc4aDM2IiBzdHJva2U9IiNjODQ3NjkiIHN0cm9rZS13aWR0aD0iNiIvPjxwYXRoIGQ9Ik0xNDcgMTA0cTE0LTkgMjUtOCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4Ii8+PHBhdGggZD0iTTE1MCAyNDlxMTggOSAzMCA2IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjgiLz4KPHBhdGggZD0iTTg0IDI3MXEtOS0yOCAyLTUxbTE4OCA1MXE5LTI4LTItNTEiIHN0cm9rZT0iI2FkYzdmNSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI1IDYiLz4KPC9nPjxnIGZpbGw9IiNmZjlhYjUiPjxwYXRoIGQ9Im02NCAxMzAgMy0xMCAzIDEwIDEwIDMtMTAgMy0zIDEwLTMtMTAtMTAtM1ptMjIzLTQ3IDQtMTIgNCAxMiAxMiA0LTEyIDQtNCAxMi00LTEyLTEyLTRaIi8+PGNpcmNsZSBjeD0iODQiIGN5PSIyODQiIHI9IjMiLz48Y2lyY2xlIGN4PSIyNzQiIGN5PSIyNzgiIHI9IjMiLz48L2c+PC9zdmc+","icon":"⛄","primaryColor":"#d5efff","accentColor":"#ff9ab5"},"effects":{"reveal":"rainbow-ring","ambient":"rainbow-trail","sound":"rainbow-song","params":{"durationMs":2600,"particleCount":95}}},{"id":"bubble-bottle-brush","name":"泡泡魔法刷","description":"荧黄小刷子一挥，洗出一串亮晶晶的泡泡。","rarity":"common","weight":4,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmMGZmOTgiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNiZmRlM2IiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iI2RkZjY1MyIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkZGY2NTMiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxnIHRyYW5zZm9ybT0icm90YXRlKDE1IDE4MCAxODApIj48cGF0aCBkPSJNMTcxIDE3OWgyNWwtMiAxMTRhMTMgMTMgMCAwIDEtMjYgMFoiIGZpbGw9IiNlNWY1NDMiIHN0cm9rZT0iI2YzZmY5YSIgc3Ryb2tlLXdpZHRoPSIzIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjI4OSIgcng9IjQiIHJ5PSI5IiBmaWxsPSIjOTZiNzU5Ii8+CjxwYXRoIGQ9Ik0xMzkgNzFxLTE1IDE3LTMgMzMtMTUgMTgtMyAzNC0xMiAyMCAyIDM0LTUgMjYgMjkgMzFoMzFxMzMtNSAyOS0zMSAxNC0xNCAyLTM0IDEyLTE2LTMtMzQgMTItMTYtMy0zM1oiIGZpbGw9InVybCgjYm9keSkiIHN0cm9rZT0iI2U5ZmY5MiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0xODEgODV2MTE3IiBzdHJva2U9IiNlYmVkMzIiIHN0cm9rZS13aWR0aD0iMTAiLz48ZyBzdHJva2U9IiNmMGZmYTgiIHN0cm9rZS13aWR0aD0iMyIgb3BhY2l0eT0iLjgiPjxwYXRoIGQ9Im0xNDYgODYgMjAgN20tMjQgMTUgMjMgMm0tMjAgMTkgMjItMW0tMjQgMTggMjMtM20tMjIgMTkgMjItNm0tMTggMjIgMjAtN200Ny04My0yMCA3bTI0IDE1LTIzIDJtMjAgMTktMjItMW0yNCAxOC0yMy0zbTIyIDE5LTIyLTZtMTggMjItMjAtNyIvPjwvZz4KPHBhdGggZD0iTTE2OSAyNDJoMjUiIHN0cm9rZT0iIzZhNzJiNCIgc3Ryb2tlLXdpZHRoPSIzIi8+PC9nPgo8ZyBmaWxsPSIjYzhmNGZmMzMiIHN0cm9rZT0iI2M4ZjRmZiIgc3Ryb2tlLXdpZHRoPSIyIj48Y2lyY2xlIGN4PSI5NCIgY3k9IjE3MyIgcj0iMTciLz48Y2lyY2xlIGN4PSIyNTAiIGN5PSIyMTYiIHI9IjEyIi8+PGNpcmNsZSBjeD0iMjY1IiBjeT0iMTE1IiByPSIxOSIvPjxjaXJjbGUgY3g9Ijk0IiBjeT0iMjMxIiByPSI3Ii8+PC9nPgo8L2c+PGcgZmlsbD0iI2VmZmZjMCI+PHBhdGggZD0ibTY0IDEzMCAzLTEwIDMgMTAgMTAgMy0xMCAzLTMgMTAtMy0xMC0xMC0zWm0yMjMtNDcgNC0xMiA0IDEyIDEyIDQtMTIgNC00IDEyLTQtMTItMTItNFoiLz48Y2lyY2xlIGN4PSI4NCIgY3k9IjI4NCIgcj0iMyIvPjxjaXJjbGUgY3g9IjI3NCIgY3k9IjI3OCIgcj0iMyIvPjwvZz48L3N2Zz4=","icon":"🫧","primaryColor":"#ddf653","accentColor":"#efffc0"},"effects":{"reveal":"sparkle-bloom","ambient":"floating-stars","sound":"magic-chime","params":{"durationMs":2200,"particleCount":65}}},{"id":"heart-piggy-bank","name":"爱心小猪存钱罐","description":"把小小愿望，存进蓝白色的小猪肚子里。","rarity":"common","weight":4,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmYyOWQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM5YmU3ZjQiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iIzliZTdmNCIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM5YmU3ZjQiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik05NCAyMDZxLTMwLTE0LTI1LTQxIiBzdHJva2U9IiNkYmVhZmYiIHN0cm9rZS13aWR0aD0iOSIvPgo8ZWxsaXBzZSBjeD0iMTc3IiBjeT0iMjAwIiByeD0iMTAzIiByeT0iNzciIGZpbGw9IiNmNWZhZmYiIHN0cm9rZT0iI2QyZThmNyIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0xMjMgMTM4cTUzLTM1IDExMiA0bDggMjhxLTM2IDItNDctNGwtMTYgMTItMzctMTctMzkgOVoiIGZpbGw9IiM5ZGU0ZjIiLz48cGF0aCBkPSJtMTE5IDE0NSAyMC0xNCAyMyA3bTE2LTYgMjQgNiAxNC03IiBzdHJva2U9IiNkOGY4ZmYiIHN0cm9rZS13aWR0aD0iOSIvPgo8cGF0aCBkPSJNMTI0IDE1MSA5NCAxMTlxLTE0IDI1LTMgNTNtMTQ4LTIxIDI5LTMycTE1IDI1IDMgNTMiIGZpbGw9IiNmOWZjZmYiIHN0cm9rZT0iI2Q0ZTlmNyIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Ik0xMDUgMjUzdjI0cTEyIDE1IDI5IDBsMi0xNm03MyAwIDIgMTZxMTcgMTUgMjkgMHYtMjQiIGZpbGw9IiNlN2YxZmIiIHN0cm9rZT0iI2Q0ZTlmNyIvPgo8cmVjdCB4PSIxNDciIHk9IjEyNCIgd2lkdGg9IjcxIiBoZWlnaHQ9IjE2IiByeD0iOCIgZmlsbD0iI2UyZWQ2NSIgdHJhbnNmb3JtPSJyb3RhdGUoOSAxNDcgMTI0KSIvPjxwYXRoIGQ9Im0xNTcgMTMxIDQ3IDciIHN0cm9rZT0iIzQ2NDQ1NiIgc3Ryb2tlLXdpZHRoPSI2Ii8+CjxlbGxpcHNlIGN4PSIyMTYiIGN5PSIyMTEiIHJ4PSIzNyIgcnk9IjI3IiBmaWxsPSIjZTlmNWZlIiBzdHJva2U9IiNjZmU2ZjciIHN0cm9rZS13aWR0aD0iMiIvPjxnIGZpbGw9IiM5YmI3YzciPjxlbGxpcHNlIGN4PSIyMDQiIGN5PSIyMTEiIHJ4PSI0IiByeT0iNiIvPjxlbGxpcHNlIGN4PSIyMjUiIGN5PSIyMTEiIHJ4PSI0IiByeT0iNiIvPjwvZz4KPGcgZmlsbD0iIzQxNDc2MyI+PGNpcmNsZSBjeD0iMTU2IiBjeT0iMTg1IiByPSI1Ii8+PGNpcmNsZSBjeD0iMjUxIiBjeT0iMTc5IiByPSI1Ii8+PC9nPjxwYXRoIGQ9Ik0xMTggMjA2Yy0xMC0xNC0yMS0xLTEzIDhsMTMgMTEgMTQtMTNjNy0xMi04LTE5LTE0LTZaIiBmaWxsPSIjZWU3Mjk1Ii8+CjxwYXRoIGQ9Ik05MiAxODFxLTggMTMtNSAyNSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI2Ii8+CjxjaXJjbGUgY3g9IjI3MiIgY3k9IjkxIiByPSIxOCIgZmlsbD0iI2ZmZGM4NCIgc3Ryb2tlPSIjZmZmMmMwIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJtMjY3IDgzIDEwIDBtLTUtNHYyMW0tNS0xMGgxMCIgc3Ryb2tlPSIjZDZhNTU0IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9nPjxnIGZpbGw9IiNmZmYyOWQiPjxwYXRoIGQ9Im02NCAxMzAgMy0xMCAzIDEwIDEwIDMtMTAgMy0zIDEwLTMtMTAtMTAtM1ptMjIzLTQ3IDQtMTIgNCAxMiAxMiA0LTEyIDQtNCAxMi00LTEyLTEyLTRaIi8+PGNpcmNsZSBjeD0iODQiIGN5PSIyODQiIHI9IjMiLz48Y2lyY2xlIGN4PSIyNzQiIGN5PSIyNzgiIHI9IjMiLz48L2c+PC9zdmc+","icon":"🐷","primaryColor":"#9be7f4","accentColor":"#fff29d"},"effects":{"reveal":"sparkle-bloom","ambient":"floating-stars","sound":"magic-chime","params":{"durationMs":2200,"particleCount":65}}},{"id":"crane-hanfu","name":"丹鹤流云汉服裙","description":"酒红裙摆轻轻转，白鹤踏着云朵飞起来。","rarity":"rare","weight":2,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNiYzU4N2MiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3NjI0NDYiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iI2Q2NmM4YyIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkNjZjOGMiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxkZWZzPjxjbGlwUGF0aCBpZD0ic2tpcnRjbGlwIj48cGF0aCBkPSJNMTIzIDc4aDExM2w0NiAyMjBxLTEwMyAyNS0yMDUgMFoiLz48L2NsaXBQYXRoPjwvZGVmcz4KPHBhdGggZD0iTTEyMyA3OGgxMTNsNDYgMjIwcS0xMDMgMjUtMjA1IDBaIiBmaWxsPSJ1cmwoI2JvZHkpIiBzdHJva2U9IiNlZjliYjUiIHN0cm9rZS13aWR0aD0iMyIvPgo8ZyBjbGlwLXBhdGg9InVybCgjc2tpcnRjbGlwKSI+PHBhdGggZD0iTTczIDIxOHExMDMgMzUgMjE0IDB2NjhxLTExMCAzMC0yMTQgMFoiIGZpbGw9IiNmN2UzYmYiLz48cGF0aCBkPSJNNzUgMjI2cTEwNSAzNSAyMTAgMG0tMjEwIDUzcTEwNyAzMCAyMTAgMCIgc3Ryb2tlPSIjN2Y5OTk1IiBzdHJva2Utd2lkdGg9IjQiLz4KPGcgZmlsbD0iI2ZmZmVmMyIgc3Ryb2tlPSIjY2FkNGM2IiBzdHJva2Utd2lkdGg9IjEuNSI+PHBhdGggZD0iTTEwOSAyNDljLTE3LTE4LTQtMjggNC0xMmwxMi0xMyA5LTItMTIgMTFxMjYgNyAxMyAxNi0xMyA5LTI2IDBabTExMSAxOGMtMTctMTgtNC0yOCA0LTEybDEyLTEzIDktMi0xMiAxMXEyNiA3IDEzIDE2LTEzIDktMjYgMFoiLz48L2c+CjxnIHN0cm9rZT0iIzlmYTk4NyIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBkPSJtMTU0IDI3MiA2LTMxbS02IDE0LTEyLTdtMTYtMiAxMi03bS02OSAzMSAzLTE4bTE0NSA1IDktMjhtLTQgMTUgMTMtNCIvPjwvZz4KPGcgZmlsbD0iI2Q5YjM3ZSI+PHBhdGggZD0ibTEzOCAxMTkgNiAxMi0xMi0yem0xNyAxMSA2IDEyLTEyLTJ6bTQyLTExIDYgMTItMTItMnptMTcgMTEgNiAxMi0xMi0yeiIvPjwvZz4KPHBhdGggZD0ibTEyNSA5Mi0yMCAyMTltNDMtMjIwLTEwIDIyMG03My0yMjAgMTAgMjIwbTE0LTIxOCAyNiAyMTgiIHN0cm9rZT0iIzYxMWM0OCIgc3Ryb2tlLW9wYWNpdHk9Ii4zNSIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxwYXRoIGQ9Ik03NCAyOTRxMTA1IDI5IDIxNCAwIiBzdHJva2U9IiNmZmUyYjAiIHN0cm9rZS13aWR0aD0iNCIvPjwvZz4KPHBhdGggZD0iTTEyMiA3OGgxMTR2MjdIMTIyWiIgZmlsbD0iIzk2MmQ1NSIgc3Ryb2tlPSIjZWQ5MmFlIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTIzIDEwN2gxMTQiIHN0cm9rZT0iI2ZmZTFhZSIgc3Ryb2tlLXdpZHRoPSI1Ii8+CjxwYXRoIGQ9Im0xMzUgNTMgMjYgMTAtMTAgNm02Ny0xNi0yNiAxMCAxMCA2IiBzdHJva2U9IiNmYmU1YzQiIHN0cm9rZS13aWR0aD0iMyIvPgo8L2c+PGcgZmlsbD0iI2ZmZTViOCI+PHBhdGggZD0ibTY0IDEzMCAzLTEwIDMgMTAgMTAgMy0xMCAzLTMgMTAtMy0xMC0xMC0zWm0yMjMtNDcgNC0xMiA0IDEyIDEyIDQtMTIgNC00IDEyLTQtMTItMTItNFoiLz48Y2lyY2xlIGN4PSI4NCIgY3k9IjI4NCIgcj0iMyIvPjxjaXJjbGUgY3g9IjI3NCIgY3k9IjI3OCIgcj0iMyIvPjwvZz48L3N2Zz4=","icon":"👘","primaryColor":"#d66c8c","accentColor":"#ffe5b8"},"effects":{"reveal":"rainbow-ring","ambient":"rainbow-trail","sound":"rainbow-song","params":{"durationMs":2600,"particleCount":95}}},{"id":"rainbow-cape","name":"追彩虹披风","description":"披上七彩的风，向着彩虹出发！","rarity":"rare","weight":2,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmMyZGYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNhNGI1ZmYiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iI2E0YjVmZiIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNhNGI1ZmYiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxkZWZzPjxjbGlwUGF0aCBpZD0iY2FwZWNsaXAiPjxwYXRoIGQ9Ik0xNDIgMTE4aDc4bDY3IDE3MnEtMTA1IDM1LTIxMyAwWiIvPjwvY2xpcFBhdGg+PGxpbmVhckdyYWRpZW50IGlkPSJyYWluYm93IiB4MT0iODAiIHkxPSIyMDAiIHgyPSIyODAiIHkyPSIyMDAiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjZmZhNGNiIi8+PHN0b3Agb2Zmc2V0PSIuMjIiIHN0b3AtY29sb3I9IiNmZmQ4OTQiLz48c3RvcCBvZmZzZXQ9Ii40MyIgc3RvcC1jb2xvcj0iI2JjZTlhYyIvPjxzdG9wIG9mZnNldD0iLjY0IiBzdG9wLWNvbG9yPSIjOTZlNmY1Ii8+PHN0b3Agb2Zmc2V0PSIuODMiIHN0b3AtY29sb3I9IiNhYWE2ZjQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNkNDliZWMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHBhdGggZD0iTTE0MiAxMThoNzhsNjcgMTcycS0xMDUgMzUtMjEzIDBaIiBmaWxsPSJ1cmwoI3JhaW5ib3cpIiBzdHJva2U9IiNlZWUxZmYiIHN0cm9rZS13aWR0aD0iMyIvPgo8ZyBjbGlwLXBhdGg9InVybCgjY2FwZWNsaXApIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1vcGFjaXR5PSIuNCIgc3Ryb2tlLXdpZHRoPSIzIj48cGF0aCBkPSJtMTUxIDEyMS0zOCAxODNtNTQtMTg1LTE2IDE4OG00My0xODggMTYgMTg4bS0xLTE4NiAzOCAxODMiLz48L2c+CjxwYXRoIGQ9Ik0xMzcgMTI0Yy0yMy01NyAxNi04OCA0My04OHM2NyAzMSA0MyA4OGwtNDMgMjZaIiBmaWxsPSIjYWJhM2VmIiBzdHJva2U9IiNlMGQwZmYiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0xNDkgMTE3Yy0xMi0zOSAxMy02MyAzMS02M3M0MyAyNCAzMSA2M2wtMzEgMTlaIiBmaWxsPSIjNGE0ODdjIi8+CjxwYXRoIGQ9Im0xNDAgMTE5IDQwIDIzIDQyLTIzIiBzdHJva2U9IiNmZmYxY2EiIHN0cm9rZS13aWR0aD0iNSIvPjxwYXRoIGQ9Im0xODAgMTMxIDExIDEyLTExIDE1LTExLTE1WiIgZmlsbD0iIzkzZjNkZCIgc3Ryb2tlPSIjZmZmMGI2IiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0ibTExMiAyNTMgNS0xMCA1IDEwIDExIDItOCA3IDIgMTEtMTAtNS0xMCA1IDItMTEtOC03em0xMjMgMTYgNC04IDQgOCA5IDEtNyA2IDIgOS04LTUtOCA1IDItOS03LTZ6IiBmaWxsPSIjZmZmOGRlIi8+CjwvZz48ZyBmaWxsPSIjZmZjMmRmIj48cGF0aCBkPSJtNjQgMTMwIDMtMTAgMyAxMCAxMCAzLTEwIDMtMyAxMC0zLTEwLTEwLTNabTIyMy00NyA0LTEyIDQgMTIgMTIgNC0xMiA0LTQgMTItNC0xMi0xMi00WiIvPjxjaXJjbGUgY3g9Ijg0IiBjeT0iMjg0IiByPSIzIi8+PGNpcmNsZSBjeD0iMjc0IiBjeT0iMjc4IiByPSIzIi8+PC9nPjwvc3ZnPg==","icon":"🌈","primaryColor":"#a4b5ff","accentColor":"#ffc2df"},"effects":{"reveal":"rainbow-ring","ambient":"rainbow-trail","sound":"rainbow-song","params":{"durationMs":2600,"particleCount":95}}},{"id":"pearl-mermaid-set","name":"珍珠美人鱼套装","description":"贝壳小上衣、闪亮鱼尾，还有一顶海洋皇冠。","rarity":"super","weight":1,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNkZmIwZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3OWU4ZDQiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iIzc5ZThkNCIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3OWU4ZDQiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxkZWZzPjxwYXR0ZXJuIGlkPSJzY2FsZXMiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMXExMiAyMCAyNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlY2ZmZWYiIHN0cm9rZS1vcGFjaXR5PSIuNTUiIHN0cm9rZS13aWR0aD0iMS41Ii8+PC9wYXR0ZXJuPjxsaW5lYXJHcmFkaWVudCBpZD0idGFpbCIgeDE9IjE4MCIgeTE9IjE0NSIgeDI9IjIzMCIgeTI9IjMwMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2E0ZjRjZiIvPjxzdG9wIG9mZnNldD0iLjU1IiBzdG9wLWNvbG9yPSIjNzZkOGNmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOTliOWVmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+CjxwYXRoIGQ9Ik0xMzYgMTUxaDg1Yy0yIDQ1LTUgNjctMjggMTAzIDQyLTIxIDYxLTQgNjAgMzItMzkgOC02MC0xLTczLTI0LTEzIDI2LTM0IDM1LTczIDI3LTEtMzYgMTktNTMgNjItMzUtMjQtMzYtMjktNjAtMzMtMTAzWiIgZmlsbD0idXJsKCN0YWlsKSIgc3Ryb2tlPSIjY2JmZmYwIiBzdHJva2Utd2lkdGg9IjMiLz4KPHBhdGggZD0iTTEzNiAxNTFoODVjLTIgNDUtNSA2Ny0yOCAxMDNsLTI0IDBjLTI0LTM2LTI5LTYwLTMzLTEwM1oiIGZpbGw9InVybCgjc2NhbGVzKSIvPgo8cGF0aCBkPSJtMTgwIDI2NS01OCAxNm01OC0xNiA1OCAxM20tNTgtMTMtNDIgMW00Mi0xIDQzLTIiIHN0cm9rZT0iI2RiZmZmMSIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik0xMjIgMTIxYy0xOC03LTE2LTI5LTEtMzYgMTItMTQgMjctNyAzMSAzIDE5IDAgMjUgMjMgMTcgMzZaIiBmaWxsPSIjYzZhNmVmIiBzdHJva2U9IiNmMGQ4ZmYiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0xODkgMTI0Yy04LTEzLTItMzYgMTctMzYgNC0xMCAxOS0xNyAzMS0zIDE1IDcgMTcgMjktMSAzNloiIGZpbGw9IiNjNmE2ZWYiIHN0cm9rZT0iI2YwZDhmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxwYXRoIGQ9Im0xMjYgODggOCAzMG0xMC0yOCA1IDI5bTc4LTMxLTggMzBtLTEwLTI4LTUgMjltLTM1IDJoMjAiIHN0cm9rZT0iI2YwZGFmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Im0xNDkgNTMgNy0xNyAxMyAxMCAxMS0yMyAxMSAyMyAxMy0xMCA3IDE3cS0zMSAxNS02MiAwWiIgZmlsbD0iI2ZmZTNhMCIgc3Ryb2tlPSIjZmZmMWM4IiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIxODAiIGN5PSI0NiIgcj0iNiIgZmlsbD0iIzhiZTdkMyIvPgo8ZyBmaWxsPSIjZGNmZmY0Ij48Y2lyY2xlIGN4PSI5MyIgY3k9IjE4MSIgcj0iNSIvPjxjaXJjbGUgY3g9IjI3NCIgY3k9IjIwNCIgcj0iOCIvPjxjaXJjbGUgY3g9IjkzIiBjeT0iMjE0IiByPSIxMCIvPjwvZz4KPC9nPjxnIGZpbGw9IiNkZmIwZmYiPjxwYXRoIGQ9Im02NCAxMzAgMy0xMCAzIDEwIDEwIDMtMTAgMy0zIDEwLTMtMTAtMTAtM1ptMjIzLTQ3IDQtMTIgNCAxMiAxMiA0LTEyIDQtNCAxMi00LTEyLTEyLTRaIi8+PGNpcmNsZSBjeD0iODQiIGN5PSIyODQiIHI9IjMiLz48Y2lyY2xlIGN4PSIyNzQiIGN5PSIyNzgiIHI9IjMiLz48L2c+PC9zdmc+","icon":"🧜‍♀️","primaryColor":"#79e8d4","accentColor":"#dfb0ff"},"effects":{"reveal":"moonrise","ambient":"golden-rain","sound":"royal-fanfare","params":{"durationMs":3300,"particleCount":130}}},{"id":"winged-fairy-gem","name":"翅膀精灵宝石","description":"宝石长出小翅膀，偷偷送你一份森林魔法。","rarity":"super","weight":1,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmYxYjYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM5M2ZmZDEiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iIzkzZmZkMSIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM5M2ZmZDEiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Ik0xMzcgMTM0Yy00My01OS04MC0xNi00MiAxNi00Ny0xLTUwIDUzLTEwIDU2bDY1LTI0bTczLTQ4YzQzLTU5IDgwLTE2IDQyIDE2IDQ3LTEgNTAgNTMgMTAgNTZsLTY1LTI0IiBmaWxsPSIjYjdmMmQ3MzMiIHN0cm9rZT0iI2M2ZmZlMzk5IiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTEwNCAxMzJxMTggOSAzNiAzMW0tNTEgMjUgNDktMThtMTE4LTM4cS0xOCA5LTM2IDMxbTUxIDI1LTQ5LTE4IiBzdHJva2U9IiNjNWZmZTE3NyIvPgo8cGF0aCBkPSJtMTgwIDY2IDYzIDQ5IDEwIDcyLTczIDY5LTczLTY5IDEwLTcyWiIgZmlsbD0iIzkxZWZjMyIgc3Ryb2tlPSIjZDhmZmRjIiBzdHJva2Utd2lkdGg9IjMiLz4KPHBhdGggZD0ibTE4MCA2NiAyMSA2Ny0yMSAxMjMtMjEtMTIzWiIgZmlsbD0iI2RjZmZlNCIvPjxwYXRoIGQ9Im0xODAgNjYtNjMgNDkgNDIgMThabTYzIDQ5LTQyIDE4LTIxLTY3WiIgZmlsbD0iI2JhZmZkYyIvPjxwYXRoIGQ9Im0xMTcgMTE1LTEwIDcyIDUyLTU0Wm0xMjYgMCAxMCA3Mi01Mi01NFoiIGZpbGw9IiM3MGNkYmMiLz48cGF0aCBkPSJtMTA3IDE4NyA3MyA2OS0yMS0xMjNabTE0NiAwLTczIDY5IDIxLTEyM1oiIGZpbGw9IiM2NWJlYWQiLz4KPHBhdGggZD0ibTExNyAxMTUgNDIgMTggNDIgMCA0Mi0xOG0tMTM2IDcyIDUyLTU0bTk0IDU0LTUyLTU0IiBzdHJva2U9IiNlMWZmZGMiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxwYXRoIGQ9Ik0xMzMgMjQ1cTQ3IDM0IDk0IDBsLTUgMjFxLTQyIDI2LTg0IDBaIiBmaWxsPSIjZThjNjg5IiBzdHJva2U9IiNmZmYwYjQiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Im0xNjAgMjc1LTEwIDIwaDYwbC0xMC0yMCIgZmlsbD0iI2VmZDQ5YiIgc3Ryb2tlPSIjZmZmMGI0IiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0ibTE5MiAxMDUgMy0xMyAzIDEzIDEzIDMtMTMgMy0zIDEzLTMtMTMtMTMtM1oiIGZpbGw9IiNmZmZkZTkiLz4KPC9nPjxnIGZpbGw9IiNmZmYxYjYiPjxwYXRoIGQ9Im02NCAxMzAgMy0xMCAzIDEwIDEwIDMtMTAgMy0zIDEwLTMtMTAtMTAtM1ptMjIzLTQ3IDQtMTIgNCAxMiAxMiA0LTEyIDQtNCAxMi00LTEyLTEyLTRaIi8+PGNpcmNsZSBjeD0iODQiIGN5PSIyODQiIHI9IjMiLz48Y2lyY2xlIGN4PSIyNzQiIGN5PSIyNzgiIHI9IjMiLz48L2c+PC9zdmc+","icon":"💎","primaryColor":"#93ffd1","accentColor":"#fff1b6"},"effects":{"reveal":"moonrise","ambient":"golden-rain","sound":"royal-fanfare","params":{"durationMs":3300,"particleCount":130}}},{"id":"giggle-baby","name":"噗噗开心宝宝","description":"噗——！宝宝的小屁屁，放出一团开心泡泡。","rarity":"common","weight":4,"enabled":true,"appearance":{"image":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNjAgMzYwIiBmaWxsPSJub25lIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJvZHkiIHgxPSIxMDAiIHkxPSI4MCIgeDI9IjI0NSIgeTI9IjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNmZmU1Y2YiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlOGE3OGYiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZ2xvdyI+PHN0b3Agc3RvcC1jb2xvcj0iI2ZmYmNhNSIgc3RvcC1vcGFjaXR5PSIuMjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNmZmJjYTUiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxjaXJjbGUgY3g9IjE4MCIgY3k9IjE4MyIgcj0iMTUyIiBmaWxsPSJ1cmwoI2dsb3cpIi8+PGVsbGlwc2UgY3g9IjE4MCIgY3k9IjMxNiIgcng9Ijk0IiByeT0iMTAiIGZpbGw9IiMxMDBkMzUiIG9wYWNpdHk9Ii4yNSIvPjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxnIGZpbGw9IiNkM2Y1ZTMiIHN0cm9rZT0iIzlmZGRjOCIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBkPSJNMjQ2IDIwN3EyNC0xNiAzNyA0IDI0LTYgMjggMTMgMTggNiA4IDI0LTUgMTctMjMgMTAtMTMgMTQtMjYtMi0yMiAwLTE5LTIyLTEzLTEyLTUtMjdaIi8+PHBhdGggZD0iTTI4MiAxODdxMTAtNSAxMyAzdC0xMSAxMFoiLz48L2c+PHBhdGggZD0ibTI5MiAyMjMgNi05bS0xMyAyMCA4LTFtMTQgMTQgNiAzIiBzdHJva2U9IiM3N2M3YWUiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNMTQ0IDE5NHEtMTcgMzktMjQgNjJsMzggMjEgMzAtMzEgMTggMzEgMzYtMjFxLTgtMjctMjMtNjJaIiBmaWxsPSIjYTRlOGNiIiBzdHJva2U9IiNkY2ZmZWUiIHN0cm9rZS13aWR0aD0iMyIvPgo8cGF0aCBkPSJNMTI0IDI1NHEtMzAtMTMtMzggNi04IDIwIDIwIDI0bDI5LTZtMTAwLTI0cTMwLTEzIDM4IDYgOCAyMC0yMCAyNGwtMjktNiIgZmlsbD0iI2ZmZDViYSIgc3Ryb2tlPSIjZmZlNGQyIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTE0MiAyMDRxLTIyIDgtMzAgMjcgNiAxMyAxOCA0bDIxLTIxbTY1LTEwcTIyIDggMzAgMjctNiAxMy0xOCA0bC0yMS0yMSIgZmlsbD0iI2ZmZGJiZSIgc3Ryb2tlPSIjZmZlNmQzIiBzdHJva2Utd2lkdGg9IjIiLz4KPGVsbGlwc2UgY3g9IjExMSIgY3k9IjE1MSIgcng9IjEyIiByeT0iMTgiIGZpbGw9IiNmZmQ1YmEiLz48ZWxsaXBzZSBjeD0iMjQ1IiBjeT0iMTUxIiByeD0iMTIiIHJ5PSIxOCIgZmlsbD0iI2ZmZDViYSIvPgo8Y2lyY2xlIGN4PSIxNzkiIGN5PSIxNDYiIHI9IjY3IiBmaWxsPSJ1cmwoI2JvZHkpIiBzdHJva2U9IiNmZmU4ZDQiIHN0cm9rZS13aWR0aD0iMyIvPgo8cGF0aCBkPSJNMTYwIDg3Yy04LTIzIDI0LTI5IDI4LTEzIDMgMTMtMTUgMTktMTUgNSIgc3Ryb2tlPSIjOTU2YjY5IiBzdHJva2Utd2lkdGg9IjciLz4KPHBhdGggZD0iTTE0MCAxNDNxMTAtMTUgMjAgMG0zOCAwcTEwLTE1IDIwIDAiIHN0cm9rZT0iIzY2NTE1YyIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxlbGxpcHNlIGN4PSIxMzciIGN5PSIxNjIiIHJ4PSIxMyIgcnk9IjciIGZpbGw9IiNmNTllYjMiLz48ZWxsaXBzZSBjeD0iMjIwIiBjeT0iMTYyIiByeD0iMTMiIHJ5PSI3IiBmaWxsPSIjZjU5ZWIzIi8+CjxwYXRoIGQ9Ik0xNTggMTY2cTIxIDYgNDMgMC0xIDI5LTIxIDI5LTE5IDAtMjItMjlaIiBmaWxsPSIjYTA1MjY4Ii8+PHBhdGggZD0iTTE2MyAxNjZxMTUgNCAzMyAwdjloLTMzWiIgZmlsbD0iI2ZmZjllNyIvPgo8cGF0aCBkPSJtMTc1IDIyNSA0LTggNCA4IDkgMS03IDYgMiA5LTgtNC04IDQgMi05LTctNloiIGZpbGw9IiNmZmYyYjkiLz4KPC9nPjxnIGZpbGw9IiNiY2Y0ZDgiPjxwYXRoIGQ9Im02NCAxMzAgMy0xMCAzIDEwIDEwIDMtMTAgMy0zIDEwLTMtMTAtMTAtM1ptMjIzLTQ3IDQtMTIgNCAxMiAxMiA0LTEyIDQtNCAxMi00LTEyLTEyLTRaIi8+PGNpcmNsZSBjeD0iODQiIGN5PSIyODQiIHI9IjMiLz48Y2lyY2xlIGN4PSIyNzQiIGN5PSIyNzgiIHI9IjMiLz48L2c+PC9zdmc+","icon":"👶","primaryColor":"#ffbca5","accentColor":"#bcf4d8"},"effects":{"reveal":"bubble-pop","ambient":"floating-stars","sound":"bubble-giggle","params":{"durationMs":2200,"particleCount":65}}}]}</script><script>const RARITIES = { common: { label: '闪亮宝物', english: 'STARLIGHT' }, rare: { label: '稀有宝物', english: 'RAINBOW MAGIC' }, super: { label: '超级宝物', english: 'SUPER LUCKY!' } };
+const REVEALS = ['sparkle-bloom', 'rainbow-ring', 'moonrise', 'bubble-pop'];
+const AMBIENTS = ['floating-stars', 'rainbow-trail', 'golden-rain'];
+const SOUNDS = ['magic-chime', 'rainbow-song', 'royal-fanfare', 'bubble-giggle'];
+const color = (value, fallback) => /^#[0-9a-f]{6}$/i.test(value || '') ? value : fallback;
+const clamp = (value, min, max, fallback) => Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback;
+// 校验配置，并为未知效果和不完整字段提供基础表现。
+function normalizeConfig(config) {
+  if (config?.version !== 1 || !Array.isArray(config.treasures)) throw new Error('不支持的宝物配置版本');
+  const ids = new Set();
+  return config.treasures.map(item => {
+    if (!item || typeof item.id !== 'string' || !item.id.trim() || ids.has(item.id)) throw new Error('宝物 ID 必须唯一且非空');
+    ids.add(item.id);
+    const appearance = item.appearance || {}, effects = item.effects || {};
+    const image = typeof appearance.image === 'string' && /^(assets\/[^\s]+\.svg|data:image\/(svg\+xml|png|webp|jpeg);base64,[a-z0-9+/=]+)$/i.test(appearance.image) ? appearance.image : '';
+    return { id: item.id, name: String(item.name || '神秘宝物'), description: String(item.description || '一份属于你的魔法。'), rarity: RARITIES[item.rarity] ? item.rarity : 'common', weight: Number.isFinite(item.weight) && item.weight > 0 ? item.weight : 0, enabled: item.enabled !== false, appearance: { image, icon: String(appearance.icon || '✨'), primaryColor: color(appearance.primaryColor, '#ba9cff'), accentColor: color(appearance.accentColor, '#ffe1f5') }, effects: { reveal: REVEALS.includes(effects.reveal) ? effects.reveal : REVEALS[0], ambient: AMBIENTS.includes(effects.ambient) ? effects.ambient : AMBIENTS[0], sound: SOUNDS.includes(effects.sound) ? effects.sound : SOUNDS[0], params: { durationMs: clamp(effects.params?.durationMs, 1500, 4000, 2200), particleCount: Math.round(clamp(effects.params?.particleCount, 10, 160, 60)) } } };
+  });
+}
+function drawTreasure(treasures, random = Math.random) {
+  const pool = treasures.filter(t => t.enabled && t.weight > 0);
+  const total = pool.reduce((sum, t) => sum + t.weight, 0);
+  if (!pool.length || !Number.isFinite(total)) throw new Error('没有可抽取的宝物');
+  let cursor = Math.min(1 - Number.EPSILON, Math.max(0, random())) * total;
+  for (const treasure of pool) { cursor -= treasure.weight; if (cursor < 0) return treasure; }
+  return pool[pool.length - 1];
+}
+function validHistory(value) {
+  return Array.isArray(value) ? value.filter(r => r && typeof r.prizeId === 'string' && typeof r.name === 'string' && Number.isFinite(r.timestamp) && typeof r.drawId === 'string' && RARITIES[r.rarity]).slice(-1000) : [];
+}
+
+// 魔法舱：有限数量的小球做碰撞与涡流运动，选中的球真实移动到中央出口。
+class GachaChamber {
+  constructor(container, treasures, makeArt, isGentle, onCollision) {
+    this.container = container; this.isGentle = isGentle; this.onCollision = onCollision;
+    this.treasures = treasures; this.makeArt = makeArt; this.displayOffset = 0;
+    this.phase = 'idle'; this.balls = []; this.elapsed = 0; this.last = 0; this.hitCooldown = 0;
+    this.width = container.clientWidth; this.height = container.clientHeight;
+    const count = treasures.length ? Math.min(8, Math.max(6, treasures.length)) : 0;
+    for (let i = 0; i < count; i++) {
+      const treasure = treasures[i % treasures.length], node = document.createElement('div');
+      node.className = 'magic-ball'; node.style.setProperty('--ball-color', treasure.appearance.primaryColor);
+      node.dataset.prizeId = treasure.id; makeArt(treasure, node);
+      container.append(node);
+      this.balls.push({ node, treasure, x: 0, y: 0, vx: 0, vy: 0, angle: i * 18, radius: 32, seed: i });
+    }
+    this.reset();
+    new ResizeObserver(() => this.resize()).observe(container);
+    requestAnimationFrame(now => this.frame(now));
+  }
+  resize() {
+    const width = this.container.clientWidth, height = this.container.clientHeight;
+    if (!width || !height) return;
+    for (const ball of this.balls) { ball.x *= width / (this.width || width); ball.y *= height / (this.height || height); }
+    this.width = width; this.height = height;
+    this.radius = Math.max(24, Math.min(35, width * .103));
+    this.container.style.setProperty('--ball-size', `${this.radius * 2}px`);
+    for (const ball of this.balls) ball.radius = this.radius;
+  }
+  reset(winner) {
+    this.resize(); this.selected = null; this.elapsed = 0;
+    // 舱内只展示少量球，轮换形象；真正中奖的宝物始终有对应的球。
+    if (winner && this.treasures.length) {
+      const displayed = this.balls.map((_, i) => this.treasures[(this.displayOffset + i) % this.treasures.length]);
+      if (!displayed.some(treasure => treasure.id === winner.id)) displayed[displayed.length - 1] = winner;
+      this.balls.forEach((ball, i) => {
+        ball.treasure = displayed[i]; ball.node.dataset.prizeId = displayed[i].id;
+        ball.node.style.setProperty('--ball-color', displayed[i].appearance.primaryColor);
+        this.makeArt(displayed[i], ball.node);
+      });
+      this.displayOffset = (this.displayOffset + 3) % this.treasures.length;
+    }
+    const columns = this.balls.length > 6 ? 4 : 3;
+    for (const ball of this.balls) {
+      const col = ball.seed % columns, row = Math.floor(ball.seed / columns);
+      ball.x = this.width * ((col + .5) / columns); ball.y = this.height * (.33 + row * .37);
+      ball.vx = (ball.seed % 2 ? 1 : -1) * (190 + ball.seed * 23); ball.vy = -170 - ball.seed * 25;
+      ball.squash = 0;
+      ball.node.classList.remove('chosen', 'bump'); ball.node.style.opacity = '1';
+    }
+  }
+  setPhase(phase, winner) {
+    this.phase = phase; this.elapsed = 0;
+    if (phase === 'charging') this.reset(winner);
+    if (phase === 'selecting') {
+      this.selected = this.balls.find(ball => ball.treasure.id === winner.id);
+      if (!this.selected) throw new Error('中奖宝物没有对应的魔法球');
+      if (this.selected) {
+        this.selected.node.classList.add('chosen');
+        this.origin = { x: this.selected.x, y: this.selected.y };
+      }
+    }
+  }
+  hit(ball) {
+    ball.squash = .25;
+    if (this.hitCooldown > 0) return;
+    this.hitCooldown = .16;
+    ball.node.classList.remove('bump');
+    void ball.node.offsetWidth;
+    ball.node.classList.add('bump');
+    this.onCollision(ball.treasure, ball.x, ball.y);
+  }
+  frame(now) {
+    const dt = Math.min(.032, (now - (this.last || now)) / 1000); this.last = now;
+    if (!document.hidden) {
+      this.elapsed += dt; this.hitCooldown -= dt;
+      const mixing = this.phase === 'mixing' || this.phase === 'slowing';
+      for (const ball of this.balls) {
+        if (this.phase === 'selecting' && ball === this.selected) {
+          const t = this.isGentle() ? 1 : Math.min(1, this.elapsed / .65), ease = 1 - (1 - t) ** 3;
+          ball.x = this.origin.x + (this.width / 2 - this.origin.x) * ease;
+          ball.y = this.origin.y + (this.height * .30 - this.origin.y) * ease;
+          ball.angle *= .9;
+        } else if (mixing && !this.isGentle()) {
+          const power = this.phase === 'slowing' ? .45 : 1;
+          const dx = ball.x - this.width / 2, dy = ball.y - this.height / 2;
+          ball.vx += (-dy * 6 * power - dx * .8) * dt;
+          ball.vy += (dx * 6 * power + 420 - dy * .9) * dt;
+          ball.x += ball.vx * dt; ball.y += ball.vy * dt;
+          ball.angle += ball.vx * dt * .7;
+          const r = ball.radius, maxX = this.width - r - 4, maxY = this.height - r - 4;
+          if (ball.x < r || ball.x > maxX) { ball.x = Math.min(maxX, Math.max(r, ball.x)); ball.vx *= -.92; this.hit(ball); }
+          if (ball.y < r || ball.y > maxY) { ball.y = Math.min(maxY, Math.max(r, ball.y)); ball.vy *= -.94; if (Math.abs(ball.vy) < 80) ball.vy = -160; this.hit(ball); }
+          const speed = Math.hypot(ball.vx, ball.vy); if (speed > 580) { ball.vx *= 580 / speed; ball.vy *= 580 / speed; }
+        }
+      }
+      if (mixing && !this.isGentle()) {
+        for (let i = 0; i < this.balls.length; i++) for (let j = i + 1; j < this.balls.length; j++) {
+          const a = this.balls[i], b = this.balls[j], dx = b.x - a.x, dy = b.y - a.y;
+          const distance = Math.hypot(dx, dy), minimum = a.radius + b.radius;
+          if (distance > 0 && distance < minimum) {
+            const nx = dx / distance, ny = dy / distance, overlap = (minimum - distance) / 2;
+            a.x -= nx * overlap; a.y -= ny * overlap; b.x += nx * overlap; b.y += ny * overlap;
+            const velocity = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+            if (velocity < 0) { a.vx += velocity * nx; a.vy += velocity * ny; b.vx -= velocity * nx; b.vy -= velocity * ny; this.hit(a); }
+          }
+        }
+      }
+      for (const ball of this.balls) {
+        const idleFloat = this.phase === 'idle' && !this.isGentle() ? Math.sin(now / 900 + ball.seed) * 5 : 0;
+        const r = ball.radius;
+        if (mixing) { ball.x = Math.max(r, Math.min(this.width - r, ball.x)); ball.y = Math.max(r, Math.min(this.height - r, ball.y)); }
+        ball.squash = Math.max(0, ball.squash - dt * 1.8);
+        const squash = this.isGentle() ? 0 : ball.squash;
+        ball.node.style.transform = `translate(${ball.x - r}px,${ball.y - r + idleFloat}px) rotate(${ball.angle}deg) scale(${1 + squash},${1 - squash})`;
+      }
+    }
+    requestAnimationFrame(time => this.frame(time));
+  }
+}
+
+// 使用统一总线与压缩器合成鼓、低音、和弦和旋律，声音跟随每个机器动作。
+class MagicAudio {
+  constructor(isMuted) { this.isMuted = isMuted; this.context = null; this.voices = new Set(); }
+  setup(ctx) {
+    this.context = ctx;
+    this.master = ctx.createGain(); this.master.gain.value = .65;
+    this.compressor = ctx.createDynamicsCompressor();
+    this.compressor.threshold.value = -18; this.compressor.knee.value = 18; this.compressor.ratio.value = 5;
+    this.master.connect(this.compressor); this.compressor.connect(ctx.destination);
+    this.noise = ctx.createBuffer(1, ctx.sampleRate * .35, ctx.sampleRate);
+    const data = this.noise.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+  }
+  async unlock() {
+    if (this.isMuted()) return;
+    try {
+      if (!this.context) {
+        this.setup(new (window.AudioContext || window.webkitAudioContext)());
+      }
+      if (this.context.state === 'suspended') await this.context.resume();
+    } catch { /* 音频不可用时不阻止游戏。 */ }
+  }
+  ready() { return !this.isMuted() && !document.hidden && this.context?.state === 'running'; }
+  track(source, nodes, end) {
+    this.voices.add(source);
+    source.onended = () => { this.voices.delete(source); source.disconnect(); nodes.forEach(node => node.disconnect()); };
+    source.stop(end);
+  }
+  tone(frequency, length = .16, delay = 0, volume = .08, type = 'triangle', slideTo) {
+    if (!this.ready()) return;
+    const ctx = this.context, start = ctx.currentTime + delay;
+    const oscillator = ctx.createOscillator(), envelope = ctx.createGain();
+    oscillator.type = type; oscillator.frequency.setValueAtTime(frequency, start);
+    if (slideTo) oscillator.frequency.exponentialRampToValueAtTime(slideTo, start + length);
+    envelope.gain.setValueAtTime(.0001, start); envelope.gain.exponentialRampToValueAtTime(volume, start + .012);
+    envelope.gain.exponentialRampToValueAtTime(.0001, start + length);
+    oscillator.connect(envelope); envelope.connect(this.master); oscillator.start(start);
+    this.track(oscillator, [envelope], start + length + .03);
+  }
+  noiseHit(delay = 0, length = .09, volume = .06, highpass = 2200) {
+    if (!this.ready()) return;
+    const ctx = this.context, start = ctx.currentTime + delay, source = ctx.createBufferSource();
+    source.buffer = this.noise;
+    const filter = ctx.createBiquadFilter(); filter.type = 'highpass'; filter.frequency.value = highpass;
+    const gain = ctx.createGain(); gain.gain.setValueAtTime(volume, start); gain.gain.exponentialRampToValueAtTime(.0001, start + length);
+    source.connect(filter); filter.connect(gain); gain.connect(this.master); source.start(start);
+    this.track(source, [filter, gain], start + length);
+  }
+  kick(delay = 0, strong = false) { this.tone(135, .19, delay, strong ? .28 : .16, 'sine', 45); }
+  chord(notes, delay = 0, length = .45) { notes.forEach(note => this.tone(note, length, delay, .045)); }
+  start() { this.kick(0, true); [262, 392, 523, 784].forEach((note, i) => this.tone(note, .22, i * .085)); this.tone(180, .5, 0, .055, 'sine', 1000); }
+  mixing(index) { this.kick(); this.noiseHit(.08, .055, .035); this.tone([262, 330, 392, 523][index % 4], .12, .02, .055, 'triangle'); }
+  bounce(index) { this.tone(460 + index * 90, .09, 0, .04, 'sine', 300); }
+  land() { this.kick(0, true); this.tone(380, .15, 0, .1, 'triangle', 170); }
+  knock(index) { this.kick(); this.tone(620 + index * 200, .16, .03, .09, 'triangle'); }
+  charge() { this.tone(220, .6, 0, .09, 'sine', 880); this.chord([262, 330, 392], .1, .5); }
+  celebrate(id) {
+    if (id === 'bubble-giggle') {
+      [0, .19, .38].forEach((delay, i) => this.tone(120 + i * 25, .16, delay, .08, 'sawtooth', 55));
+      [523, 784, 659, 1047, 784, 1319].forEach((note, i) => this.tone(note, .23, .55 + i * .16, .085));
+      this.kick(.55); this.chord([262, 330, 392], .55, .6); this.chord([523, 659, 784], 1.5, .6);
+      return;
+    }
+    const scores = {
+      'magic-chime': { melody: [523, 659, 784, 1047, 784, 1047, 1319, 1047], chords: [[262, 330, 392], [349, 440, 523]], bass: [131, 131, 175, 196] },
+      'rainbow-song': { melody: [523, 659, 784, 988, 1047, 988, 784, 1319, 1175, 1047, 1319, 1568], chords: [[262, 330, 392], [294, 370, 440], [349, 440, 523]], bass: [131, 147, 175, 196] },
+      'royal-fanfare': { melody: [392, 523, 659, 784, 1047, 784, 1047, 1319, 1568, 1319, 1175, 1047, 1319, 1568, 2093, 1568], chords: [[196, 262, 330], [262, 330, 392], [349, 440, 523], [392, 494, 587]], bass: [98, 131, 175, 196] }
+    };
+    const score = scores[id] || scores['magic-chime'], step = .155;
+    this.kick(0, true); this.noiseHit(0, .3, .1, 1200);
+    score.melody.forEach((note, i) => {
+      this.tone(note, .27, i * step, .105, 'triangle');
+      this.tone(note * 2, .18, i * step, .017, 'sine');
+      this.noiseHit(i * step + .075, .035, .025, 4500);
+      if (i % 2 === 0) { this.kick(i * step); this.tone(score.bass[(i / 2) % 4], .25, i * step, .13, 'sine'); }
+      else this.noiseHit(i * step, .1, .055, 1000);
+    });
+    score.chords.forEach((notes, i) => this.chord(notes, i * step * 4, .65));
+    const end = score.melody.length * step;
+    this.chord([523, 659, 784, 1047], end, .6); this.kick(end, true);
+  }
+  stop() { for (const source of this.voices) { try { source.stop(); } catch {} } }
+}
+
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const machine = $('machine'), drawButton = $('draw'), dialog = $('collection-dialog');
+  const STORE_KEY = '75-magic-machine:v1';
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let treasures = [], history = [], muted = false, gentle = reducedMotion.matches;
+  let phase = 'idle', currentTreasure = null, spaceHeld = false, storageAvailable = true;
+  let chamber = null;
+  let noticeTimer;
+  function notice(message) {
+    $('notice').textContent = message; $('notice').hidden = false;
+    clearTimeout(noticeTimer); noticeTimer = setTimeout(() => { $('notice').hidden = true; }, 6500);
+  }
+  try {
+    treasures = normalizeConfig(JSON.parse($('treasure-config').textContent));
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+    if (saved?.version === 1) {
+      history = validHistory(saved.history);
+      muted = typeof saved.muted === 'boolean' ? saved.muted : false;
+      gentle = reducedMotion.matches || saved.gentle === true;
+    }
+  } catch (error) {
+    if (!treasures.length) {
+      drawButton.disabled = true; $('button-text').textContent = '魔法准备中';
+      notice('宝物配置无法读取，请检查 treasures.json 后重新构建。');
+    } else {
+      storageAvailable = false;
+      notice('本地收藏暂时无法读取。这次仍可以玩，刷新后可能无法保留。');
+    }
+  }
+  const pool = treasures.filter(t => t.enabled && t.weight > 0);
+  if (!pool.length) { drawButton.disabled = true; $('draw-hint').textContent = '请先在配置中启用一个宝物'; }
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, history, muted, gentle }));
+      storageAvailable = true;
+    } catch {
+      storageAvailable = false;
+      notice('宝藏留在了这次游戏里，但浏览器未能保存。刷新后可能丢失。');
+    }
+  }
+  function setPhase(value, winner) { phase = value; machine.dataset.state = value; chamber?.setPhase(value, winner); }
+  function syncPreferences() {
+    document.body.classList.toggle('gentle', gentle);
+    $('sound').setAttribute('aria-pressed', String(!muted));
+    $('sound').setAttribute('aria-label', muted ? '打开音效' : '关闭音效');
+    $('sound').title = muted ? '打开音效' : '关闭音效';
+    $('sound').querySelector('.mute-slash').hidden = !muted;
+    $('motion').setAttribute('aria-pressed', String(gentle));
+    $('motion').setAttribute('aria-label', gentle ? '关闭柔和动画' : '开启柔和动画');
+    $('motion').title = gentle ? '关闭柔和动画' : '开启柔和动画';
+  }
+  syncPreferences();
+  const sound = new MagicAudio(() => muted);
+  // 跑马灯沿机舱一圈排布，各灯珠保留独立颜色与错开的追逐节奏。
+  const lampColors = ['#ff9add', '#b89aff', '#84c9ff', '#80ffe0', '#ffe29a'];
+  for (let i = 0; i < 40; i++) {
+    const lamp = document.createElement('span'); lamp.className = 'lamp';
+    const edge = Math.floor(i / 10), t = (i % 10) / 9;
+    const points = [[12 + t * 76, 0], [100, 9 + t * 82], [88 - t * 76, 100], [0, 91 - t * 82]];
+    const [x, y] = points[edge]; lamp.style.left = `${x}%`; lamp.style.top = `${y}%`;
+    lamp.style.setProperty('--lamp-color', lampColors[i % lampColors.length]);
+    lamp.style.setProperty('--lamp-delay', `${-i * .055}s`); $('marquee').append(lamp);
+  }
+  new ResizeObserver(() => {
+    $('marquee').style.top = `${$('window').offsetTop - 9}px`;
+    $('marquee').style.height = `${$('window').offsetHeight + 18}px`;
+    $('marquee').style.bottom = 'auto';
+  }).observe($('window'));
+  function spellPop(text) {
+    const pop = $('spell-pop'); pop.textContent = text;
+    pop.classList.remove('pop'); void pop.offsetWidth; pop.classList.add('pop');
+  }
+  function energy(amount) { machine.style.setProperty('--energy', String(amount)); }
+  // 页面切到后台时暂停流程，不积累声音和突然跨过开奖阶段。
+  function wait(ms) {
+    return new Promise(resolve => {
+      let elapsed = 0, previous = performance.now();
+      function frame(now) {
+        if (!document.hidden) elapsed += Math.min(50, now - previous);
+        previous = now;
+        if (elapsed >= ms) resolve(); else requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  function makeArt(treasure, target) {
+    target.replaceChildren();
+    const fallback = document.createElement('span');
+    fallback.className = 'fallback-art'; fallback.textContent = treasure.appearance.icon;
+    fallback.setAttribute('aria-hidden', 'true');
+    if (treasure.appearance.image) {
+      const img = document.createElement('img'); img.src = treasure.appearance.image;
+      img.alt = treasure.name; img.draggable = false;
+      img.addEventListener('error', () => img.replaceWith(fallback), { once: true });
+      target.append(img);
+    } else target.append(fallback);
+  }
+  function showTreasure(treasure, final = false) {
+    $('treasure-art').hidden = false;
+    makeArt(treasure, $('treasure-art'));
+    machine.style.setProperty('--primary', treasure.appearance.primaryColor);
+    machine.style.setProperty('--accent', treasure.appearance.accentColor);
+    if (final) {
+      $('rarity').textContent = `✦ ${RARITIES[treasure.rarity].label} ✦`;
+      $('prize-name').textContent = treasure.name;
+      $('prize-description').textContent = treasure.description;
+    }
+  }
+  const particles = {
+    canvas: $('particles'), ctx: $('particles').getContext('2d'), items: [], waves: [], width: 0, height: 0, last: 0, ambientClock: 0,
+    resize() {
+      this.width = innerWidth; this.height = innerHeight;
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      this.canvas.width = Math.round(this.width * dpr); this.canvas.height = Math.round(this.height * dpr);
+      if (this.ctx) this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    },
+    center() { const box = $('window').getBoundingClientRect(); return { x: box.left + box.width / 2, y: box.top + box.height * .38 }; },
+    emit(treasure, ambient = false) {
+      if (!this.ctx || document.hidden) return;
+      const center = this.center(), kind = treasure.effects.ambient;
+      const amount = ambient ? 2 : (gentle ? 12 : Math.min(200, Math.round(treasure.effects.params.particleCount * 1.5)));
+      const colors = kind === 'rainbow-trail' ? ['#ffb4da', '#ffe5a0', '#83eadc', '#adbcff', '#ba9cff'] : [treasure.appearance.primaryColor, treasure.appearance.accentColor, '#fff1cf'];
+      for (let i = 0; i < amount && this.items.length < 280; i++) {
+        const angle = Math.random() * Math.PI * 2, speed = ambient || gentle ? 20 + Math.random() * 25 : 150 + Math.random() * 340;
+        const rain = kind === 'golden-rain';
+        this.items.push({ x: center.x + (rain ? (Math.random() - .5) * 580 : 0), y: rain ? center.y - 190 : center.y, vx: rain ? (Math.random() - .5) * 70 : Math.cos(angle) * speed, vy: rain ? 60 + Math.random() * 140 : Math.sin(angle) * speed - 70, life: 0, max: ambient ? 1.6 : 2.1 + Math.random() * 1.2, size: ambient ? 2 : 4 + Math.random() * 6, angle, color: colors[i % colors.length], gravity: rain ? 25 : 90, star: kind !== 'rainbow-trail' || i % 3 === 0 });
+      }
+    },
+    sparkAt(x, y, colors = lampColors, amount = 12) {
+      if (!this.ctx || document.hidden) return;
+      for (let i = 0; i < (gentle ? 3 : amount) && this.items.length < 220; i++) {
+        const angle = Math.random() * Math.PI * 2, speed = gentle ? 25 : 50 + Math.random() * 110;
+        this.items.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 0, max: .5 + Math.random() * .4, size: 2 + Math.random() * 3, angle, color: colors[i % colors.length], gravity: 25, star: true });
+      }
+    },
+    shockwave(color) {
+      if (gentle) return;
+      this.waves.push({ ...this.center(), color, life: 0 });
+    },
+    frame(now) {
+      const dt = Math.min(.04, (now - (this.last || now)) / 1000); this.last = now;
+      if (this.ctx && !document.hidden) {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.waves = this.waves.filter(wave => wave.life < 1);
+        for (const wave of this.waves) {
+          wave.life += dt;
+          const radius = 35 + 360 * (1 - (1 - Math.min(1, wave.life)) ** 3);
+          this.ctx.save(); this.ctx.globalAlpha = Math.max(0, .7 * (1 - wave.life));
+          this.ctx.strokeStyle = wave.color; this.ctx.lineWidth = 8 * (1 - wave.life) + 1;
+          this.ctx.beginPath(); this.ctx.arc(wave.x, wave.y, radius, 0, Math.PI * 2); this.ctx.stroke(); this.ctx.restore();
+        }
+        if (phase === 'result' && currentTreasure && !gentle && !dialog.open) {
+          this.ambientClock += dt;
+          if (this.ambientClock > .8) { this.emit(currentTreasure, true); this.ambientClock = 0; }
+        }
+        this.items = this.items.filter(p => p.life < p.max);
+        for (const p of this.items) {
+          p.life += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += p.gravity * dt;
+          const ctx = this.ctx; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.angle + p.life * .7);
+          ctx.globalAlpha = Math.min(1, (p.max - p.life) * 1.7); ctx.fillStyle = p.color;
+          if (p.star) {
+            ctx.beginPath(); for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4, r = k % 2 ? p.size * .3 : p.size; if (k === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r); else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); } ctx.closePath(); ctx.fill();
+          } else ctx.fillRect(-p.size / 2, -p.size, p.size, p.size * 2);
+          ctx.restore();
+        }
+      }
+      requestAnimationFrame(time => this.frame(time));
+    }
+  };
+  particles.resize(); requestAnimationFrame(time => particles.frame(time));
+  addEventListener('resize', () => particles.resize());
+  chamber = new GachaChamber($('magic-balls'), pool, makeArt, () => gentle, (treasure, x, y) => {
+    if (dialog.open || !['mixing', 'slowing'].includes(phase)) return;
+    sound.bounce(pool.indexOf(treasure));
+    const bounds = $('magic-balls').getBoundingClientRect();
+    particles.sparkAt(bounds.left + x, bounds.top + y, [treasure.appearance.primaryColor, '#fff0b7'], 5);
+  });
+  function updateCount() { $('collection-count').textContent = history.length; }
+  updateCount();
+  // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
+  async function draw() {
+    if (!['idle', 'result'].includes(phase) || dialog.open || !pool.length) return;
+    const winner = drawTreasure(treasures);
+    drawButton.disabled = true; drawButton.classList.add('pressed');
+    $('collection').disabled = true; particles.items = []; particles.waves = []; currentTreasure = null;
+    $('treasure-art').hidden = true; $('jackpot').classList.remove('show');
+    machine.style.setProperty('--primary', '#ba9cff'); machine.style.setProperty('--accent', '#ffe1f5');
+    setPhase('charging', winner); energy(.05); spellPop('魔法启动！');
+    $('button-text').textContent = '注入魔法！';
+    $('draw-hint').textContent = '能量正在冲进魔法舱';
+    $('rarity').textContent = ''; $('prize-name').textContent = '小球，醒来啦！'; $('prize-description').textContent = '一道魔法，点亮整个机器。';
+    try {
+      await sound.unlock(); sound.stop(); sound.start();
+      const buttonBounds = drawButton.getBoundingClientRect();
+      particles.sparkAt(buttonBounds.left + buttonBounds.width / 2, buttonBounds.top, lampColors, 22);
+      energy(.25); await wait(260); drawButton.classList.remove('pressed'); energy(.5); await wait(300);
+      setPhase('mixing'); $('button-text').textContent = '魔法球跳舞中';
+      $('prize-name').textContent = '转呀转，跳呀跳！'; $('prize-description').textContent = '哪一颗会蹦出来呢？';
+      $('draw-hint').textContent = '听！小球在唱魔法歌';
+      for (let i = 0; i < 6; i++) {
+        sound.mixing(i); energy(.5 + (i + 1) * .065);
+        if (i === 1) spellPop('转呀转！');
+        if (i === 4) spellPop('✦ MAGIC! ✦');
+        await wait(220);
+      }
+      setPhase('slowing'); $('prize-name').textContent = '有一颗被选中啦！';
+      $('draw-hint').textContent = '看，它正在寻找出口'; sound.mixing(6); energy(1); await wait(350);
+      machine.style.setProperty('--primary', winner.appearance.primaryColor);
+      machine.style.setProperty('--accent', winner.appearance.accentColor);
+      setPhase('selecting', winner); $('button-text').textContent = '宝物正在到来';
+      $('rarity').textContent = '✦ 一颗属于你的魔法球 ✦'; await wait(650);
+      setPhase('landing');
+      $('prize-name').textContent = '接住你的魔法球！'; $('prize-description').textContent = '里面的小宝物，想出来啦。';
+      await wait(350); sound.land(); spellPop('咚！');
+      const center = particles.center(); particles.sparkAt(center.x, center.y + 65, [winner.appearance.primaryColor, '#fff2c8'], 18);
+      await wait(200); $('spell-pop').classList.remove('pop');
+      setPhase('cracking'); $('button-text').textContent = '就要打开啦';
+      $('draw-hint').textContent = '摇一摇，魔法就要出来了';
+      for (let i = 0; i < 3; i++) { sound.knock(i); await wait(310); }
+      setPhase('anticipation'); $('rarity').textContent = '✦ 惊喜就要出现 ✦'; await wait(220);
+      if (winner.rarity === 'super') {
+        setPhase('overload'); energy(1); sound.charge();
+        $('jackpot').classList.add('show'); $('button-text').textContent = '超级幸运！';
+        $('prize-name').textContent = '哇！满满的超级魔法！'; await wait(950); $('jackpot').classList.remove('show');
+      }
+      currentTreasure = winner; machine.dataset.reveal = winner.effects.reveal;
+      showTreasure(winner, true); setPhase('celebrating');
+      $('button-text').textContent = '找到宝物啦！'; $('draw-hint').textContent = '这份魔法，属于你！';
+      const record = { drawId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`, prizeId: winner.id, name: winner.name, icon: winner.appearance.icon, description: winner.description, rarity: winner.rarity, timestamp: Date.now() };
+      history.push(record); history = history.slice(-1000); save(); updateCount();
+      $('announcement').textContent = `恭喜 75，获得${RARITIES[winner.rarity].label}：${winner.name}。${winner.description}`;
+      sound.celebrate(winner.effects.sound); particles.shockwave(winner.appearance.primaryColor); particles.emit(winner);
+      spellPop(winner.rarity === 'super' ? '超级宝物！' : winner.rarity === 'rare' ? '彩虹魔法！' : '找到宝物啦！');
+      await wait(420); $('spell-pop').classList.remove('pop');
+      particles.emit(winner);
+      await wait(winner.effects.params.durationMs - 420);
+      setPhase('result'); $('button-text').textContent = '再来一次';
+      $('draw-hint').textContent = '';
+    } catch {
+      setPhase('idle'); energy(0); $('treasure-art').hidden = true; $('button-text').textContent = '开启魔法';
+      notice('机器歇了一小会儿，再按一下试试。');
+    } finally {
+      drawButton.disabled = false; drawButton.classList.remove('pressed'); $('collection').disabled = false; $('jackpot').classList.remove('show'); $('spell-pop').classList.remove('pop');
+    }
+  }
+  drawButton.addEventListener('click', draw);
+  addEventListener('keydown', event => {
+    if (event.code !== 'Space') return;
+    // 空格是游戏专用键；先拦截浏览器默认按键激活，焦点位置不改变用途。
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.repeat || spaceHeld) return;
+    spaceHeld = true; draw();
+  }, { capture: true });
+  addEventListener('keyup', event => {
+    if (event.code !== 'Space') return;
+    // 按钮的原生点击通常在松键时发生，因此 keyup 也必须拦截。
+    event.preventDefault(); event.stopPropagation(); spaceHeld = false;
+  }, { capture: true });
+  addEventListener('blur', () => { spaceHeld = false; });
+  $('sound').addEventListener('click', () => {
+    muted = !muted;
+    if (muted) { sound.stop(); sound.context?.suspend().catch(() => {}); } else { sound.unlock().then(() => sound.tone(660, .18)); }
+    syncPreferences(); save();
+  });
+  $('motion').addEventListener('click', () => {
+    if (reducedMotion.matches && gentle) { notice('正在遵循设备的减少动态效果设置。'); return; }
+    gentle = !gentle; particles.items = []; particles.waves = []; syncPreferences(); save();
+    notice(gentle ? '柔和动画已开启' : '完整动画已开启');
+  });
+  reducedMotion.addEventListener('change', event => { if (event.matches) { gentle = true; particles.items = []; particles.waves = []; syncPreferences(); } });
+  document.addEventListener('visibilitychange', () => {
+    spaceHeld = false;
+    document.body.classList.toggle('background-paused', document.hidden);
+    if (document.hidden) sound.context?.suspend().catch(() => {});
+    else if (!muted && sound.context) sound.context.resume().catch(() => {});
+  });
+  $('fullscreen').addEventListener('click', async () => {
+    try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }
+    catch { notice('当前窗口暂不支持全屏，可以最大化浏览器来玩。'); }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    $('fullscreen').setAttribute('aria-label', document.fullscreenElement ? '退出全屏' : '进入全屏');
+    $('fullscreen').title = document.fullscreenElement ? '退出全屏' : '进入全屏';
+  });
+  function textElement(tag, value, className) { const node = document.createElement(tag); node.textContent = value; if (className) node.className = className; return node; }
+  function renderCollection() {
+    const collected = new Set(history.map(r => r.prizeId));
+    $('collection-summary').textContent = history.length ? `已经发现 ${collected.size} 种宝物，收获 ${history.length} 次惊喜。` : '宝藏还在星空里等你，去开启第一次魔法吧。';
+    $('collection-grid').replaceChildren();
+    const archived = [...collected].filter(id => !treasures.some(t => t.id === id)).map(id => {
+      const last = history.filter(r => r.prizeId === id).at(-1);
+      return { id, name: last.name, description: last.description || '一份过去发现的魔法。', rarity: last.rarity, appearance: { icon: last.icon || '✨', image: '' } };
+    });
+    for (const treasure of [...treasures, ...archived]) {
+      const records = history.filter(r => r.prizeId === treasure.id), latest = records.at(-1);
+      const card = document.createElement('article'); card.className = `treasure-card${latest ? '' : ' uncollected'}`;
+      const art = document.createElement('div'); makeArt(treasure, art);
+      // 收藏插画直接放入网格，保留图片失败时的图标降级。
+      card.append(...art.childNodes);
+      card.append(textElement('span', RARITIES[treasure.rarity].label, 'rarity'), textElement('h3', treasure.name), textElement('p', latest ? treasure.description : '还没发现，下一次也许就是它。', 'card-description'), textElement('span', latest ? `已获得 × ${records.length}` : '等待发现', 'card-count'));
+      if (latest) card.append(textElement('time', `最近发现 · ${new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(latest.timestamp)}`, 'last-date'));
+      $('collection-grid').append(card);
+    }
+    $('collection-summary').textContent += storageAvailable ? '' : ' 本次收藏暂未保存到浏览器。';
+  }
+  $('collection').addEventListener('click', () => { renderCollection(); dialog.showModal(); });
+  $('close-collection').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } });
+  dialog.addEventListener('close', () => $('collection').focus());
+})();
+</script>
+</body></html>

@@ -1,0 +1,28 @@
+# 系统与编辑器文件
+.DS_Store
+._*
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 本地依赖、缓存和日志
+node_modules/
+.npm/
+.cache/
+*.log
+
+# 本地环境配置（保留可公开的示例）
+.env
+.env.*
+!.env.example
+!.env.template
+
+# 自动生成的预览与测试报告
+artifacts/
+test-results/
+playwright-report/
+coverage/
+
+# index.html 是可直接运行的交付文件，需要纳入版本控制。

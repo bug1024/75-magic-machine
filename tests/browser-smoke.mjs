@@ -1,0 +1,104 @@
+// 可选真实浏览器验证：PLAYWRIGHT_MODULE 指向已安装的 Playwright 模块。
+import assert from 'node:assert/strict';
+import { mkdir, readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const url = pathToFileURL(`${process.cwd()}/index.html`).href;
+const output = process.env.SCREENSHOT_DIR || '/tmp/75-magic-machine';
+await mkdir(output, { recursive: true });
+let failures = [];
+const config = JSON.parse(await readFile(new URL('../treasures.json', import.meta.url), 'utf8'));
+const total = config.treasures.reduce((sum, t) => sum + t.weight, 0);
+const cases = [0, 1, 2, config.treasures.length - 1].map(index => {
+  const treasure = config.treasures[index];
+  const before = config.treasures.slice(0, index).reduce((sum, t) => sum + t.weight, 0);
+  return [(before + treasure.weight / 2) / total, treasure.name, treasure.effects.reveal, treasure.id];
+});
+try {
+  for (const [random, expected, effect, id] of cases) {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await context.newPage();
+    page.on('pageerror', error => failures.push(error.message));
+    await page.addInitScript(value => { Math.random = () => value; }, random);
+    await page.goto(url);
+    const visibleText = await page.locator('body').innerText();
+    for (const removed of ['一点点魔法，无限的惊喜', 'MAGIC GACHA', 'MAGIC POWER', '每一份宝物，都有属于你的魔法']) assert.ok(!visibleText.includes(removed));
+    await page.locator('#sound').click(); // 验证偏好保存，同时静音测试。
+    assert.equal(await page.locator('.lamp').count(), 40);
+    assert.equal(await page.locator('.magic-ball').count(), 8);
+    if (id === 'starlight-dress') await page.screenshot({ path: `${output}/idle.png` });
+    await page.locator('#draw').focus();
+    await page.keyboard.down('Space');
+    assert.equal(await page.locator('#draw').isDisabled(), true);
+    await page.keyboard.down('Space');
+    await page.evaluate(() => document.querySelector('#draw').click());
+    await page.waitForSelector('#machine[data-state="mixing"]');
+    const before = await page.locator('.magic-ball').first().evaluate(el => el.style.transform);
+    await page.waitForTimeout(250);
+    const after = await page.locator('.magic-ball').first().evaluate(el => el.style.transform);
+    assert.notEqual(before, after);
+    if (id === 'starlight-dress') await page.screenshot({ path: `${output}/mixing.png` });
+    await page.waitForSelector('#machine[data-state="selecting"]');
+    assert.equal(await page.locator('.magic-ball.chosen').getAttribute('data-prize-id'), id);
+    await page.waitForSelector('#machine[data-state="landing"]');
+    await page.waitForSelector('#machine[data-state="cracking"]');
+    if (id === 'starlight-dress') await page.screenshot({ path: `${output}/capsule.png` });
+    await page.waitForSelector('#machine[data-state="celebrating"]');
+    assert.equal(await page.locator('#prize-name').textContent(), expected);
+    assert.equal(await page.locator('#machine').getAttribute('data-reveal'), effect);
+    await page.waitForTimeout(750);
+    await page.screenshot({ path: `${output}/${effect}.png` });
+    await page.waitForSelector('#machine[data-state="result"]');
+    assert.equal(await page.locator('#draw-hint').textContent(), '');
+    await page.keyboard.down('Space'); // 仍长按时不触发第二次抽取。
+    assert.equal(await page.locator('#collection-count').textContent(), '1');
+    assert.equal(await page.locator('#machine').getAttribute('data-state'), 'result');
+    await page.keyboard.up('Space');
+    await page.reload();
+    assert.equal(await page.locator('#collection-count').textContent(), '1');
+    assert.equal(await page.locator('#sound').getAttribute('aria-pressed'), 'false');
+    await page.locator('#collection').click();
+    assert.equal(await page.locator('.treasure-card').count(), config.treasures.length);
+    assert.equal(await page.locator('.treasure-card img').evaluateAll(images => images.every(img => img.complete && img.naturalWidth > 0)), true);
+    assert.equal(await page.locator('.treasure-card:not(.uncollected) h3').textContent(), expected);
+    await page.locator('#collection-dialog').evaluate(el => el.focus());
+    await page.keyboard.press('Space'); // 弹窗内不应触发抽取。
+    assert.equal(await page.locator('#machine').getAttribute('data-state'), 'idle');
+    assert.equal(await page.locator('#collection-dialog').evaluate(el => el.open), true);
+    if (id === 'starlight-dress') await page.screenshot({ path: `${output}/collection.png` });
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#collection-dialog').evaluate(el => el.open), false);
+    assert.equal(await page.locator('#collection').evaluate(el => el === document.activeElement), true);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    console.log(`通过：${expected} · 效果、输入锁定、长按、持久化、收藏弹窗`);
+    await context.close();
+  }
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  page.on('pageerror', error => failures.push(error.message));
+  await page.goto(url);
+  assert.equal(await page.locator('body').evaluate(el => el.classList.contains('gentle')), true);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  await page.screenshot({ path: `${output}/mobile.png` });
+  await page.locator('#draw').click();
+  await page.waitForSelector('#machine[data-state="result"]');
+  assert.equal(await page.locator('#collection-count').textContent(), '1');
+  await page.locator('#collection').click();
+  assert.equal(await page.locator('#collection-dialog').evaluate(el => el.scrollWidth <= el.clientWidth), true);
+  console.log('通过：手机布局、减少动态效果、鼠标抽取');
+  await context.close();
+  const blocked = await browser.newContext();
+  const blockedPage = await blocked.newPage();
+  blockedPage.on('pageerror', error => failures.push(error.message));
+  await blockedPage.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } }); });
+  await blockedPage.goto(url);
+  await blockedPage.locator('#draw').click();
+  await blockedPage.waitForSelector('#machine[data-state="result"]');
+  assert.equal(await blockedPage.locator('#collection-count').textContent(), '1');
+  assert.match(await blockedPage.locator('#notice').textContent(), /未能保存/);
+  console.log('通过：存储被禁用时仍可完成抽取，并显示保存提示');
+  await blocked.close();
+  assert.deepEqual(failures, []);
+  console.log(`浏览器无脚本错误；截图：${output}`);
+} finally { await browser.close(); }
