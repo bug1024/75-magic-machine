@@ -56,6 +56,14 @@
       }
     ],
     "wingedAt": 20,
-    "castleAt": 35
+    "castleAt": 35,
+    "witch": {
+      "enabled": true,
+      "every": 50,
+      "hits": 3,
+      "visibleMs": 2800,
+      "hiddenMs": 450,
+      "image": "assets/witch.svg"
+    }
   }
 }

@@ -214,10 +214,15 @@
   world = new MagicWorld(gameRules.world, savedWorld, history, {
     energy: () => rechargeStation.balance, warningThreshold: gameRules.energy.warningThreshold,
     pickGift: () => drawTreasure(treasures, Math.random, { equalProbability: cheatMode }),
+    pickAmmo: () => {
+      const collected = pool.filter(treasure => history.some(record => record.prizeId === treasure.id));
+      const ammo = collected.length ? collected : pool;
+      return ammo[Math.floor(Math.random() * ammo.length)] || pool[0];
+    },
     wait, save, art: makeArt, sound: kind => { sound.stopWarning(); sound.encounter(kind); },
     apply: (event, giftId) => {
       if (event.id === 'ghost' && rechargeStation.balance <= gameRules.energy.warningThreshold) return { description: '小幽灵打了个饱嗝！', detail: '它没有拿走你的能量。' };
-      if (event.id === 'courier' || (event.id === 'fairy' && rechargeStation.full)) {
+      if (event.id === 'witch' || event.id === 'courier' || (event.id === 'fairy' && rechargeStation.full)) {
         const gift = pool.find(treasure => treasure.id === giftId) || drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
         history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
         return { gift, description: `额外礼物：${gift.name}`, detail: '已经放进你的宝藏里！' };

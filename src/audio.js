@@ -82,6 +82,11 @@ class MagicAudio {
     this.chord([523, 659, 784, 1047], end, .6); this.kick(end, true);
   }
   encounter(kind) {
+    if (kind === 'witch-arrive') { [330, 247, 294, 220].forEach((note, i) => this.tone(note, .3, i * .17, .065)); this.chord([147, 220, 294], .3, .6); return; }
+    if (kind === 'witch-shot') { this.tone(220, .18, 0, .075, 'sine', 880); this.noiseHit(.03, .06, .035, 2800); return; }
+    if (kind === 'witch-hit') { this.kick(0, true); this.tone(784, .16, .04, .085, 'triangle', 392); this.tone(1047, .2, .18, .075); return; }
+    if (kind === 'witch-miss') { this.tone(440, .18, 0, .05, 'sine', 330); return; }
+    if (kind === 'witch-win') { this.celebrate('royal-fanfare'); return; }
     if (kind === 'ghost') { this.tone(330, .32, 0, .085, 'triangle', 180); this.tone(150, .22, .8, .07, 'sawtooth', 90); this.tone(440, .17, 1.05, .07); return; }
     if (kind.startsWith('upgrade')) { if (kind === 'upgrade-winged') this.treasureSound('rainbow-flight'); else this.celebrate(kind === 'upgrade-castle' ? 'royal-fanfare' : 'rainbow-song'); return; }
     const notes = kind === 'fairy' ? [784, 1047, 1319, 1568, 1319] : [523, 659, 784, 1047];

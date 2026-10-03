@@ -54,3 +54,18 @@ test('角色插画存在，配置参数受限', async () => {
   const normalized = normalizeWorldRules({ chance: 9, minGap: -3, guaranteeAfter: -4, rainbowAt: 0 });
   assert.equal(normalized.chance, 1); assert.equal(normalized.minGap, 0); assert.equal(normalized.guaranteeAfter, 1); assert.equal(normalized.rainbowAt, 1);
 });
+test('女巫只在每50次正常开奖触发，优先于随机事件，进度与升级队列可恢复', async () => {
+  for (const count of [49, 99, 149]) {
+    const next = advanceWorld({ ...initial(), completedDraws: count, sinceEvent: 7 }, rules, 0, 3, () => 0);
+    assert.deepEqual(next.pending, [{ kind: 'witch', milestone: count + 1, hits: 0, giftId: null }]);
+    assert.equal(next.sinceEvent, 8);
+  }
+  const disabled = normalizeWorldRules({ ...config.world, witch: { ...config.world.witch, enabled: false } });
+  assert.ok(!advanceWorld({ ...initial(), completedDraws: 49 }, disabled, 5, 3, () => .99).pending.some(item => item.kind === 'witch'));
+  const simultaneous = normalizeWorldRules({ ...config.world, castleAt: 50 });
+  assert.deepEqual(advanceWorld({ ...initial(), completedDraws: 49 }, simultaneous, 0, 3, () => 0).pending.map(item => item.kind), ['upgrade', 'witch']);
+  const pending = normalizeWorldState({ completedDraws: 50, pending: [{ kind: 'witch', hits: 2, milestone: 50, giftId: 'cloud-dolphin' }] }, [], rules).pending[0];
+  assert.equal(pending.hits, 2); assert.equal(pending.giftId, 'cloud-dolphin');
+  assert.equal(normalizeWorldState({ pending: [{ kind: 'witch', hits: 99 }] }, [], rules).pending[0].hits, 3);
+  assert.match(await readFile(new URL(`../${rules.witch.image}`, import.meta.url), 'utf8'), /viewBox="0 0 360 360"/);
+});

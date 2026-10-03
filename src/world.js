@@ -3,6 +3,7 @@ class MagicWorld {
     this.rules = rules; this.state = normalizeWorldState(saved, history, rules); this.callbacks = callbacks; this.busy = false;
     this.$ = id => document.getElementById(id); this.dialog = this.$('world-dialog');
     this.dialog.addEventListener('cancel', event => event.preventDefault());
+    this.witch = new WitchGame(rules.witch, callbacks);
     this.render();
   }
   snapshot() { return structuredClone(this.state); }
@@ -17,7 +18,7 @@ class MagicWorld {
   }
   completedDraw() {
     this.state = advanceWorld(this.state, this.rules, this.callbacks.energy(), this.callbacks.warningThreshold, Math.random);
-    for (const pending of this.state.pending) if (pending.kind === 'event' && pending.id !== 'ghost') pending.giftId = this.callbacks.pickGift().id;
+    for (const pending of this.state.pending) if (pending.kind === 'witch' || (pending.kind === 'event' && pending.id !== 'ghost')) pending.giftId = this.callbacks.pickGift().id;
     this.render(false);
   }
   async playPending() {
@@ -26,6 +27,14 @@ class MagicWorld {
     try {
       while (this.state.pending.length) {
         const item = this.state.pending[0];
+        if (item.kind === 'witch') {
+          await this.witch.play(item, () => {
+            const result = this.callbacks.apply({ id: 'witch' }, item.giftId);
+            this.state.pending.shift(); this.callbacks.save(); this.render();
+            return result;
+          });
+          continue;
+        }
         const event = item.kind === 'event' ? this.rules.events.find(event => event.id === item.id) : null;
         const upgradeLevel = item.level || 'rainbow';
         const upgradeName = MACHINE_LEVELS.find(level => level.id === upgradeLevel)?.name || '彩虹机器';

@@ -20,12 +20,13 @@ export function normalizeWorldRules(value) {
   const rainbowAt = integer(value?.rainbowAt, 10, 1, 9998);
   const wingedAt = integer(value?.wingedAt, 20, rainbowAt + 1, 9999);
   const castleAt = integer(value?.castleAt, 35, wingedAt + 1, 10000);
-  return { enabled: value?.enabled !== false, chance: Number.isFinite(value?.chance) ? Math.max(0, Math.min(1, value.chance)) : .15, minGap, guaranteeAfter: integer(value?.guaranteeAfter, 8, minGap + 1, 200), rainbowAt, wingedAt, castleAt, events };
+  const witch = { enabled: value?.witch?.enabled !== false, every: integer(value?.witch?.every, 50, 1, 10000), hits: integer(value?.witch?.hits, 3, 1, 10), visibleMs: integer(value?.witch?.visibleMs, 2800, 1500, 10000), hiddenMs: integer(value?.witch?.hiddenMs, 450, 200, 3000), image: typeof value?.witch?.image === 'string' && /^(assets\/[^\s]+\.svg|data:image\/svg\+xml;base64,[a-z0-9+/=]+)$/i.test(value.witch.image) ? value.witch.image : '' };
+  return { enabled: value?.enabled !== false, chance: Number.isFinite(value?.chance) ? Math.max(0, Math.min(1, value.chance)) : .15, minGap, guaranteeAfter: integer(value?.guaranteeAfter, 8, minGap + 1, 200), rainbowAt, wingedAt, castleAt, events, witch };
 }
 export function normalizeWorldState(saved, history, rules) {
   const natural = (value, fallback) => Number.isSafeInteger(value) && value >= 0 ? value : fallback;
   const completedDraws = natural(saved?.completedDraws, history.filter(record => record.source !== 'event').length);
-  const pending = Array.isArray(saved?.pending) ? saved.pending.filter(item => item && (item.kind === 'upgrade' || (item.kind === 'event' && rules.events.some(event => event.id === item.id)))).map(item => item.kind === 'upgrade' ? { kind: 'upgrade', level: MACHINE_LEVELS.some(level => level.threshold && level.id === item.level) ? item.level : 'rainbow' } : { kind: 'event', id: item.id, giftId: typeof item.giftId === 'string' ? item.giftId : null }).slice(0, 2) : [];
+  const pending = Array.isArray(saved?.pending) ? saved.pending.filter(item => item && (item.kind === 'upgrade' || item.kind === 'witch' || (item.kind === 'event' && rules.events.some(event => event.id === item.id)))).map(item => item.kind === 'upgrade' ? { kind: 'upgrade', level: MACHINE_LEVELS.some(level => level.threshold && level.id === item.level) ? item.level : 'rainbow' } : item.kind === 'witch' ? { kind: 'witch', milestone: natural(item.milestone, completedDraws), hits: Math.min(rules.witch.hits, natural(item.hits, 0)), giftId: typeof item.giftId === 'string' ? item.giftId : null } : { kind: 'event', id: item.id, giftId: typeof item.giftId === 'string' ? item.giftId : null }).slice(0, 2) : [];
   return { completedDraws, sinceEvent: Math.min(rules.guaranteeAfter, natural(saved?.sinceEvent, 0)), pending };
 }
 export function advanceWorld(state, rules, balance, warningThreshold, random = Math.random) {
@@ -33,6 +34,11 @@ export function advanceWorld(state, rules, balance, warningThreshold, random = M
   const next = { ...state, completedDraws: state.completedDraws + 1, sinceEvent: state.sinceEvent + 1, pending: [] };
   for (const level of MACHINE_LEVELS.filter(level => level.threshold)) {
     if (state.completedDraws < rules[level.threshold] && next.completedDraws >= rules[level.threshold]) next.pending.push({ kind: 'upgrade', level: level.id });
+  }
+  // 固定里程碑挑战优先于随机拜访，避免同一次开奖连续弹出多个事件。
+  if (rules.witch.enabled && next.completedDraws % rules.witch.every === 0) {
+    next.pending.push({ kind: 'witch', milestone: next.completedDraws, hits: 0, giftId: null });
+    return next;
   }
   const eligible = rules.events.filter(event => event.enabled && event.weight > 0 && (event.id !== 'ghost' || balance > warningThreshold));
   if (rules.enabled && eligible.length && next.sinceEvent > rules.minGap && (next.sinceEvent >= rules.guaranteeAfter || random() < rules.chance)) {
