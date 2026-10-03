@@ -575,6 +575,199 @@
           "particleCount": 65
         }
       }
+    },
+    {
+      "id": "hiccup-dino",
+      "name": "打嗝小恐龙",
+      "description": "嗝！小恐龙从蛋里钻出来，喷出彩色泡泡。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/hiccup-dino.svg",
+        "icon": "🦖",
+        "primaryColor": "#b3ecd0",
+        "accentColor": "#ffe3a5"
+      },
+      "effects": {
+        "reveal": "egg-hatch",
+        "ambient": "floating-stars",
+        "sound": "burp-bubbles",
+        "interaction": "burp-bubbles",
+        "params": {
+          "durationMs": 3000,
+          "particleCount": 85
+        }
+      }
+    },
+    {
+      "id": "candy-cloud",
+      "name": "棉花糖小云朵",
+      "description": "戳一戳软软的小云朵，下一场糖果雨。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/candy-cloud.svg",
+        "icon": "☁️",
+        "primaryColor": "#ffc1da",
+        "accentColor": "#bceafa"
+      },
+      "effects": {
+        "reveal": "cloud-puff",
+        "ambient": "floating-stars",
+        "sound": "candy-rain",
+        "interaction": "candy-rain",
+        "params": {
+          "durationMs": 3000,
+          "particleCount": 85
+        }
+      }
+    },
+    {
+      "id": "jelly-bunny",
+      "name": "蹦蹦果冻兔",
+      "description": "软乎乎的果冻兔，压扁一点，弹高一点！",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/jelly-bunny.svg",
+        "icon": "🐰",
+        "primaryColor": "#dcb9f6",
+        "accentColor": "#ffcce9"
+      },
+      "effects": {
+        "reveal": "jelly-bounce",
+        "ambient": "floating-stars",
+        "sound": "jelly-hop",
+        "interaction": "jelly-hop",
+        "params": {
+          "durationMs": 3000,
+          "particleCount": 85
+        }
+      }
+    },
+    {
+      "id": "rainbow-dragon",
+      "name": "彩虹小飞龙",
+      "description": "小翅膀扑一扑，带着七彩尾巴飞起来。",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/rainbow-dragon.svg",
+        "icon": "🐉",
+        "primaryColor": "#a9ecdc",
+        "accentColor": "#c6b1ff"
+      },
+      "effects": {
+        "reveal": "dragon-flight",
+        "ambient": "rainbow-trail",
+        "sound": "rainbow-flight",
+        "interaction": "rainbow-flight",
+        "params": {
+          "durationMs": 3000,
+          "particleCount": 85
+        }
+      }
+    },
+    {
+      "id": "singing-mushrooms",
+      "name": "会唱歌的蘑菇",
+      "description": "三只小蘑菇，一起唱出森林里的快乐音符。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/singing-mushrooms.svg",
+        "icon": "🍄",
+        "primaryColor": "#ffa6c9",
+        "accentColor": "#b6a5ff"
+      },
+      "effects": {
+        "reveal": "mushroom-song",
+        "ambient": "floating-stars",
+        "sound": "mushroom-notes",
+        "interaction": "mushroom-notes",
+        "params": {
+          "durationMs": 3000,
+          "particleCount": 85
+        }
+      }
+    },
+    {
+      "id": "star-seed",
+      "name": "星星种子",
+      "description": "点一点小星星，种出一朵发光的魔法花。",
+      "rarity": "rare",
+      "weight": 2,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/star-seed.svg",
+        "icon": "🌱",
+        "primaryColor": "#ffe5a0",
+        "accentColor": "#a6e6b7",
+        "interactionImage": "assets/star-flower.svg"
+      },
+      "effects": {
+        "reveal": "seed-sprout",
+        "ambient": "rainbow-trail",
+        "sound": "flower-bloom",
+        "interaction": "flower-bloom",
+        "params": {
+          "durationMs": 3000,
+          "particleCount": 85
+        }
+      }
+    },
+    {
+      "id": "bubble-spaceship",
+      "name": "泡泡宇宙飞船",
+      "description": "三、二、一！带着小兔子去星球上玩。",
+      "rarity": "super",
+      "weight": 1,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/bubble-spaceship.svg",
+        "icon": "🚀",
+        "primaryColor": "#fbccdf",
+        "accentColor": "#bce9fa"
+      },
+      "effects": {
+        "reveal": "rocket-launch",
+        "ambient": "rainbow-trail",
+        "sound": "space-trip",
+        "interaction": "space-trip",
+        "params": {
+          "durationMs": 3000,
+          "particleCount": 85
+        }
+      }
+    },
+    {
+      "id": "giggle-socks",
+      "name": "偷笑小袜子",
+      "description": "左脚跳，右脚跳，两只小袜子偷偷笑。",
+      "rarity": "common",
+      "weight": 4,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/giggle-socks.svg",
+        "icon": "🧦",
+        "primaryColor": "#ffc1d8",
+        "accentColor": "#b5eadb"
+      },
+      "effects": {
+        "reveal": "sock-dance",
+        "ambient": "floating-stars",
+        "sound": "sock-giggle",
+        "interaction": "sock-giggle",
+        "params": {
+          "durationMs": 3000,
+          "particleCount": 85
+        }
+      }
     }
   ]
 }

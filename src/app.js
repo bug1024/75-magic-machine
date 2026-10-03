@@ -8,8 +8,9 @@
   let phase = 'idle', currentTreasure = null, spaceHeld = false, storageAvailable = true;
   // 每次打开页面都默认关闭，作弊开关不写入持久化设置。
   let cheatMode = false;
-  const gameRules = normalizeGameConfig(JSON.parse($('game-config').textContent));
-  let savedEnergy = null, rechargeStation = null;
+  const rawGameRules = JSON.parse($('game-config').textContent);
+  const gameRules = { ...normalizeGameConfig(rawGameRules), world: normalizeWorldRules(rawGameRules.world) };
+  let savedEnergy = null, rechargeStation = null, savedWorld = null, world = null;
   let chamber = null;
   let noticeTimer;
   function notice(message) {
@@ -21,7 +22,7 @@
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
     if (saved?.version === 1) {
       history = validHistory(saved.history);
-      savedEnergy = saved.energy;
+      savedEnergy = saved.energy; savedWorld = saved.world;
       muted = typeof saved.muted === 'boolean' ? saved.muted : false;
       gentle = reducedMotion.matches || saved.gentle === true;
     }
@@ -38,7 +39,7 @@
   if (!pool.length) { drawButton.disabled = true; $('draw-hint').textContent = '请先在配置中启用一个宝物'; }
   function save() {
     try {
-      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, history, muted, gentle, energy: rechargeStation?.snapshot() ?? normalizeEnergyState(savedEnergy, gameRules) }));
+      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, history, muted, gentle, energy: rechargeStation?.snapshot() ?? normalizeEnergyState(savedEnergy, gameRules), world: world?.snapshot() ?? normalizeWorldState(savedWorld, history, gameRules.world) }));
       storageAvailable = true;
     } catch {
       storageAvailable = false;
@@ -63,10 +64,10 @@
     const empty = rechargeStation.balance < gameRules.energy.drawCost;
     energy(rechargeStation.balance / gameRules.energy.max);
     $('button-text').textContent = empty ? '补充魔法' : phase === 'result' ? '再来一次' : '开启魔法';
-    $('draw-hint').textContent = empty ? '答一道题，点亮一格能量' : phase === 'result' ? '' : '按空格键，或点一下按钮';
+    $('draw-hint').textContent = empty ? '答一道题，点亮一格能量' : phase === 'result' ? (currentTreasure?.effects.interaction ? '点点宝物，和它玩一玩' : '') : '按空格键，或点一下按钮';
   }
   rechargeStation = new RechargeStation(gameRules, savedEnergy, {
-    canOpen: () => ['idle', 'result'].includes(phase) && !dialog.open,
+    canOpen: () => ['idle', 'result'].includes(phase) && !dialog.open && !world?.busy && !drawButton.disabled,
     onChange: () => { save(); syncDrawAction(); },
     onReward: full => { sound.unlock().then(() => sound.answerCorrect(full)); },
     onFailure: () => { sound.unlock().then(() => sound.answerWrong()); }
@@ -124,6 +125,7 @@
     machine.style.setProperty('--primary', treasure.appearance.primaryColor);
     machine.style.setProperty('--accent', treasure.appearance.accentColor);
     if (final) {
+      treasurePlay.set(treasure);
       $('rarity').textContent = `✦ ${RARITIES[treasure.rarity].label} ✦`;
       $('prize-name').textContent = treasure.name;
       $('prize-description').textContent = treasure.description;
@@ -162,7 +164,7 @@
     },
     frame(now) {
       const dt = Math.min(.04, (now - (this.last || now)) / 1000); this.last = now;
-      const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !document.hidden && !muted;
+      const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !world?.busy && !document.hidden && !muted;
       if (warningActive) {
         this.warningClock += dt;
         const interval = rechargeStation.balance <= 1 ? 2.4 : 3.2;
@@ -178,7 +180,7 @@
           this.ctx.strokeStyle = wave.color; this.ctx.lineWidth = 8 * (1 - wave.life) + 1;
           this.ctx.beginPath(); this.ctx.arc(wave.x, wave.y, radius, 0, Math.PI * 2); this.ctx.stroke(); this.ctx.restore();
         }
-        if (phase === 'result' && currentTreasure && !gentle && !dialog.open && !rechargeStation.dialog.open) {
+        if (phase === 'result' && currentTreasure && !gentle && !dialog.open && !rechargeStation.dialog.open && !world?.busy) {
           this.ambientClock += dt;
           if (this.ambientClock > .8) { this.emit(currentTreasure, true); this.ambientClock = 0; }
         }
@@ -206,11 +208,46 @@
   });
   function updateCount() { $('collection-count').textContent = history.length; }
   updateCount();
+  function treasureRecord(treasure, source = 'draw', eventId = null) {
+    return { drawId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`, prizeId: treasure.id, name: treasure.name, icon: treasure.appearance.icon, description: treasure.description, rarity: treasure.rarity, timestamp: Date.now(), source, eventId };
+  }
+  world = new MagicWorld(gameRules.world, savedWorld, history, {
+    energy: () => rechargeStation.balance, warningThreshold: gameRules.energy.warningThreshold,
+    pickGift: () => drawTreasure(treasures, Math.random, { equalProbability: cheatMode }),
+    wait, save, art: makeArt, sound: kind => { sound.stopWarning(); sound.encounter(kind); },
+    apply: (event, giftId) => {
+      if (event.id === 'ghost' && rechargeStation.balance <= gameRules.energy.warningThreshold) return { description: '小幽灵打了个饱嗝！', detail: '它没有拿走你的能量。' };
+      if (event.id === 'courier' || (event.id === 'fairy' && rechargeStation.full)) {
+        const gift = pool.find(treasure => treasure.id === giftId) || drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
+        history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
+        return { gift, description: `额外礼物：${gift.name}`, detail: '已经放进你的宝藏里！' };
+      }
+      const before = rechargeStation.balance; rechargeStation.change(event.energyDelta, false);
+      const delta = rechargeStation.balance - before;
+      return { description: event.id === 'fairy' ? '爱心魔法补充啦！' : '噗！小幽灵吸走一颗爱心', detail: `魔法能量 ${delta > 0 ? '+' : ''}${delta} · ${rechargeStation.balance}/${gameRules.energy.max}` };
+    }
+  });
+  async function resumeWorld() {
+    drawButton.disabled = true; $('collection').disabled = true; $('cheat').disabled = true; rechargeStation.setLocked(true);
+    try { await world.playPending(); }
+    catch { notice('魔法伙伴歇了一会儿，刷新后会继续拜访。'); }
+    finally { drawButton.disabled = false; $('collection').disabled = false; $('cheat').disabled = false; rechargeStation.setLocked(false); syncDrawAction(); }
+  }
+  if (world.state.pending.length && pool.length) resumeWorld();
+  const treasurePlay = new TreasurePlay($('treasure-art'), {
+    canPlay: () => phase === 'result' && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
+    feedback: (treasure, kind, count) => {
+      sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !document.hidden) sound.treasureSound(kind, count); });
+      particles.emit(treasure); particles.shockwave(treasure.appearance.primaryColor);
+      $('announcement').textContent = kind === 'flower-bloom' ? '星星种子开出魔法花啦！' : `${treasure.name}和你一起玩！`;
+    }
+  });
   // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
   async function draw() {
-    if (!['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || !pool.length) return;
+    if (!['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || world?.state.pending.length || !pool.length) return;
     if (rechargeStation.balance < gameRules.energy.drawCost) { rechargeStation.open(); return; }
     const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
+    treasurePlay.reset();
     rechargeStation.consume(); rechargeStation.setLocked(true);
     let awarded = false;
     drawButton.disabled = true; drawButton.classList.add('pressed');
@@ -223,7 +260,7 @@
     $('draw-hint').textContent = '能量正在冲进魔法舱';
     $('rarity').textContent = ''; $('prize-name').textContent = '小球，醒来啦！'; $('prize-description').textContent = '一道魔法，点亮整个机器。';
     try {
-      await sound.unlock(); sound.stop(); sound.start();
+      await sound.unlock(); sound.stop(); sound.start(machineLevel(world.state.completedDraws, gameRules.world).id);
       const buttonBounds = drawButton.getBoundingClientRect();
       particles.sparkAt(buttonBounds.left + buttonBounds.width / 2, buttonBounds.top, lampColors, 22);
       energy(.25); await wait(260); drawButton.classList.remove('pressed'); energy(.5); await wait(300);
@@ -259,8 +296,7 @@
       currentTreasure = winner; machine.dataset.reveal = winner.effects.reveal;
       showTreasure(winner, true); setPhase('celebrating');
       $('button-text').textContent = '找到宝物啦！'; $('draw-hint').textContent = '这份魔法，属于你！';
-      const record = { drawId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`, prizeId: winner.id, name: winner.name, icon: winner.appearance.icon, description: winner.description, rarity: winner.rarity, timestamp: Date.now() };
-      history.push(record); awarded = true; history = history.slice(-1000); save(); updateCount();
+      history.push(treasureRecord(winner)); awarded = true; history = history.slice(-1000); world.completedDraw(); save(); updateCount();
       $('announcement').textContent = `恭喜 75，获得${RARITIES[winner.rarity].label}：${winner.name}。${winner.description}`;
       sound.celebrate(winner.effects.sound); particles.shockwave(winner.appearance.primaryColor); particles.emit(winner);
       spellPop(winner.rarity === 'super' ? '超级宝物！' : winner.rarity === 'rare' ? '彩虹魔法！' : '找到宝物啦！');
@@ -268,7 +304,8 @@
       particles.emit(winner);
       await wait(winner.effects.params.durationMs - 420);
       setPhase('result'); $('button-text').textContent = '再来一次';
-      $('draw-hint').textContent = '';
+      $('draw-hint').textContent = winner.effects.interaction ? '点点宝物，和它玩一玩' : '';
+      await world.playPending();
     } catch {
       if (!awarded) rechargeStation.change(gameRules.energy.drawCost);
       setPhase('idle'); energy(0); $('treasure-art').hidden = true; $('button-text').textContent = '开启魔法';
@@ -295,7 +332,7 @@
   }, { capture: true });
   addEventListener('blur', () => { spaceHeld = false; });
   $('cheat').addEventListener('click', () => {
-    if (!['idle', 'result'].includes(phase)) return;
+    if (!['idle', 'result'].includes(phase) || world?.busy || drawButton.disabled) return;
     cheatMode = !cheatMode;
     $('cheat').setAttribute('aria-pressed', String(cheatMode));
     $('cheat').setAttribute('aria-label', cheatMode ? '关闭作弊模式' : '开启作弊模式');

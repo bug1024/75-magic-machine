@@ -50,7 +50,7 @@ try {
     await page.waitForTimeout(750);
     await page.screenshot({ path: `${output}/${effect}.png` });
     await page.waitForSelector('#machine[data-state="result"]');
-    assert.equal(await page.locator('#draw-hint').textContent(), '');
+    assert.equal(await page.locator('#draw-hint').textContent(), config.treasures.find(t => t.id === id).effects.interaction ? '点点宝物，和它玩一玩' : '');
     await page.keyboard.down('Space'); // 仍长按时不触发第二次抽取。
     assert.equal(await page.locator('#collection-count').textContent(), '1');
     assert.equal(await page.locator('#machine').getAttribute('data-state'), 'result');

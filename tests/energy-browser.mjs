@@ -9,6 +9,7 @@ const errors = [];
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => { Math.random = () => .5; }); // 此脚本专注能量，不触发随机事件。
   await page.goto(url);
   assert.equal(await page.locator('#power-count').textContent(), '10 / 10');
   assert.equal(await page.locator('.power-cell.filled').count(), 10);

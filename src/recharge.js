@@ -52,9 +52,9 @@ class RechargeStation {
   get full() { return this.balance >= this.rules.energy.max; }
   snapshot() { return { ...this.state }; }
   setLocked(locked) { this.$('recharge').disabled = locked; }
-  change(delta) {
+  change(delta, notify = true) {
     this.state.balance = changeEnergy(this.balance, delta, this.rules);
-    this.render(); this.onChange();
+    this.render(); if (notify) this.onChange();
   }
   consume() {
     if (this.balance < this.rules.energy.drawCost) return false;

@@ -1,7 +1,8 @@
 export const RARITIES = { common: { label: '闪亮宝物', english: 'STARLIGHT' }, rare: { label: '稀有宝物', english: 'RAINBOW MAGIC' }, super: { label: '超级宝物', english: 'SUPER LUCKY!' } };
-export const REVEALS = ['sparkle-bloom', 'rainbow-ring', 'moonrise', 'bubble-pop'];
+export const REVEALS = ['sparkle-bloom', 'rainbow-ring', 'moonrise', 'bubble-pop', 'egg-hatch', 'cloud-puff', 'jelly-bounce', 'dragon-flight', 'mushroom-song', 'seed-sprout', 'rocket-launch', 'sock-dance'];
 export const AMBIENTS = ['floating-stars', 'rainbow-trail', 'golden-rain'];
-export const SOUNDS = ['magic-chime', 'rainbow-song', 'royal-fanfare', 'bubble-giggle'];
+export const INTERACTIONS = ['burp-bubbles', 'candy-rain', 'jelly-hop', 'rainbow-flight', 'mushroom-notes', 'flower-bloom', 'space-trip', 'sock-giggle'];
+export const SOUNDS = ['magic-chime', 'rainbow-song', 'royal-fanfare', 'bubble-giggle', ...INTERACTIONS];
 const color = (value, fallback) => /^#[0-9a-f]{6}$/i.test(value || '') ? value : fallback;
 const clamp = (value, min, max, fallback) => Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback;
 // 校验配置，并为未知效果和不完整字段提供基础表现。
@@ -13,7 +14,8 @@ export function normalizeConfig(config) {
     ids.add(item.id);
     const appearance = item.appearance || {}, effects = item.effects || {};
     const image = typeof appearance.image === 'string' && /^(assets\/[^\s]+\.svg|data:image\/(svg\+xml|png|webp|jpeg);base64,[a-z0-9+/=]+)$/i.test(appearance.image) ? appearance.image : '';
-    return { id: item.id, name: String(item.name || '神秘宝物'), description: String(item.description || '一份属于你的魔法。'), rarity: RARITIES[item.rarity] ? item.rarity : 'common', weight: Number.isFinite(item.weight) && item.weight > 0 ? item.weight : 0, enabled: item.enabled !== false, appearance: { image, icon: String(appearance.icon || '✨'), primaryColor: color(appearance.primaryColor, '#ba9cff'), accentColor: color(appearance.accentColor, '#ffe1f5') }, effects: { reveal: REVEALS.includes(effects.reveal) ? effects.reveal : REVEALS[0], ambient: AMBIENTS.includes(effects.ambient) ? effects.ambient : AMBIENTS[0], sound: SOUNDS.includes(effects.sound) ? effects.sound : SOUNDS[0], params: { durationMs: clamp(effects.params?.durationMs, 1500, 4000, 2200), particleCount: Math.round(clamp(effects.params?.particleCount, 10, 160, 60)) } } };
+    const interactionImage = typeof appearance.interactionImage === 'string' && /^(assets\/[^\s]+\.svg|data:image\/svg\+xml;base64,[a-z0-9+/=]+)$/i.test(appearance.interactionImage) ? appearance.interactionImage : '';
+    return { id: item.id, name: String(item.name || '神秘宝物'), description: String(item.description || '一份属于你的魔法。'), rarity: RARITIES[item.rarity] ? item.rarity : 'common', weight: Number.isFinite(item.weight) && item.weight > 0 ? item.weight : 0, enabled: item.enabled !== false, appearance: { image, interactionImage, icon: String(appearance.icon || '✨'), primaryColor: color(appearance.primaryColor, '#ba9cff'), accentColor: color(appearance.accentColor, '#ffe1f5') }, effects: { interaction: INTERACTIONS.includes(effects.interaction) ? effects.interaction : '', reveal: REVEALS.includes(effects.reveal) ? effects.reveal : REVEALS[0], ambient: AMBIENTS.includes(effects.ambient) ? effects.ambient : AMBIENTS[0], sound: SOUNDS.includes(effects.sound) ? effects.sound : SOUNDS[0], params: { durationMs: clamp(effects.params?.durationMs, 1500, 4000, 2200), particleCount: Math.round(clamp(effects.params?.particleCount, 10, 160, 60)) } } };
   });
 }
 export function drawTreasure(treasures, random = Math.random, { equalProbability = false } = {}) {

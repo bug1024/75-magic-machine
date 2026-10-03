@@ -49,13 +49,14 @@ class MagicAudio {
   }
   kick(delay = 0, strong = false) { this.tone(135, .19, delay, strong ? .28 : .16, 'sine', 45); }
   chord(notes, delay = 0, length = .45) { notes.forEach(note => this.tone(note, length, delay, .045)); }
-  start() { this.kick(0, true); [262, 392, 523, 784].forEach((note, i) => this.tone(note, .22, i * .085)); this.tone(180, .5, 0, .055, 'sine', 1000); }
+  start(level = false) { if (level === 'winged' || level === 'castle') { const notes = level === 'castle' ? [392, 523, 659, 784, 1047, 1319] : [659, 784, 1047, 1319, 1568]; notes.forEach((note, i) => this.tone(note, .25, i * .09, .085)); this.chord(level === 'castle' ? [196, 262, 330] : [330, 392, 523], 0, .55); this.kick(0, true); if (level === 'winged') this.noiseHit(.2, .15, .035, 3000); return; } if (level === true || level === 'rainbow') { [523, 659, 784, 1047, 1319].forEach((note, i) => this.tone(note, .2, i * .075, .085)); this.chord([262, 330, 392], 0, .4); this.kick(0, true); return; } this.kick(0, true); [262, 392, 523, 784].forEach((note, i) => this.tone(note, .22, i * .085)); this.tone(180, .5, 0, .055, 'sine', 1000); }
   mixing(index) { this.kick(); this.noiseHit(.08, .055, .035); this.tone([262, 330, 392, 523][index % 4], .12, .02, .055, 'triangle'); }
   bounce(index) { this.tone(460 + index * 90, .09, 0, .04, 'sine', 300); }
   land() { this.kick(0, true); this.tone(380, .15, 0, .1, 'triangle', 170); }
   knock(index) { this.kick(); this.tone(620 + index * 200, .16, .03, .09, 'triangle'); }
   charge() { this.tone(220, .6, 0, .09, 'sine', 880); this.chord([262, 330, 392], .1, .5); }
   celebrate(id) {
+    if (INTERACTIONS.includes(id)) { this.treasureSound(id); return; }
     if (id === 'bubble-giggle') {
       [0, .19, .38].forEach((delay, i) => this.tone(120 + i * 25, .16, delay, .08, 'sawtooth', 55));
       [523, 784, 659, 1047, 784, 1319].forEach((note, i) => this.tone(note, .23, .55 + i * .16, .085));
@@ -79,6 +80,26 @@ class MagicAudio {
     score.chords.forEach((notes, i) => this.chord(notes, i * step * 4, .65));
     const end = score.melody.length * step;
     this.chord([523, 659, 784, 1047], end, .6); this.kick(end, true);
+  }
+  encounter(kind) {
+    if (kind === 'ghost') { this.tone(330, .32, 0, .085, 'triangle', 180); this.tone(150, .22, .8, .07, 'sawtooth', 90); this.tone(440, .17, 1.05, .07); return; }
+    if (kind.startsWith('upgrade')) { if (kind === 'upgrade-winged') this.treasureSound('rainbow-flight'); else this.celebrate(kind === 'upgrade-castle' ? 'royal-fanfare' : 'rainbow-song'); return; }
+    const notes = kind === 'fairy' ? [784, 1047, 1319, 1568, 1319] : [523, 659, 784, 1047];
+    notes.forEach((note, i) => this.tone(note, .25, i * .14, .08)); this.chord([262, 330, 392], .6, .5);
+  }
+  treasureSound(kind, count = 1) {
+    const scores = {
+      'burp-bubbles': [262, 330, 523, 659], 'candy-rain': [1047, 784, 659, 523, 784, 1047],
+      'jelly-hop': [330, 523, 784, 523, 1047], 'rainbow-flight': [523, 659, 784, 1047, 1319, 1568],
+      'mushroom-notes': [[523, 659, 784], [659, 784, 1047], [784, 1047, 1319]][(count - 1) % 3],
+      'flower-bloom': [523, 784, 1047, 1319, 1568], 'space-trip': [392, 330, 262, 523, 784, 1047],
+      'sock-giggle': [523, 392, 659, 523, 784, 659]
+    };
+    if (kind === 'burp-bubbles') this.tone(160, .27, 0, .08, 'sawtooth', 65);
+    if (kind === 'space-trip') { this.noiseHit(.6, .35, .08, 1000); this.tone(160, .6, .6, .06, 'sine', 900); }
+    const notes = scores[kind] || scores['flower-bloom'];
+    notes.forEach((note, i) => this.tone(note, .23, .3 + i * .15, .085, kind === 'candy-rain' ? 'sine' : 'triangle'));
+    this.chord([262, 330, 392], .3, .5); this.kick(.3);
   }
   answerCorrect(full = false) {
     // 小胜利的上行乐句；满格时追加和弦与一段更长的庆祝旋律。

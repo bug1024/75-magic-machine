@@ -5,7 +5,7 @@ import { normalizeConfig, drawTreasure, validHistory } from '../src/engine.mjs';
 const config = JSON.parse(await readFile(new URL('../treasures.json', import.meta.url), 'utf8'));
 test('完整奖池的每个宝物均按自身权重抽取，停用奖品不会进入奖池', () => {
   const pool = normalizeConfig(config);
-  assert.equal(pool.length, 25);
+  assert.equal(pool.length, 33);
   const total = pool.reduce((sum, item) => sum + item.weight, 0);
   let cursor = 0;
   for (const treasure of pool) {
@@ -26,6 +26,8 @@ test('全部宝物插画存在，专属效果已注册', async () => {
     const original = config.treasures.find(t => t.id === treasure.id);
     assert.equal(treasure.effects.reveal, original.effects.reveal);
     assert.equal(treasure.effects.sound, original.effects.sound);
+    assert.equal(treasure.effects.interaction, original.effects.interaction || '');
+    if (treasure.appearance.interactionImage) assert.match(await readFile(new URL(`../${treasure.appearance.interactionImage}`, import.meta.url), 'utf8'), /viewBox="0 0 360 360"/);
   }
 });
 test('作弊模式为每件宝物分配相等区间，关闭后恢复权重且不修改配置', () => {
