@@ -11,7 +11,7 @@
   const rawGameRules = JSON.parse($('game-config').textContent);
   const gameRules = { ...normalizeGameConfig(rawGameRules), world: normalizeWorldRules(rawGameRules.world) };
   let savedEnergy = null, rechargeStation = null, savedWorld = null, world = null;
-  let chamber = null, garden = null, savedGarden = null;
+  let chamber = null, garden = null, savedGarden = null, finale = null;
   let noticeTimer;
   let acquiredAt = {}, unread = new Set(), tips = new Set();
   const pacing = new ScenePacing();
@@ -71,7 +71,7 @@
   let lastAction = performance.now();
   const wakeScene = () => { lastAction = performance.now(); document.body.classList.remove('scene-resting'); };
   addEventListener('pointerdown', wakeScene, { passive: true }); addEventListener('keydown', wakeScene);
-  new ForegroundLoop(now => document.body.classList.toggle('scene-resting', now - lastAction > 8000 && ['idle', 'result'].includes(phase) && !world?.busy && !garden?.stories?.busy), 1000);
+  new ForegroundLoop(now => document.body.classList.toggle('scene-resting', now - lastAction > 8000 && ['idle', 'result'].includes(phase) && ((!world?.busy && !finale?.busy && !garden?.stories?.busy) || (finale?.busy && finale.state.stage === 'crown' && finale.elapsed > 8000))), 1000);
   const sound = new MagicAudio(() => muted);
   function syncDrawAction() {
     if (!['idle', 'result'].includes(phase) || !pool.length) return;
@@ -81,7 +81,7 @@
     $('draw-hint').textContent = empty ? '答一道题，点亮两格能量' : phase === 'result' ? (currentTreasure?.effects.interaction ? '点点宝物，和它玩一玩' : '') : '按空格键，或点一下按钮';
   }
   rechargeStation = new RechargeStation(gameRules, savedEnergy, {
-    canOpen: () => ['idle', 'result'].includes(phase) && !extraOverlay() && !dialog.open && !world?.busy && !drawButton.disabled,
+    canOpen: () => ['idle', 'result'].includes(phase) && !extraOverlay() && !dialog.open && !world?.busy && !finale?.busy && !drawButton.disabled,
     onChange: () => { save(); syncDrawAction(); },
     onReward: full => { sound.unlock().then(() => sound.answerCorrect(full)); },
     onFailure: () => { sound.unlock().then(() => sound.answerWrong()); }
@@ -215,7 +215,7 @@
   };
   particles.resize();
   new ForegroundLoop((now, elapsed) => {
-    const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !extraOverlay() && !world?.busy && !muted;
+    const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !extraOverlay() && !world?.busy && !finale?.busy && !muted;
     if (warningActive) { particles.warningClock += elapsed / 1000; const interval = rechargeStation.balance <= 1 ? 2.4 : 3.2; if (particles.warningClock >= interval && sound.warning(rechargeStation.balance)) particles.warningClock = 0; }
     else { particles.warningClock = 3.2; if (sound.warningVoices.size) sound.stopWarning(); }
   }, 500);
@@ -246,8 +246,9 @@
       const ammo = collected.length ? collected : pool;
       return ammo[Math.floor(Math.random() * ammo.length)] || pool[0];
     },
-    guardianOrigin: id => { const index = garden?.state.slots.indexOf(id); return document.querySelector(`[data-slot="${index}"]`)?.getBoundingClientRect() || $('window').getBoundingClientRect(); },
-    guardians: () => [...new Set(garden?.state.slots.filter(Boolean) || [])].map(id => treasures.find(t => t.id === id)).filter(t => t?.effects.guardian),
+    guardianOrigin: id => { const friend = document.querySelector(`[data-friend="${id}"]`); if (friend) return friend.getBoundingClientRect(); const index = garden?.state.slots.indexOf(id); return document.querySelector(`[data-slot="${index}"]`)?.getBoundingClientRect() || $('window').getBoundingClientRect(); },
+    guardians: () => [...[...new Set(garden?.state.slots.filter(Boolean) || [])].map(id => treasures.find(t => t.id === id)).filter(t => t?.effects.guardian), ...(finale?.guardianFriends() || [])],
+    eternal: () => world.state.finale.complete, finale: () => finale.play(),
     voice: text => { if (!globalThis.speechSynthesis) return; speechSynthesis.cancel(); if (!muted && text) { const speech = new SpeechSynthesisUtterance(text); speech.lang = 'zh-CN'; speech.rate = .9; speech.pitch = 1.2; speechSynthesis.speak(speech); } },
     wait, save, art: makeArt, sound: kind => { sound.stopWarning(); sound.encounter(kind); },
     apply: (event, giftId) => {
@@ -269,9 +270,9 @@
     finally { pacing.quiet(6000); drawButton.disabled = false; $('collection').disabled = false; $('cheat').disabled = false; rechargeStation.setLocked(false); syncDrawAction(); }
   }
   const treasurePlay = new TreasurePlay($('treasure-art'), {
-    canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
+    canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !finale?.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
     feedback: (treasure, kind, count, event, line, reaction) => {
-      sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !document.hidden) sound.interact(treasure, count, reaction); });
+      sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !finale?.busy && !document.hidden) sound.interact(treasure, count, reaction); });
       particles.emit(treasure, true);
       if (reaction?.surprise) particles.shockwave(treasure.appearance.primaryColor);
       $('announcement').textContent = line;
@@ -280,26 +281,38 @@
   garden = new MagicGarden(rawGameRules.weather, savedGarden, treasures, history, {
     inventory: () => inventory, reward: amount => { rechargeStation.change(amount, false); syncDrawAction(); },
     art: makeArt, save, unlock: () => sound.unlock(),
-    canPlay: () => !garden?.stories?.busy && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
-    canStory: () => ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !$('settings-dialog').open && !$('environment-dialog').open && !dialog.open && !rechargeStation.dialog.open,
+    canPlay: () => !garden?.stories?.busy && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !finale?.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
+    canStory: () => ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !finale?.busy && !$('settings-dialog').open && !$('environment-dialog').open && !dialog.open && !rechargeStation.dialog.open,
     canAutoStory: () => quietReady() && !world.state.pending.length && !garden?.weather,
     storyFinished: () => pacing.quiet(6000),
     weatherFinished: () => pacing.quiet(4000),
-    canWeather: () => !world.state.pending.length && quietReady() && ['idle', 'result'].includes(phase) && !drawButton.disabled && !garden?.stories?.busy && !world.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open,
-    sound: (kind, count = 1, reaction, treasure) => sound.unlock().then(() => { if (!document.hidden && !world.busy) treasure ? sound.interact(treasure, count, reaction) : sound.treasureSound(kind, count); }),
+    canWeather: () => !world.state.pending.length && (!!garden?.weather || quietReady()) && ['idle', 'result'].includes(phase) && !drawButton.disabled && !garden?.stories?.busy && !world.busy && !finale?.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open,
+    sound: (kind, count = 1, reaction, treasure) => sound.unlock().then(() => { if (!document.hidden && !world.busy && !finale?.busy) treasure ? sound.interact(treasure, count, reaction) : sound.treasureSound(kind, count); }),
     storySound: (kind, time, weather) => sound.story(kind, time, weather),
     weatherSound: kind => sound.weather(kind)
   }, rawGameRules.dayNight, rawGameRules.seasons, rawGameRules.gardenStories);
+  garden.adventures = new GardenAdventures(garden, rawGameRules.adventures || []);
+  finale = new MagicFinale(world, garden, treasures, {
+    dragonArt: rawGameRules.guardianDragon, inventory: () => inventory, save, art: makeArt, unlock: () => sound.unlock(),
+    canPlay: () => garden.callbacks.canPlay(),
+    grantCrown: crown => { if (!inventory[crown.id]) { acquired(crown); inventory[crown.id] = 1; history.push(treasureRecord(crown, 'finale')); history = history.slice(-1000); updateCount(); } },
+    music: stage => { sound.stop(); sound.stopWarning(); if (stage === 'celebrate' || stage === 'crown') sound.celebrate('royal-fanfare',true); else sound.story(stage === 'love' ? 'hug' : stage === 'seasons' ? 'forest' : 'sparkle','night',null); },
+    hit: (stage,count) => { sound.unlock().then(()=>stage === 'love' ? sound.tone(520+count*100,.22) : sound.encounter('witch-hit')); },
+    finished: () => { pacing.quiet(6000); syncDrawAction(); },
+    replay: async () => { if (!garden.callbacks.canPlay()) return; drawButton.disabled = true; rechargeStation.setLocked(true); try { await finale.play(true); } finally { drawButton.disabled=false; rechargeStation.setLocked(false); syncDrawAction(); } }
+  });
   const paceTick = (now, elapsed) => {
-    const active = !document.hidden && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !garden.stories.busy && !dialog.open && !rechargeStation.dialog.open && !extraOverlay();
+    const active = !document.hidden && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !finale?.busy && !garden.stories.busy && !dialog.open && !rechargeStation.dialog.open && !extraOverlay();
     pacing.advance(elapsed, active);
     if (active && pacing.ready && world.state.pending.length && pool.length) { garden.endWeather(); resumeWorld(); }
     }; new ForegroundLoop(paceTick, () => pacing.remaining || world.state.pending.length ? 100 : 500);
   // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
   async function draw() {
-    if (garden?.stories?.busy || !['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || extraOverlay() || !pool.length) return;
+    if (garden?.stories?.busy || !['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || finale?.busy || extraOverlay() || !pool.length) return;
     if (rechargeStation.balance < gameRules.energy.drawCost) { rechargeStation.open(); return; }
-    const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode, inventory, recentIds: history.filter(r => r.source !== 'event').slice(-3).reverse().map(r => r.prizeId) });
+    if (!world.state.finale.complete && world.state.completedDraws + 1 === FINALE_AT) { await finalDraw(); return; }
+    if (garden.weather) garden.endWeather();
+    const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode, inventory, recentIds: history.filter(r => r.source !== 'event' && r.source !== 'finale').slice(-3).reverse().map(r => r.prizeId) });
     treasurePlay.reset(); garden.choose(null); garden.stories.closePanel();
     rechargeStation.consume(); rechargeStation.setLocked(true);
     let awarded = false;
@@ -368,6 +381,14 @@
       rechargeStation.setLocked(false); syncDrawAction();
       drawButton.disabled = false; drawButton.classList.remove('pressed'); $('collection').disabled = false; $('cheat').disabled = false; $('jackpot').classList.remove('show'); $('spell-pop').classList.remove('pop');
     }
+  }
+  async function finalDraw() {
+    treasurePlay.reset(); garden.choose(null); garden.endWeather(); particles.clear();
+    rechargeStation.consume(); rechargeStation.setLocked(true); drawButton.disabled=true; $('collection').disabled=true;
+    world.completedDraw(); save();
+    setPhase('charging', pool[0]); $('button-text').textContent='第75次，魔法醒来！'; $('prize-name').textContent='小球变成星星啦！'; $('prize-description').textContent='花园正在准备一份特别的惊喜。'; $('treasure-art').hidden=true;
+    try { await sound.unlock(); sound.start('life'); await wait(1200); setPhase('idle'); await resumeWorld(); }
+    finally { setPhase('idle'); drawButton.disabled=false; $('collection').disabled=false; rechargeStation.setLocked(false); syncDrawAction(); }
   }
   drawButton.addEventListener('click', draw);
   addEventListener('keydown', event => {
@@ -438,7 +459,7 @@
       const art = document.createElement('div'); makeArt(treasure, art);
       // 收藏插画直接放入网格，保留图片失败时的图标降级。
       card.append(...art.childNodes);
-      card.append(textElement('span', RARITIES[treasure.rarity].label, 'rarity'), textElement('h3', treasure.name), textElement('p', owned ? treasure.description : '还没发现，下一次也许就是它。', 'card-description'), textElement('span', owned ? `拥有 ${owned} · 已摆放 ${used} · 可摆放 ${Math.max(0, owned - used)}` : '等待发现', 'card-count'));
+      card.append(textElement('span', treasure.id === CROWN_ID ? '超级宝物 · ONLY ONE' : RARITIES[treasure.rarity].label, 'rarity'), textElement('h3', treasure.name), textElement('p', owned ? treasure.description : treasure.id === CROWN_ID ? '完成第75次魔法之夜，获得唯一皇冠。' : '还没发现，下一次也许就是它。', 'card-description'), textElement('span', owned ? `拥有 ${owned} · 已摆放 ${used} · 可摆放 ${Math.max(0, owned - used)}` : '等待发现', 'card-count'));
       if (treasure.effects?.guardian) card.append(textElement('span', used ? (treasure.effects.guardian === 'heart-shield' ? '🛡 已摆放 · 爱心助攻与护盾' : '🛡 已摆放 · 魔法助攻') : '🛡 放进花园后可守护', 'guardian-card-badge'));
       const recentDate = acquiredAt[treasure.id] || latest?.timestamp;
       if (recentDate) card.append(textElement('time', `最近获得 · ${new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(recentDate)}`, 'last-date'));
@@ -458,7 +479,7 @@
   dialog.addEventListener('close', () => { if (garden?.chosen) garden.plots.querySelector('.garden-slot').focus(); else $('collection').focus(); });
   for (const id of ['settings', 'environment']) {
     const panel = $(`${id}-dialog`);
-    $(id).onclick = () => { if (!world.busy && !garden.stories.busy && ['idle', 'result'].includes(phase)) panel.showModal(); };
+    $(id).onclick = () => { if (!world.busy && !finale?.busy && !garden.stories.busy && ['idle', 'result'].includes(phase)) panel.showModal(); };
     panel.querySelector('[data-close]').onclick = () => panel.close();
     panel.addEventListener('click', event => { if (event.target === panel) { const r = panel.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) panel.close(); } });
     panel.addEventListener('close', () => $(id).focus());

@@ -3,7 +3,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const browser=await chromium.launch({...(process.env.BROWSER_CHANNEL ? {channel:process.env.BROWSER_CHANNEL} : {}),headless:true}),errors=[];
 try {
  const page=await browser.newPage();page.on('pageerror',e=>errors.push(e.message));await page.goto('file://'+process.cwd()+'/index.html');
- // 真正渲染35种声音的四种互动，检查非静音、无削波、节点回收、分支区别。
+ // 真正渲染36件宝物的声音的四种互动，检查非静音、无削波、节点回收、分支区别。
  const results=await page.evaluate(async()=>{
   const treasures=normalizeConfig(JSON.parse(document.getElementById('treasure-config').textContent));const results=[];
   for(const treasure of treasures){const variants=[];let baseline;
@@ -17,7 +17,7 @@ try {
    results.push({id:treasure.id,profile:treasure.effects.interactionSound,variants});
   }return results;
  });
- assert.equal(results.length,35);assert.equal(new Set(results.map(r=>r.profile)).size,35);
+ assert.equal(results.length,36);assert.equal(new Set(results.map(r=>r.profile)).size,36);
  for(const r of results){for(const v of r.variants){assert.ok(v.peak>.005&&v.peak<.95,`${r.id}: peak ${v.peak}`);assert.equal(v.voices,0);}assert.ok(r.variants[1].difference/Math.max(r.variants[0].energy,.0001)>.05,`${r.id} 分支应有声音变化`);}
  // 真实开奖后的点击、Enter及花园点击，都传入宝物与具体分支，且不重播中奖函数。
  if(await page.locator('#sound').getAttribute('aria-pressed')!=='true')await page.locator('#sound').click();await page.keyboard.press('Space');await page.waitForSelector('#machine[data-state=result]'); const drawnEnergy = await page.locator('#power-count').textContent();
@@ -26,5 +26,5 @@ try {
  const calls=await page.evaluate(()=>window.playCalls);assert.ok(calls.every(c=>c.voices>0),'真实点击应创建音频节点');assert.equal(calls[0].id,calls[1].id);assert.notEqual(calls[0].reaction,calls[1].reaction);assert.equal(await page.locator('#power-count').textContent(),drawnEnergy);assert.equal(await page.locator('#collection-count').textContent(),'1');
  await page.evaluate(()=>MagicAudio.prototype.treasureSound=window.originalTreasureSound);await page.locator('#collection').click();await page.locator('.treasure-card:not(.uncollected) .place-treasure').click();await page.locator('.garden-slot[data-slot="0"]').click();await page.evaluate(()=>MagicAudio.prototype.treasureSound=()=>{throw Error('花园互动误用了开奖音效')});await page.locator('.garden-slot[data-slot="0"]').click();await page.waitForFunction(()=>window.playCalls.length===3);assert.equal((await page.evaluate(()=>window.playCalls))[2].profile,calls[0].profile);
  await page.evaluate(async()=>{const ctx=new OfflineAudioContext(1,44100,44100),audio=new MagicAudio(()=>true);audio.setup(ctx);const treasure=normalizeConfig(JSON.parse(document.getElementById('treasure-config').textContent))[0];audio.interact(treasure);if(audio.voices.size)throw Error('静音时创建了声音');});
- assert.deepEqual(errors,[]);console.log('通过：35种宝物×4分支实际合成、分支差异、音量/无削波/节点回收、真实开奖与花园点击/Enter接入、静音、无重复开奖音效');
+ assert.deepEqual(errors,[]);console.log('通过：36件宝物×4分支实际合成、分支差异、音量/无削波/节点回收、真实开奖与花园点击/Enter接入、静音、无重复开奖音效');
 }finally{await browser.close();}

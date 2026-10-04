@@ -99,7 +99,7 @@ class GardenStories {
   finish() {
     // 让孩子有时间看自己的花园，多个组合不会连续抢占舞台。
     this.quietUntil = performance.now() + 10000;
-    this.busy = false; this.garden.callbacks.storyFinished?.(); this.stage.hidden = true; delete document.body.dataset.story;
+    this.busy = false; this.garden.adventures?.render(); this.garden.callbacks.storyFinished?.(); this.stage.hidden = true; delete document.body.dataset.story;
     document.getElementById('garden-story-actors').replaceChildren(); document.getElementById('garden-story-bits').replaceChildren(); this.render();
   }
 }

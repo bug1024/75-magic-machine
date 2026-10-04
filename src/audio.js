@@ -227,6 +227,8 @@ class MagicAudio {
         tone(240,.08,0,'triangle',180);tone(380,.24,.18,'sine',1900);rhythm.forEach((at,i)=>pop(.55+at,900+i*180));break;
       case 'piggy': // 金币落罐，叮当尾音。
         rhythm.forEach((at,i)=>{noise(at,.035,5000,.02);bell(1450+i*230,at+.025,.3);});tone(380,.12,.95,'triangle',220);break;
+      case 'crown': // 皇冠的星光和弦，与普通首饰的珠子声区分。
+        bell(784,0,.5);rhythm.forEach((at,i)=>bell(1047+i*263,.3+at,.4));if(variant>=2)trill(550,.3,1.25,80,12);break;
       case 'necklace': // 小珠子碰撞，高频而轻。
         rhythm.forEach((at,i)=>bell(2100+i*270,at,.25));break;
       case 'fairy-gem': // 清透晶体，多泛音长尾。

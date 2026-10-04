@@ -110,6 +110,7 @@ class WitchGame {
   }
   async play(item, settle) {
     this.enemyName = ENEMIES.find(e => e.id === (item.opponent || 'witch'))?.name || '邪恶女巫';
+    if (this.callbacks.eternal?.()) this.enemyName = `${this.enemyName.replace(/邪恶|淘气|捣蛋/g, '')}影子`;
     this.challengeRules = enemyRules(this.rules, item.opponent);
     this.guardians = this.callbacks.guardians?.() || [];
     item.usedGuardians ||= []; item.assistHits ??= item.assistUsed ? 1 : 0;

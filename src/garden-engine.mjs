@@ -1,3 +1,4 @@
+import { normalizeAdventureState } from './adventure-engine.mjs';
 export const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
 export const WEATHER_KINDS = ['rain', 'snow', 'wind', 'meteors', 'icecream', 'coins', 'sakura', 'storm'];
 export function normalizeWeatherRules(raw = {}) {
@@ -8,7 +9,7 @@ export function normalizeGardenState(raw, treasures, history, inventory = null) 
   const owned = inventory || history.reduce((counts, record) => { counts[record.prizeId] = (counts[record.prizeId] || 0) + 1; return counts; }, Object.create(null));
   const used = Object.create(null);
   const known = new Set(treasures.map(treasure => treasure.id));
-  return { discoveredAt: Object.fromEntries(Object.entries(raw?.discoveredAt || {}).filter(([id, time]) => /^[a-z0-9-]{1,64}$/.test(id) && Number.isFinite(time) && time > 0)), discovered: Array.isArray(raw?.discovered) ? [...new Set(raw.discovered.filter(id => typeof id === 'string' && /^[a-z0-9-]{1,64}$/.test(id)))].slice(0, 256) : [], season: SEASONS.includes(raw?.season) ? raw.season : null, timeOfDay: raw?.timeOfDay === 'night' ? 'night' : raw?.timeOfDay === 'day' ? 'day' : null, slots: Array.from({ length: 6 }, (_, index) => {
+  return { adventures: normalizeAdventureState(raw?.adventures), discoveredAt: Object.fromEntries(Object.entries(raw?.discoveredAt || {}).filter(([id, time]) => /^[a-z0-9-]{1,64}$/.test(id) && Number.isFinite(time) && time > 0)), discovered: Array.isArray(raw?.discovered) ? [...new Set(raw.discovered.filter(id => typeof id === 'string' && /^[a-z0-9-]{1,64}$/.test(id)))].slice(0, 256) : [], season: SEASONS.includes(raw?.season) ? raw.season : null, timeOfDay: raw?.timeOfDay === 'night' ? 'night' : raw?.timeOfDay === 'day' ? 'day' : null, slots: Array.from({ length: 6 }, (_, index) => {
     const id = raw?.slots?.[index];
     if (typeof id !== 'string' || !known.has(id) || (used[id] || 0) >= (owned[id] || 0)) return null;
     used[id] = (used[id] || 0) + 1; return id;
@@ -32,7 +33,7 @@ export function normalizeStoryRules(raw) {
     const requirements = Array.isArray(item.requirements) ? item.requirements.filter(r => r && /^[a-z][a-z0-9-]{0,31}$/.test(r.tag || '') && Number.isInteger(r.count) && r.count >= 1 && r.count <= 6 && (r.id == null || typeof r.id === 'string' && /^[a-z0-9-]{1,64}$/.test(r.id))).map(r => ({ tag: r.tag, count: r.count, ...(r.id ? { id: r.id } : {}) })) : [];
     if (!requirements.length || requirements.length !== item.requirements.length || requirements.reduce((sum, r) => sum + r.count, 0) > 6) return [];
     seen.add(item.id);
-    return [{ id: item.id, name: String(item.name || '花园故事'), icon: String(item.icon || '✦'), hint: String(item.hint || '试试把不同伙伴放在一起。'), lines: Array.isArray(item.lines) ? item.lines.filter(line => typeof line === 'string' && line.trim()).slice(0, 3).map(line => line.slice(0, 100)) : [], enabled: item.enabled !== false, effect: item.effect, requirements, durationMs: Number.isFinite(item.durationMs) ? Math.max(3000, Math.min(15000, Math.round(item.durationMs))) : 6500, energyReward: Number.isInteger(item.energyReward) ? Math.max(0, Math.min(3, item.energyReward)) : 1 }];
+    return [{ id: item.id, name: String(item.name || '花园故事'), icon: String(item.icon || '✦'), hint: String(item.hint || '试试把不同伙伴放在一起。'), lines: Array.isArray(item.lines) ? item.lines.filter(line => typeof line === 'string' && line.trim()).slice(0, 3).map(line => line.slice(0, 100)) : [], enabled: item.enabled !== false, effect: item.effect, keepsake: item.keepsake && /^[a-z0-9-]{1,64}$/.test(item.keepsake.id || '') ? { id: item.keepsake.id, name: String(item.keepsake.name || '故事纪念物').slice(0,50), icon: String(item.keepsake.icon || '✦').slice(0,12), line: String(item.keepsake.line || '花园还记得这个故事！').slice(0,100) } : null, requirements, durationMs: Number.isFinite(item.durationMs) ? Math.max(3000, Math.min(15000, Math.round(item.durationMs))) : 6500, energyReward: Number.isInteger(item.energyReward) ? Math.max(0, Math.min(3, item.energyReward)) : 1 }];
   });
 }
 // 一件宝物只担任一个组合角色，重复摆放同种宝物不会充当不同伙伴。

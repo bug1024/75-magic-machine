@@ -70,7 +70,7 @@ test('每次升级后第一抽首次遇见新反派，旧角色混合出现且�
     assert.ok(restored.seenOpponents.includes(id));
   }
   const quiet = {...rules, enabled:false};
-  let state = {...initial(),completedDraws:60,seenOpponents:ENEMIES.map(e=>e.id),lastWitchDraw:60};
+  let state = {...initial(),finale:{complete:true},completedDraws:80,seenOpponents:ENEMIES.map(e=>e.id),lastWitchDraw:80};
   for (let i=1;i<=rules.witch.minGap;i++) {state=advanceWorld(state,quiet,10,3,()=>0);assert.equal(state.pending.length,0);}
   state=advanceWorld(state,quiet,10,3,()=>0);assert.equal(state.pending[0].opponent,'bat');state.pending=[];
   for(let i=1;i<=rules.witch.guaranteeAfter;i++){state=advanceWorld(state,quiet,10,3,()=>.99);assert.equal(state.pending.some(p=>p.kind==='witch'),i===rules.witch.guaranteeAfter);}

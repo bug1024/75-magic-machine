@@ -9,11 +9,14 @@ class MagicWorld {
   snapshot() { return structuredClone(this.state); }
   render(theme = true) {
     const pendingUpgrade = this.state.pending.find(item => item.kind === 'upgrade');
-    const threshold = MACHINE_LEVELS.find(level => level.id === pendingUpgrade?.level)?.threshold;
+    const threshold = this.state.finale.complete || this.state.pending.some(item=>item.kind==='finale') ? null : MACHINE_LEVELS.find(level => level.id === pendingUpgrade?.level)?.threshold;
     const level = machineLevel(threshold ? Math.min(this.state.completedDraws, this.rules[threshold] - 1) : this.state.completedDraws, this.rules);
     const next = MACHINE_LEVELS[MACHINE_LEVELS.indexOf(level) + 1];
     if (theme) this.$('machine').dataset.level = level.id;
     this.$('machine-level').textContent = `✦ ${level.name}${next ? ` · ${this.state.completedDraws}/${this.rules[next.threshold]}` : ''} ✦`;
+    if (this.state.finale.complete) this.$('machine-level').textContent = '👑 永恒花园 · 完整生命树';
+    else if (this.state.completedDraws >= 50) this.$('machine-level').textContent = `✦ 星光庆典 · ${Math.min(75, this.state.completedDraws)}/75 ✦`;
+    this.$('machine').style.setProperty('--final-stars', this.state.finale.complete ? 1 : Math.max(0, Math.min(1,(this.state.completedDraws - 50) / 25)));
     this.$('machine-level').setAttribute('aria-label', `${level.name}，累计抽奖 ${this.state.completedDraws} 次${next ? `，${this.rules[next.threshold]} 次解锁${next.name}` : '，已完成全部形态升级'}`);
   }
   completedDraw() {
@@ -102,6 +105,8 @@ class MagicWorld {
     try {
       for (let scene = 0; scene < 1 && this.state.pending.length; scene++) {
         const item = this.state.pending[0];
+        if (item.kind === 'upgrade' && this.state.finale.complete) { this.state.pending.shift(); this.callbacks.save(); this.render(); continue; }
+        if (item.kind === 'finale') { await this.callbacks.finale(); continue; }
         if (item.kind === 'upgrade' && item.level === 'life') { await this.awakenLifeTree(); continue; }
         if (item.kind === 'witch') {
           await this.witch.play(item, () => {

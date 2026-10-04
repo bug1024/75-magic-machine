@@ -1,3 +1,4 @@
+import { FINALE_AT, normalizeFinale } from './adventure-engine.mjs';
 // 随机事件只在一次正常开奖后判定；赠送的宝物不推进抽奖次数。
 export const MACHINE_LEVELS = [
   { id: 'starlight', name: '星光机器', threshold: null },
@@ -39,20 +40,24 @@ export function normalizeWorldRules(value) {
 }
 export function normalizeWorldState(saved, history, rules) {
   const natural = (value, fallback) => Number.isSafeInteger(value) && value >= 0 ? value : fallback;
-  const completedDraws = natural(saved?.completedDraws, history.filter(record => record.source !== 'event').length);
-  const pending = Array.isArray(saved?.pending) ? saved.pending.filter(item => item && (item.kind === 'upgrade' || item.kind === 'witch' || (item.kind === 'event' && rules.events.some(event => event.id === item.id)))).map(item => item.kind === 'upgrade' ? { kind: 'upgrade', level: MACHINE_LEVELS.some(level => level.threshold && level.id === item.level) ? item.level : 'rainbow' } : item.kind === 'witch' ? { kind: 'witch', ...(ENEMIES.some(e => e.id === item.opponent) ? { opponent: item.opponent } : {}), assistUsed: item.assistUsed === true, usedGuardians: Array.isArray(item.usedGuardians) ? [...new Set(item.usedGuardians.filter(id => typeof id === 'string'))].slice(0, 6) : [], assistHits: Math.min(5, natural(item.assistHits, item.assistUsed ? 1 : 0)), shieldUsed: item.shieldUsed === true, interferenceUsed: item.interferenceUsed === true, milestone: natural(item.milestone, completedDraws), hits: Math.min(enemyRules(rules.witch, item.opponent).hits, natural(item.hits, 0)), giftId: typeof item.giftId === 'string' ? item.giftId : null } : { kind: 'event', id: item.id, ...(Number.isInteger(item.chargeRemaining) ? { chargeRemaining: Math.max(0, Math.min(10, item.chargeRemaining)) } : {}), giftId: typeof item.giftId === 'string' ? item.giftId : null }).slice(0, 8) : [];
+  const completedDraws = natural(saved?.completedDraws, history.filter(record => record.source !== 'event' && record.source !== 'finale').length);
+  const pending = Array.isArray(saved?.pending) ? saved.pending.filter(item => item && (item.kind === 'finale' || item.kind === 'upgrade' || item.kind === 'witch' || (item.kind === 'event' && rules.events.some(event => event.id === item.id)))).map(item => item.kind === 'finale' ? { kind: 'finale' } : item.kind === 'upgrade' ? { kind: 'upgrade', level: MACHINE_LEVELS.some(level => level.threshold && level.id === item.level) ? item.level : 'rainbow' } : item.kind === 'witch' ? { kind: 'witch', ...(ENEMIES.some(e => e.id === item.opponent) ? { opponent: item.opponent } : {}), assistUsed: item.assistUsed === true, usedGuardians: Array.isArray(item.usedGuardians) ? [...new Set(item.usedGuardians.filter(id => typeof id === 'string'))].slice(0, 6) : [], assistHits: Math.min(5, natural(item.assistHits, item.assistUsed ? 1 : 0)), shieldUsed: item.shieldUsed === true, interferenceUsed: item.interferenceUsed === true, milestone: natural(item.milestone, completedDraws), hits: Math.min(enemyRules(rules.witch, item.opponent).hits, natural(item.hits, 0)), giftId: typeof item.giftId === 'string' ? item.giftId : null } : { kind: 'event', id: item.id, ...(Number.isInteger(item.chargeRemaining) ? { chargeRemaining: Math.max(0, Math.min(10, item.chargeRemaining)) } : {}), giftId: typeof item.giftId === 'string' ? item.giftId : null }).slice(0, 8) : [];
   const oldChallenge = pending.find(item => item.kind === 'witch');
   const fallbackWitch = oldChallenge ? Math.min(completedDraws, oldChallenge.milestone) : history.some(record => ENEMIES.some(enemy => enemy.id === record.eventId)) ? completedDraws : null;
   const candidateWitch = natural(saved?.lastWitchDraw, fallbackWitch);
   const lastWitchDraw = candidateWitch === null ? null : Math.min(completedDraws, candidateWitch);
   const seenOpponents = Array.isArray(saved?.seenOpponents) ? [...new Set(saved.seenOpponents.filter(id => ENEMIES.some(e => e.id === id)))] : saved ? ENEMIES.filter(e => completedDraws >= rules[e.threshold] && (e.id === 'bat' || e.id === 'witch')).map(e => e.id) : [];
-  return { completedDraws, seenEvents: Array.isArray(saved?.seenEvents) ? [...new Set(saved.seenEvents.filter(id => rules.events.some(e => e.id === id)))] : [], seenOpponents, lastWitchDraw, witchWait: Math.min(rules.witch.guaranteeAfter, natural(saved?.witchWait, 0)), sinceEvent: Math.min(rules.guaranteeAfter, natural(saved?.sinceEvent, 0)), pending };
+  const finale = normalizeFinale(saved?.finale);
+  if (completedDraws >= FINALE_AT && !finale.complete && !pending.some(item=>item.kind === 'finale')) pending.unshift({kind:'finale'});
+  const queue = finale.complete ? pending.filter(item=>item.kind !== 'finale') : [...pending.filter(item=>item.kind === 'finale').slice(0,1), ...pending.filter(item=>item.kind !== 'finale')];
+  return { finale, completedDraws, seenEvents: Array.isArray(saved?.seenEvents) ? [...new Set(saved.seenEvents.filter(id => rules.events.some(e => e.id === id)))] : [], seenOpponents, lastWitchDraw, witchWait: Math.min(rules.witch.guaranteeAfter, natural(saved?.witchWait, 0)), sinceEvent: Math.min(rules.guaranteeAfter, natural(saved?.sinceEvent, 0)), pending: queue };
 }
 export function advanceWorld(state, rules, balance, warningThreshold, random = Math.random) {
   const next = { ...state, completedDraws: state.completedDraws + 1, sinceEvent: state.sinceEvent + 1, pending: [...state.pending] };
   for (const level of MACHINE_LEVELS.filter(level => level.threshold)) {
     if (state.completedDraws < rules[level.threshold] && next.completedDraws >= rules[level.threshold]) next.pending.push({ kind: 'upgrade', level: level.id });
   }
+  if (next.completedDraws >= FINALE_AT && !state.finale?.complete && !next.pending.some(item=>item.kind==='finale')) { next.pending.unshift({kind:'finale'}); return next; }
   if (state.pending.length) return next;
   if (next.pending.some(item => item.kind === 'upgrade')) { next.sinceEvent = 0; return next; }
   // 升级当次留给机器；升级后的第一抽安排新角色登场，之后混合旧角色。

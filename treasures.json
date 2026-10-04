@@ -2478,6 +2478,85 @@
         "magic",
         "heart"
       ]
+    },
+    {
+      "id": "75-starlight-crown",
+      "name": "75 的星光皇冠",
+      "description": "魔法之夜留下的唯一皇冠，属于花园真正的小小守护者。",
+      "rarity": "super",
+      "weight": 0,
+      "enabled": true,
+      "tags": [
+        "magic",
+        "star",
+        "guardian",
+        "outfit"
+      ],
+      "appearance": {
+        "image": "assets/75-starlight-crown.svg",
+        "icon": "👑",
+        "primaryColor": "#ffe49a",
+        "accentColor": "#c4a3ff"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "golden-rain",
+        "sound": "royal-fanfare",
+        "guardian": "star-shot",
+        "interaction": "gem-sparkle",
+        "interactionSound": "crown",
+        "interactionLines": [
+          "皇冠记得你的每一份勇气！",
+          "75，星光一直陪着你！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "fountain",
+            "line": "皇冠洒出属于你的星光！",
+            "symbols": [
+              "👑",
+              "⭐",
+              "💗"
+            ],
+            "weight": 10
+          },
+          {
+            "id": "play",
+            "motion": "hug",
+            "line": "守护龙送来一个星光抱抱！",
+            "symbols": [
+              "🐉",
+              "💗"
+            ],
+            "weight": 10
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "三次星光，伙伴们一起跳舞！",
+            "symbols": [
+              "👑",
+              "🌸",
+              "⭐"
+            ],
+            "weight": 10,
+            "trigger": "combo"
+          },
+          {
+            "id": "secret",
+            "motion": "orbit",
+            "line": "守护龙绕着皇冠飞了一圈！",
+            "symbols": [
+              "🐉",
+              "👑",
+              "✨"
+            ],
+            "weight": 1,
+            "surprise": true
+          }
+        ]
+      }
     }
   ]
 }

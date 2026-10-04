@@ -4,8 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { normalizeConfig, drawTreasure, validHistory, chooseReaction } from '../src/engine.mjs';
 const config = JSON.parse(await readFile(new URL('../treasures.json', import.meta.url), 'utf8'));
 test('完整奖池的每个宝物均按自身权重抽取，停用奖品不会进入奖池', () => {
-  const pool = normalizeConfig(config);
-  assert.equal(pool.length, 35);
+  const all = normalizeConfig(config), pool = all.filter(t=>t.enabled && t.weight>0);
+  assert.equal(all.length, 36); assert.equal(pool.length, 35); assert.equal(all.find(t=>t.id==='75-starlight-crown').weight,0);
   const total = pool.reduce((sum, item) => sum + item.weight, 0);
   let cursor = 0;
   for (const treasure of pool) {
@@ -32,7 +32,7 @@ test('全部宝物插画存在，专属效果已注册', async () => {
   }
 });
 test('作弊模式为每件宝物分配相等区间，关闭后恢复权重且不修改配置', () => {
-  const pool = normalizeConfig(config), original = structuredClone(pool);
+  const pool = normalizeConfig(config).filter(t=>t.enabled && t.weight>0), original = structuredClone(pool);
   for (let i = 0; i < pool.length; i++) {
     assert.equal(drawTreasure(pool, () => (i + .5) / pool.length, { equalProbability: true }).id, pool[i].id);
   }

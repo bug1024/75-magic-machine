@@ -8,13 +8,13 @@ const seed={version:1,muted:true,history:[],inventory:{'loving-mom':1,'longbao-p
 try {
  const page=await browser.newPage({viewport:{width:1280,height:800}});page.on('pageerror',e=>errors.push(e.message));
  await page.goto(url);await page.evaluate(s=>localStorage.setItem('75-magic-machine:v1',JSON.stringify(s)),seed);await page.reload();
- assert.equal(await page.locator('.utilities button').count(),4);
+ assert.equal(await page.locator('.utilities button:visible').count(),4);
  await page.locator('#settings').click();await page.locator('#cheat').click();assert.equal(await page.locator('#cheat').getAttribute('aria-pressed'),'true');
  await page.keyboard.press('Space');assert.equal(await page.locator('#machine').getAttribute('data-state'),'idle');await page.keyboard.press('Escape');
  await page.locator('#environment').click();await page.locator('#season').click();assert.equal(await page.locator('body').getAttribute('data-season'),'summer');
  await page.locator('#collection').click();await page.locator('#collection-filter').selectOption('owned');assert.equal(await page.locator('.treasure-card').count(),3);
  await page.locator('#collection-sort').selectOption('rarity');assert.equal(await page.locator('.treasure-card').first().getAttribute('data-treasure'),'super-heart');
- await page.locator('#collection-filter').selectOption('missing');assert.equal(await page.locator('.treasure-card').count(),32);await page.keyboard.press('Escape');
+ await page.locator('#collection-filter').selectOption('missing');assert.equal(await page.locator('.treasure-card').count(),await page.locator('#treasure-config').evaluate(el=>JSON.parse(el.textContent).treasures.length)-Object.keys(seed.inventory).length);await page.keyboard.press('Escape');
  await page.locator('#garden-story-button').click();assert.equal(await page.locator('#garden-story-shade').isVisible(),true);assert.ok(await page.locator('.recipe-companion img').count()>0);
  await page.locator('#garden-story-panel').evaluate(el=>el.scrollTop=el.scrollHeight);const r=await page.locator('#close-garden-stories').boundingBox();assert.ok(r.y>0&&r.y<800);await page.keyboard.press('Escape');assert.ok(await page.locator('#garden-story-panel').isHidden());
  await page.locator('#garden-story-button').click();await page.locator('#garden-story-shade').click({position:{x:1000,y:100}});assert.ok(await page.locator('#garden-story-panel').isHidden());

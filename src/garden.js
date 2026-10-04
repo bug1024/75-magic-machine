@@ -31,7 +31,7 @@ class MagicGarden {
       }
     }; new ForegroundLoop(tick, 250);
   }
-  snapshot() { return { discoveredAt: {...this.state.discoveredAt}, discovered: [...this.state.discovered], season: this.state.season, timeOfDay: this.state.timeOfDay, slots: [...this.state.slots] }; }
+  snapshot() { return { adventures: structuredClone(this.state.adventures), discoveredAt: {...this.state.discoveredAt}, discovered: [...this.state.discovered], season: this.state.season, timeOfDay: this.state.timeOfDay, slots: [...this.state.slots] }; }
   renderSeason() {
     const seasons = { spring: ['🌸', '春天'], summer: ['🌿', '夏天'], autumn: ['🍁', '秋天'], winter: ['❄', '冬天'] };
     document.body.dataset.season = this.state.season;
@@ -106,9 +106,11 @@ class MagicGarden {
       bit.textContent = { snow: '❄', wind: '🍃', icecream: ['🍦','🍨'][i % 2], coins: '★', sakura: '🌸' }[kind] || '';
       if (kind === 'storm' && i % 5 === 0) { bit.textContent = '🍃'; bit.className = 'storm-leaf'; } this.layer.append(bit);
     }
+    this.adventures?.startWeather(kind);
     this.callbacks.weatherSound(kind);
   }
   endWeather() {
+    this.adventures?.stopWeather();
     if (this.weather) this.callbacks.weatherFinished?.();
     this.weather = null; delete document.body.dataset.weather; this.layer.replaceChildren();
     this.nextAt = this.elapsed + this.rules.intervalMs; document.getElementById('weather-name').textContent = '⛅️'; document.getElementById('weather').title = '晴天，点击切换天气'; document.getElementById('weather').setAttribute('aria-label', '晴天，点击切换天气');

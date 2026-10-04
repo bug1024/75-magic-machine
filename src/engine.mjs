@@ -10,7 +10,7 @@ export function chooseReaction(reactions, count, previous, random = Math.random)
   let cursor = Math.max(0, Math.min(.999999, random())) * candidates.reduce((sum, r) => sum + r.weight, 0);
   return candidates.find(r => (cursor -= r.weight) < 0) || reactions[0];
 }
-export const INTERACTION_SOUNDS = ["silk", "unicorn", "castle", "dolphin", "owl", "wobbler", "brush", "piggy", "hanfu", "cape", "mermaid", "fairy-gem", "baby", "mom", "poop", "cat", "scooter", "bicycle", "wand", "moon-gun", "necklace", "headband", "wiggle-car", "alarm", "whale", "dino", "candy", "jelly", "dragon", "mushroom", "seed", "spaceship", "socks", "penguin", "super-heart"];
+export const INTERACTION_SOUNDS = ["silk", "unicorn", "castle", "dolphin", "owl", "wobbler", "brush", "piggy", "hanfu", "cape", "mermaid", "fairy-gem", "baby", "mom", "poop", "cat", "scooter", "bicycle", "wand", "moon-gun", "necklace", "headband", "wiggle-car", "alarm", "whale", "dino", "candy", "jelly", "dragon", "mushroom", "seed", "spaceship", "socks", "penguin", "super-heart", "crown"];
 export const SOUNDS = ['magic-chime', 'rainbow-song', 'royal-fanfare', 'bubble-giggle', ...INTERACTIONS];
 const color = (value, fallback) => /^#[0-9a-f]{6}$/i.test(value || '') ? value : fallback;
 const clamp = (value, min, max, fallback) => Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback;
@@ -47,5 +47,6 @@ export function normalizeInventory(saved, history) {
   if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
     for (const [id, count] of Object.entries(saved)) if (id && Number.isSafeInteger(count) && count > 0) result[id] = count;
   } else for (const record of history) result[record.prizeId] = (result[record.prizeId] || 0) + 1;
+  if (result['75-starlight-crown']) result['75-starlight-crown'] = 1;
   return result;
 }

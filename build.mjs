@@ -1,14 +1,16 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { normalizeConfig } from './src/engine.mjs';
 import { normalizeGameConfig } from './src/energy.mjs';
+import { normalizeAdventureRules } from './src/adventure-engine.mjs';
 import { normalizeWorldRules } from './src/world-engine.mjs';
 import { normalizeWeatherRules, normalizeDayNightRules, normalizeSeasonRules, normalizeStoryRules } from './src/garden-engine.mjs';
 const rawGame = JSON.parse(await readFile('game-config.json', 'utf8'));
 const gardenStories = normalizeStoryRules(JSON.parse(await readFile('garden-stories.json', 'utf8')));
-const gameConfig = { ...normalizeGameConfig(rawGame), world: normalizeWorldRules(rawGame.world), weather: normalizeWeatherRules(rawGame.weather), dayNight: normalizeDayNightRules(rawGame.dayNight), seasons: normalizeSeasonRules(rawGame.seasons), gardenStories };
+const gameConfig = { ...normalizeGameConfig(rawGame), world: normalizeWorldRules(rawGame.world), weather: normalizeWeatherRules(rawGame.weather), dayNight: normalizeDayNightRules(rawGame.dayNight), seasons: normalizeSeasonRules(rawGame.seasons), gardenStories, adventures: normalizeAdventureRules(JSON.parse(await readFile('garden-adventures.json', 'utf8'))) };
 for (const event of gameConfig.world.events) if (event.image.startsWith('assets/')) event.image = `data:image/svg+xml;base64,${(await readFile(event.image)).toString('base64')}`;
 for (const type of ['bat', 'rock', 'dragon']) if (gameConfig.world.witch[type].image.startsWith('assets/')) gameConfig.world.witch[type].image = `data:image/svg+xml;base64,${(await readFile(gameConfig.world.witch[type].image)).toString('base64')}`;
 if (gameConfig.world.witch.image.startsWith('assets/')) gameConfig.world.witch.image = `data:image/svg+xml;base64,${(await readFile(gameConfig.world.witch.image)).toString('base64')}`;
+gameConfig.guardianDragon = `data:image/svg+xml;base64,${(await readFile('assets/guardian-dragon.svg')).toString('base64')}`;
 const config = { version: 1, treasures: normalizeConfig(JSON.parse(await readFile('treasures.json', 'utf8'))) };
 for (const treasure of config.treasures) {
   for (const field of ['image', 'interactionImage']) {
@@ -20,8 +22,12 @@ for (const treasure of config.treasures) {
 }
 const [template, css, gachaCss, engine, chamber, audio, energyEngine, recharge, energyCss, worldEngine, world, worldCss, treasurePlay, treasureCss, evolutionCss, witch, witchCss, gardenEngine, gardenStoriesScript, garden, gardenCss, storyCss, app] = await Promise.all(['src/template.html', 'src/style.css', 'src/gacha.css', 'src/engine.mjs', 'src/chamber.js', 'src/audio.js', 'src/energy.mjs', 'src/recharge.js', 'src/energy.css', 'src/world-engine.mjs', 'src/world.js', 'src/world.css', 'src/treasure-play.js', 'src/treasure-play.css', 'src/evolution.css', 'src/witch.js', 'src/witch.css', 'src/garden-engine.mjs', 'src/garden-stories.js', 'src/garden.js', 'src/garden.css', 'src/garden-stories.css', 'src/app.js'].map(path => readFile(path, 'utf8')));
 const experience = await readFile('src/experience.mjs', 'utf8');
+const adventureEngine = await readFile('src/adventure-engine.mjs','utf8');
+const adventures = await readFile('src/adventures.js','utf8');
+const finale = await readFile('src/finale.js','utf8');
+const adventureCss = await readFile('src/adventures.css','utf8');
 const experienceCss = await readFile('src/experience.css', 'utf8');
 const safeConfig = JSON.stringify(config).replace(/</g, '\\u003c');
-const html = template.replace('/* INLINE_STYLES */', () => `${css}\n${gachaCss}\n${energyCss}\n${worldCss}\n${treasureCss}\n${evolutionCss}\n${witchCss}\n${gardenCss}\n${storyCss}\n${experienceCss}`).replace('/* INLINE_GAME_CONFIG */', () => JSON.stringify(gameConfig).replace(/</g, '\\u003c')).replace('/* INLINE_CONFIG */', () => safeConfig).replace('/* INLINE_SCRIPT */', () => `${experience.replace(/export /g, '')}\n${engine.replace(/export /g, '')}\n${chamber}\n${audio}\n${energyEngine.replace(/export /g, '')}\n${recharge}\n${worldEngine.replace(/export /g, '')}\n${witch}\n${world}\n${treasurePlay}\n${gardenEngine.replace(/export /g, '')}\n${gardenStoriesScript}\n${garden}\n${app}`);
+const html = template.replace('/* INLINE_STYLES */', () => `${css}\n${gachaCss}\n${energyCss}\n${worldCss}\n${treasureCss}\n${evolutionCss}\n${witchCss}\n${gardenCss}\n${storyCss}\n${experienceCss}\n${adventureCss}`).replace('/* INLINE_GAME_CONFIG */', () => JSON.stringify(gameConfig).replace(/</g, '\\u003c')).replace('/* INLINE_CONFIG */', () => safeConfig).replace('/* INLINE_SCRIPT */', () => `${experience.replace(/export /g, '')}\n${engine.replace(/export /g, '')}\n${chamber}\n${audio}\n${energyEngine.replace(/export /g, '')}\n${recharge}\n${adventureEngine.replace(/export /g, '')}\n${worldEngine.replace(/^import .*;\n/gm, '').replace(/export /g, '')}\n${witch}\n${world}\n${treasurePlay}\n${gardenEngine.replace(/^import .*;\n/gm, '').replace(/export /g, '')}\n${gardenStoriesScript}\n${garden}\n${adventures}\n${finale}\n${app}`);
 await writeFile('index.html', html);
 console.log('已生成 index.html：配置、插画、样式与脚本全部内嵌。');

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "weather": [
+    {"kind":"rain","title":"小花喝水啦","prompt":"接三滴雨，浇醒小花","symbol":"💧","souvenir":"雨露小花","icon":"🌷","effect":"forest"},
+    {"kind":"snow","title":"龙宝堆雪人","prompt":"滚三团雪，堆一个小雪人","symbol":"❄","souvenir":"龙宝的小雪人","icon":"⛄","effect":"ocean"},
+    {"kind":"wind","title":"帮伙伴找帽子","prompt":"抓住三顶飞走的小帽子","symbol":"👒","souvenir":"风精灵风车","icon":"🍃","effect":"race"},
+    {"kind":"meteors","title":"许一个星星愿望","prompt":"接住三颗流星，点亮许愿星","symbol":"⭐","souvenir":"流星许愿台","icon":"🌟","effect":"lunar"},
+    {"kind":"icecream","title":"冰激凌分享会","prompt":"接三球冰激凌，和伙伴分享","symbol":"🍦","souvenir":"冰激凌小树","icon":"🍦","effect":"picnic"},
+    {"kind":"coins","title":"喂饱小猪存钱罐","prompt":"接三枚金金币，听小猪叮当响","symbol":"🟡","souvenir":"小猪金币喷泉","icon":"🪙","effect":"sparkle"},
+    {"kind":"sakura","title":"妈妈的花冠","prompt":"收集三朵樱花，编一顶花冠","symbol":"🌸","souvenir":"妈妈的樱花花冠","icon":"🌸","effect":"hug"},
+    {"kind":"storm","title":"给花园撑小伞","prompt":"撑起三把伞，保护花园伙伴","symbol":"☂","souvenir":"风雨彩虹亭","icon":"🌈","effect":"ball"}
+  ]
+}
