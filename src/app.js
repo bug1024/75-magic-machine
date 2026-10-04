@@ -211,6 +211,13 @@
   function treasureRecord(treasure, source = 'draw', eventId = null) {
     return { drawId: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`, prizeId: treasure.id, name: treasure.name, icon: treasure.appearance.icon, description: treasure.description, rarity: treasure.rarity, timestamp: Date.now(), source, eventId };
   }
+  let refillTimer;
+  function acquirePower(treasure) {
+    if (treasure.effects.onAcquire !== 'refill-energy') return;
+    rechargeStation.change(gameRules.energy.max, false);
+    machine.classList.remove('heart-refill'); void machine.offsetWidth; machine.classList.add('heart-refill');
+    clearTimeout(refillTimer); refillTimer = setTimeout(() => machine.classList.remove('heart-refill'), 2600);
+  }
   world = new MagicWorld(gameRules.world, savedWorld, history, {
     energy: () => rechargeStation.balance, warningThreshold: gameRules.energy.warningThreshold,
     pickGift: eventId => { const ocean = pool.filter(t => ['water', 'ocean', 'sea', 'bubbles'].some(tag => t.tags.includes(tag)) || ['cloud-dolphin', 'mermaid-outfit', 'whale-cup'].includes(t.id)); return drawTreasure(eventId === 'mermaid' && ocean.length ? ocean : treasures, Math.random, { equalProbability: cheatMode }); },
@@ -227,8 +234,8 @@
       if (event.id === 'ghost' && rechargeStation.balance <= gameRules.energy.warningThreshold) return { description: '小幽灵打了个饱嗝！', detail: '它没有拿走你的能量。' };
       if (['witch', 'bat', 'rock', 'dragon', 'courier', 'mermaid'].includes(event.id) || (event.id === 'fairy' && rechargeStation.full)) {
         const gift = pool.find(treasure => treasure.id === giftId) || drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
-        inventory[gift.id] = (inventory[gift.id] || 0) + 1; history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
-        return { gift, description: `额外礼物：${gift.name}`, detail: '已经放进你的宝藏里！' };
+        acquirePower(gift); inventory[gift.id] = (inventory[gift.id] || 0) + 1; history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
+        return { gift, description: `额外礼物：${gift.name}`, detail: gift.effects.onAcquire === 'refill-energy' ? '能量补满十格！爱心已经放进宝藏。' : '已经放进你的宝藏里！' };
       }
       const before = rechargeStation.balance; rechargeStation.change(event.energyDelta, false);
       const delta = rechargeStation.balance - before;
@@ -244,7 +251,7 @@
   const treasurePlay = new TreasurePlay($('treasure-art'), {
     canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
     feedback: (treasure, kind, count, event, line, reaction) => {
-      sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !document.hidden) sound.treasureSound(kind, count, reaction); });
+      sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !document.hidden) sound.interact(treasure, count, reaction); });
       if (reaction?.surprise) particles.shockwave(treasure.appearance.primaryColor);
       $('announcement').textContent = line;
     }
@@ -255,7 +262,7 @@
     canPlay: () => !garden?.stories?.busy && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
     canStory: () => ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open,
     canWeather: () => !garden?.stories?.busy && !world.busy && !dialog.open && !rechargeStation.dialog.open,
-    sound: (kind, count = 1, reaction) => sound.unlock().then(() => { if (!document.hidden && !world.busy) sound.treasureSound(kind, count, reaction); }),
+    sound: (kind, count = 1, reaction, treasure) => sound.unlock().then(() => { if (!document.hidden && !world.busy) treasure ? sound.interact(treasure, count, reaction) : sound.treasureSound(kind, count); }),
     storySound: (kind, time, weather) => sound.story(kind, time, weather),
     weatherSound: kind => sound.weather(kind)
   }, rawGameRules.dayNight, rawGameRules.seasons, rawGameRules.gardenStories);
@@ -314,7 +321,7 @@
       currentTreasure = winner; machine.dataset.reveal = winner.effects.reveal;
       showTreasure(winner, true); setPhase('celebrating');
       $('button-text').textContent = '找到宝物啦！'; $('draw-hint').textContent = '这份魔法，属于你！';
-      inventory[winner.id] = (inventory[winner.id] || 0) + 1; history.push(treasureRecord(winner)); awarded = true; history = history.slice(-1000); world.completedDraw(); save(); updateCount();
+      acquirePower(winner); inventory[winner.id] = (inventory[winner.id] || 0) + 1; history.push(treasureRecord(winner)); awarded = true; history = history.slice(-1000); world.completedDraw(); save(); updateCount();
       $('announcement').textContent = `恭喜 75，获得${RARITIES[winner.rarity].label}：${winner.name}。${winner.description}`;
       sound.celebrate(winner.effects.sound, true); particles.shockwave(winner.appearance.primaryColor); particles.emit(winner);
       spellPop(winner.rarity === 'super' ? '超级宝物！' : winner.rarity === 'rare' ? '彩虹魔法！' : '找到宝物啦！');
@@ -400,7 +407,7 @@
       // 收藏插画直接放入网格，保留图片失败时的图标降级。
       card.append(...art.childNodes);
       card.append(textElement('span', RARITIES[treasure.rarity].label, 'rarity'), textElement('h3', treasure.name), textElement('p', owned ? treasure.description : '还没发现，下一次也许就是它。', 'card-description'), textElement('span', owned ? `拥有 ${owned} · 已摆放 ${used} · 可摆放 ${Math.max(0, owned - used)}` : '等待发现', 'card-count'));
-      if (treasure.effects?.guardian) card.append(textElement('span', used ? (treasure.effects.guardian === 'heart-shield' ? '🛡 已摆放 · 爱心护盾' : '🛡 已摆放 · 魔法助攻') : '🛡 放进花园后可守护', 'guardian-card-badge'));
+      if (treasure.effects?.guardian) card.append(textElement('span', used ? (treasure.effects.guardian === 'heart-shield' ? '🛡 已摆放 · 爱心助攻与护盾' : '🛡 已摆放 · 魔法助攻') : '🛡 放进花园后可守护', 'guardian-card-badge'));
       if (latest) card.append(textElement('time', `最近发现 · ${new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(latest.timestamp)}`, 'last-date'));
       if (owned && treasures.some(item => item.id === treasure.id)) {
         const place = textElement('button', owned > used ? '放进花园' : '已全部摆放', 'place-treasure'); place.type = 'button'; place.disabled = owned <= used || garden.stories.busy;

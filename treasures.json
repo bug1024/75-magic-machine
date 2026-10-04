@@ -65,7 +65,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "silk"
       },
       "tags": [
         "outfit",
@@ -136,7 +137,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "unicorn"
       },
       "tags": [
         "animal",
@@ -208,7 +210,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "castle"
       },
       "tags": [
         "magic",
@@ -280,7 +283,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "dolphin"
       },
       "tags": [
         "animal",
@@ -351,7 +355,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "owl"
       },
       "tags": [
         "animal",
@@ -422,7 +427,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "wobbler"
       },
       "tags": [
         "toy",
@@ -493,7 +499,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "brush"
       },
       "tags": [
         "household",
@@ -564,7 +571,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "piggy"
       },
       "tags": [
         "animal",
@@ -635,7 +643,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "hanfu"
       },
       "tags": [
         "outfit",
@@ -706,7 +715,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "cape"
       },
       "tags": [
         "outfit",
@@ -777,7 +787,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "mermaid"
       },
       "tags": [
         "outfit",
@@ -849,7 +860,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "fairy-gem"
       },
       "tags": [
         "magic",
@@ -921,7 +933,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "baby"
       },
       "tags": [
         "baby",
@@ -993,7 +1006,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "mom"
       },
       "tags": [
         "family",
@@ -1065,7 +1079,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "poop"
       },
       "tags": [
         "toilet",
@@ -1137,7 +1152,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "cat"
       },
       "tags": [
         "animal"
@@ -1207,7 +1223,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "scooter"
       },
       "tags": [
         "vehicle"
@@ -1277,7 +1294,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "bicycle"
       },
       "tags": [
         "vehicle"
@@ -1348,7 +1366,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "wand"
       },
       "tags": [
         "magic",
@@ -1421,7 +1440,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "moon-gun"
       },
       "tags": [
         "moon",
@@ -1494,7 +1514,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "necklace"
       },
       "tags": [
         "outfit",
@@ -1565,7 +1586,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "headband"
       },
       "tags": [
         "outfit"
@@ -1635,7 +1657,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "wiggle-car"
       },
       "tags": [
         "vehicle"
@@ -1705,7 +1728,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "alarm"
       },
       "tags": [
         "household",
@@ -1776,7 +1800,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "whale"
       },
       "tags": [
         "ocean",
@@ -1841,7 +1866,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "dino"
       },
       "tags": [
         "animal",
@@ -1906,7 +1932,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "candy"
       },
       "tags": [
         "food",
@@ -1971,7 +1998,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "jelly"
       },
       "tags": [
         "animal"
@@ -2036,7 +2064,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "dragon"
       },
       "tags": [
         "animal",
@@ -2103,7 +2132,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "mushroom"
       },
       "tags": [
         "plant",
@@ -2169,7 +2199,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "seed"
       },
       "tags": [
         "plant",
@@ -2234,7 +2265,8 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "spaceship"
       },
       "tags": [
         "vehicle",
@@ -2300,11 +2332,147 @@
             "weight": 1,
             "surprise": true
           }
-        ]
+        ],
+        "interactionSound": "socks"
       },
       "tags": [
         "outfit",
         "funny"
+      ]
+    },
+    {
+      "id": "longbao-penguin",
+      "name": "眨眼企鹅龙宝",
+      "description": "穿着粉粉衣服的龙宝，摇摇小翅膀，守护你的魔法花园。",
+      "rarity": "rare",
+      "weight": 3,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/longbao-penguin.svg",
+        "icon": "🐧",
+        "primaryColor": "#f3bfd4",
+        "accentColor": "#fff3c7"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2400,
+          "particleCount": 85
+        },
+        "interaction": "owl-peek",
+        "interactionSound": "penguin",
+        "interactionSymbols": [
+          "🫧",
+          "❄",
+          "💗"
+        ],
+        "interactionLines": [
+          "穿着粉粉衣服的龙宝，摇摇小翅膀，守护你的魔法花园。"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "龙宝眨眨眼，嘎嘎来报到！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "小翅膀拍拍，龙宝摇摆舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "龙宝滑冰翻个跟斗！",
+            "surprise": true,
+            "weight": 8
+          },
+          {
+            "id": "combo",
+            "motion": "launch",
+            "line": "龙宝冰雪冲刺！",
+            "surprise": true,
+            "trigger": "combo",
+            "weight": 1
+          }
+        ],
+        "guardian": "bubble-shot"
+      },
+      "tags": [
+        "animal",
+        "ocean",
+        "guardian"
+      ]
+    },
+    {
+      "id": "super-heart",
+      "name": "满满魔法超级爱心",
+      "description": "一颗满满的爱！获得它就能把魔法能量补满到十格。",
+      "rarity": "super",
+      "weight": 1,
+      "enabled": true,
+      "appearance": {
+        "image": "assets/super-heart.svg",
+        "icon": "💖",
+        "primaryColor": "#ff75b1",
+        "accentColor": "#fff3c7"
+      },
+      "effects": {
+        "reveal": "sparkle-bloom",
+        "ambient": "floating-stars",
+        "sound": "magic-chime",
+        "params": {
+          "durationMs": 2400,
+          "particleCount": 85
+        },
+        "interaction": "warm-hug",
+        "interactionSound": "super-heart",
+        "interactionSymbols": [
+          "💗",
+          "💕",
+          "✨"
+        ],
+        "interactionLines": [
+          "一颗满满的爱！获得它就能把魔法能量补满到十格。"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "hug",
+            "line": "爱心扑通扑通，送你暖暖的爱！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "fountain",
+            "line": "爱心喷泉开演啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "哇！变出一串小爱心！",
+            "surprise": true,
+            "weight": 8
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "超级爱心绕你转圈圈！",
+            "surprise": true,
+            "trigger": "combo",
+            "weight": 1
+          }
+        ],
+        "onAcquire": "refill-energy"
+      },
+      "tags": [
+        "magic",
+        "heart"
       ]
     }
   ]

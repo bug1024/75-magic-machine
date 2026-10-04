@@ -36,8 +36,8 @@ class WitchGame {
     this.state = 'visible'; this.clock = 0; this.stage.dataset.action = 'ready';
     if (this.item.hits >= Math.floor(this.challengeRules.hits / 2) && !this.item.interferenceUsed) {
       this.item.interferenceUsed = true;
-      const shield = this.guardians.find(g => g.effects.guardian === 'heart-shield' && !this.item.usedGuardians.includes(g.id));
-      if (shield) { this.item.usedGuardians.push(shield.id); this.item.shieldUsed = true; this.stage.classList.add('guardian-shield'); this.$('witch-feedback').textContent = `${shield.name}的爱心护盾挡住了捣蛋迷雾！`; this.callbacks.sound('guardian-shield'); }
+      const shield = this.guardians.find(g => g.effects.guardian === 'heart-shield' && !this.item.shieldUsed);
+      if (shield) { this.item.shieldUsed = true; this.stage.classList.add('guardian-shield'); this.$('witch-feedback').textContent = `${shield.name}的爱心护盾挡住了捣蛋迷雾！`; this.callbacks.sound('guardian-shield'); }
       else { this.fogClock = 2200; this.stage.classList.add('enemy-fog'); this.$('witch-feedback').textContent = '捣蛋迷雾来了，找找它躲在哪里！'; }
       this.callbacks.save();
     }
@@ -54,7 +54,7 @@ class WitchGame {
     projectile.style.setProperty('--from-y', `${cannon.top + cannon.height * .42 - bounds.top - 25}px`);
     projectile.style.setProperty('--to-x', `${toX - 25}px`); projectile.style.setProperty('--to-y', `${toY - 25}px`);
     this.shotAssist = !!guardian; this.shotGuardian = guardian;
-    if (guardian) { projectile.classList.add('assist-shot'); projectile.dataset.guardian = guardian.effects.guardian; this.$('witch-feedback').textContent = `${guardian.name}，魔法助攻！`; }
+    if (guardian) { projectile.classList.add('assist-shot'); projectile.dataset.guardian = guardian.effects.guardian === 'heart-shield' ? 'heart-shot' : guardian.effects.guardian; this.$('witch-feedback').textContent = `${guardian.name}，魔法助攻！`; }
     this.callbacks.art(guardian || this.callbacks.pickAmmo(), projectile); this.stage.append(projectile); this.projectile = projectile;
     this.target.disabled = true; this.state = 'shot'; this.clock = 0; this.shotHit = hit;
     this.stage.dataset.action = 'firing'; this.$('machine').classList.add('witch-firing'); this.callbacks.sound('witch-shot');
@@ -87,7 +87,7 @@ class WitchGame {
   }
   nextGuardian() {
     if (this.item.assistHits >= Math.floor(this.challengeRules.hits / 2) || this.item.hits >= this.challengeRules.hits - 1) return null;
-    return this.guardians.find(g => g.effects.guardian !== 'heart-shield' && !this.item.usedGuardians.includes(g.id));
+    return this.guardians.find(g => !this.item.usedGuardians.includes(g.id));
   }
   showVictory() {
     const reward = this.reward; this.state = 'won'; this.clock = 0; this.target.hidden = true;

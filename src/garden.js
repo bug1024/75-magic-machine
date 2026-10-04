@@ -72,9 +72,9 @@ class MagicGarden {
       button.append(art); const label = document.createElement('span'); label.className = 'garden-name'; label.textContent = treasure?.name || (this.chosen ? '放这里' : '待摆放'); button.append(label);
       const play = treasure ? new TreasurePlay(button, {
         canPlay: () => this.callbacks.canPlay() && !this.chosen,
-        feedback: (item, kind, count, event, line, reaction) => { this.callbacks.sound(kind, count, reaction); document.getElementById('announcement').textContent = line; }
+        feedback: (item, kind, count, event, line, reaction) => { this.callbacks.sound(kind, count, reaction, item); document.getElementById('announcement').textContent = line; }
       }, false) : null;
-      if (treasure?.effects.guardian) { const badge = document.createElement('span'); badge.className = 'guardian-badge'; badge.textContent = '🛡'; badge.title = treasure.effects.guardian === 'heart-shield' ? '守护已生效：每场抵挡一次迷雾，移走后失效' : '守护已生效：每件每场最多助攻一次，总助攻不超过一半血量，移走后失效'; button.append(badge); }
+      if (treasure?.effects.guardian) { const badge = document.createElement('span'); badge.className = 'guardian-badge'; badge.textContent = '🛡'; badge.title = treasure.effects.guardian === 'heart-shield' ? '守护已生效：每场爱心助攻一次并抵挡一次迷雾，移走后失效' : '守护已生效：每件每场最多助攻一次，总助攻不超过一半血量，移走后失效'; button.append(badge); }
       if (play) { const actionLabel = button.getAttribute('aria-label'); play.set(treasure); if (this.chosen) button.setAttribute('aria-label', actionLabel); this.players.push(play); }
       button.onclick = event => {
         if (!this.callbacks.canPlay()) return;

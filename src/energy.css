@@ -35,3 +35,6 @@ body.gentle.low-energy .danger-vignette{opacity:.55}body.gentle.recharging .dang
 @keyframes charge-confetti{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}15%{opacity:1}65%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--burst-x)),calc(-50% + var(--burst-y))) rotate(100deg) scale(.7)}}
 @keyframes charged-title{0%{opacity:.3;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.just-charged .full-heart,.just-charged .charge-burst:before,.just-charged .charge-burst:after,.just-charged .charge-burst span,.just-charged h3{animation:none}}
+
+.heart-refill .power-cell{animation:super-heart-fill 1.2s ease-in-out 2}.heart-refill .power-panel{box-shadow:0 0 30px #ff86c388,inset 0 0 0 2px #ffc7e4}.heart-refill .power-panel:after{content:'💗 能量满满！';position:absolute;bottom:100%;left:50%;translate:-50% 0;color:#fff3c7;text-shadow:0 2px 5px #5c3257;font-size:14px;white-space:nowrap}
+@keyframes super-heart-fill{0%,100%{transform:none}50%{transform:translateY(-5px) scale(1.18);filter:drop-shadow(0 0 10px #ffd5e9)}}body.gentle .heart-refill .power-cell{animation:none}@media(prefers-reduced-motion:reduce){.heart-refill .power-cell{animation:none}}
