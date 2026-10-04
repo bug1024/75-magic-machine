@@ -4,7 +4,7 @@
     "max": 10,
     "warningThreshold": 3,
     "drawCost": 1,
-    "correctReward": 1
+    "correctReward": 2
   },
   "math": {
     "defaultDifficulty": "easy",
@@ -26,8 +26,8 @@
   "world": {
     "enabled": true,
     "chance": 0.15,
-    "minGap": 3,
-    "guaranteeAfter": 8,
+    "minGap": 4,
+    "guaranteeAfter": 10,
     "rainbowAt": 10,
     "events": [
       {
@@ -72,8 +72,8 @@
       "hiddenMs": 450,
       "image": "assets/witch.svg",
       "chance": 0.25,
-      "minGap": 5,
-      "guaranteeAfter": 10,
+      "minGap": 7,
+      "guaranteeAfter": 12,
       "bat": {
         "enabled": true,
         "image": "assets/evil-bat.svg",
@@ -90,7 +90,7 @@
       },
       "dragon": {
         "enabled": true,
-        "hits": 10,
+        "hits": 8,
         "image": "assets/evil-dragon.svg",
         "visibleMs": 5000,
         "hiddenMs": 700
@@ -100,9 +100,9 @@
   },
   "weather": {
     "enabled": true,
-    "firstAfterMs": 12000,
-    "intervalMs": 40000,
-    "durationMs": 16000,
+    "firstAfterMs": 25000,
+    "intervalMs": 65000,
+    "durationMs": 14000,
     "kinds": [
       "rain",
       "snow",
@@ -112,7 +112,17 @@
       "coins",
       "sakura",
       "storm"
-    ]
+    ],
+    "weights": {
+      "rain": 5,
+      "snow": 4,
+      "wind": 3,
+      "meteors": 1,
+      "icecream": 1,
+      "coins": 1,
+      "sakura": 2,
+      "storm": 0.4
+    }
   },
   "dayNight": {
     "enabled": true,

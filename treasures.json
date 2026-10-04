@@ -284,7 +284,8 @@
             "surprise": true
           }
         ],
-        "interactionSound": "dolphin"
+        "interactionSound": "dolphin",
+        "guardian": "bubble-shot"
       },
       "tags": [
         "animal",
@@ -428,7 +429,8 @@
             "surprise": true
           }
         ],
-        "interactionSound": "wobbler"
+        "interactionSound": "wobbler",
+        "guardian": "bubble-shot"
       },
       "tags": [
         "toy",
@@ -716,7 +718,8 @@
             "surprise": true
           }
         ],
-        "interactionSound": "cape"
+        "interactionSound": "cape",
+        "guardian": "rainbow-shot"
       },
       "tags": [
         "outfit",
@@ -1153,7 +1156,8 @@
             "surprise": true
           }
         ],
-        "interactionSound": "cat"
+        "interactionSound": "cat",
+        "guardian": "star-shot"
       },
       "tags": [
         "animal"

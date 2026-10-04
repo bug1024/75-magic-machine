@@ -41,7 +41,7 @@ class WitchGame {
       else { this.fogClock = 2200; this.stage.classList.add('enemy-fog'); this.$('witch-feedback').textContent = '捣蛋迷雾来了，找找它躲在哪里！'; }
       this.callbacks.save();
     }
-    if (this.item.opponent === 'dragon') this.stage.dataset.phase = this.item.hits >= 5 ? 'angry' : 'sleepy';
+    if (this.item.opponent === 'dragon') this.stage.dataset.phase = this.item.hits >= Math.ceil(this.challengeRules.hits / 2) ? 'angry' : 'sleepy';
   }
   shoot(event, guardian = null) {
     if (this.state !== 'visible' || document.hidden) return;
@@ -128,7 +128,7 @@ class WitchGame {
       if (!document.hidden) { const delta = Math.min(50, now - previous); this.clock += delta; this.fogClock = Math.max(0, this.fogClock - delta); if (!this.fogClock) this.stage.classList.remove('enemy-fog'); } previous = now;
       if (this.state === 'intro' && this.clock >= 2600) { broadcast.dataset.action = 'sinking'; this.callbacks.sound(`${item.opponent || 'witch'}-arrive`); if (item.hits >= this.challengeRules.hits) this.win(); else this.move(); }
       else if (this.state === 'visible' && this.nextGuardian() && this.clock >= 900) this.shoot(null, this.nextGuardian());
-      else if (this.state === 'visible' && this.clock >= this.challengeRules.visibleMs) { this.state = 'hidden'; this.clock = 0; this.target.hidden = true; this.target.disabled = true; }
+      else if (this.state === 'visible' && this.clock >= this.challengeRules.visibleMs * (this.stage.dataset.phase === 'angry' ? .8 : 1)) { this.state = 'hidden'; this.clock = 0; this.target.hidden = true; this.target.disabled = true; }
       else if (this.state === 'hidden' && this.clock >= this.challengeRules.hiddenMs) this.move();
       else if (this.state === 'shot' && this.clock >= 450) this.impact();
       else if (this.state === 'hit' && this.clock >= 500) { this.state = 'hidden'; this.clock = 0; this.target.hidden = true; }

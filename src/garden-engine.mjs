@@ -2,13 +2,13 @@ export const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
 export const WEATHER_KINDS = ['rain', 'snow', 'wind', 'meteors', 'icecream', 'coins', 'sakura', 'storm'];
 export function normalizeWeatherRules(raw = {}) {
   const bounded = (value, fallback, min, max) => Number.isFinite(value) ? Math.min(max, Math.max(min, Math.round(value))) : fallback;
-  return { enabled: raw.enabled !== false, firstAfterMs: bounded(raw.firstAfterMs, 12000, 1000, 300000), intervalMs: bounded(raw.intervalMs, 40000, 5000, 300000), durationMs: bounded(raw.durationMs, 16000, 3000, 60000), kinds: WEATHER_KINDS.filter(kind => !Array.isArray(raw.kinds) || raw.kinds.includes(kind)) };
+  return { weights: Object.fromEntries(WEATHER_KINDS.map(kind => [kind, Number.isFinite(raw.weights?.[kind]) ? Math.max(0, Math.min(20, raw.weights[kind])) : ({rain:5,snow:4,wind:3,sakura:2,storm:.4}[kind] || 1)])), enabled: raw.enabled !== false, firstAfterMs: bounded(raw.firstAfterMs, 25000, 1000, 300000), intervalMs: bounded(raw.intervalMs, 65000, 5000, 300000), durationMs: bounded(raw.durationMs, 14000, 3000, 60000), kinds: WEATHER_KINDS.filter(kind => !Array.isArray(raw.kinds) || raw.kinds.includes(kind)) };
 }
 export function normalizeGardenState(raw, treasures, history, inventory = null) {
   const owned = inventory || history.reduce((counts, record) => { counts[record.prizeId] = (counts[record.prizeId] || 0) + 1; return counts; }, Object.create(null));
   const used = Object.create(null);
   const known = new Set(treasures.map(treasure => treasure.id));
-  return { discovered: Array.isArray(raw?.discovered) ? [...new Set(raw.discovered.filter(id => typeof id === 'string' && /^[a-z0-9-]{1,64}$/.test(id)))].slice(0, 256) : [], season: SEASONS.includes(raw?.season) ? raw.season : null, timeOfDay: raw?.timeOfDay === 'night' ? 'night' : raw?.timeOfDay === 'day' ? 'day' : null, slots: Array.from({ length: 6 }, (_, index) => {
+  return { discoveredAt: Object.fromEntries(Object.entries(raw?.discoveredAt || {}).filter(([id, time]) => /^[a-z0-9-]{1,64}$/.test(id) && Number.isFinite(time) && time > 0)), discovered: Array.isArray(raw?.discovered) ? [...new Set(raw.discovered.filter(id => typeof id === 'string' && /^[a-z0-9-]{1,64}$/.test(id)))].slice(0, 256) : [], season: SEASONS.includes(raw?.season) ? raw.season : null, timeOfDay: raw?.timeOfDay === 'night' ? 'night' : raw?.timeOfDay === 'day' ? 'day' : null, slots: Array.from({ length: 6 }, (_, index) => {
     const id = raw?.slots?.[index];
     if (typeof id !== 'string' || !known.has(id) || (used[id] || 0) >= (owned[id] || 0)) return null;
     used[id] = (used[id] || 0) + 1; return id;

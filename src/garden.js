@@ -27,12 +27,12 @@ class MagicGarden {
         if (this.seasonRules.enabled && this.seasonElapsed >= this.seasonRules.durationMs) this.nextSeason();
         if (this.dayNightRules.enabled && this.dayElapsed >= this.dayNightRules.durationMs) this.toggleTime();
         if (this.weather && this.elapsed >= this.endsAt) this.endWeather();
-        if (!this.weather && this.rules.enabled && this.elapsed >= this.nextAt) this.startWeather();
+        if (!this.weather && this.rules.enabled && this.elapsed >= this.nextAt) this.startWeather(false);
       }
       this.lastTime = now; requestAnimationFrame(tick);
     }; requestAnimationFrame(tick);
   }
-  snapshot() { return { discovered: [...this.state.discovered], season: this.state.season, timeOfDay: this.state.timeOfDay, slots: [...this.state.slots] }; }
+  snapshot() { return { discoveredAt: {...this.state.discoveredAt}, discovered: [...this.state.discovered], season: this.state.season, timeOfDay: this.state.timeOfDay, slots: [...this.state.slots] }; }
   renderSeason() {
     const seasons = { spring: ['🌸', '春天'], summer: ['🌿', '夏天'], autumn: ['🍁', '秋天'], winter: ['❄', '冬天'] };
     document.body.dataset.season = this.state.season;
@@ -91,10 +91,12 @@ class MagicGarden {
     });
     this.stories?.render();
   }
-  startWeather() {
+  startWeather(manual = true) {
     if (!this.rules.enabled || !this.rules.kinds.length) return;
     const choices = this.rules.kinds.filter(kind => kind !== this.lastKind);
-    const kind = (choices.length ? choices : this.rules.kinds)[Math.floor(Math.random() * (choices.length || this.rules.kinds.length))];
+    const kind = chooseWeather(choices.length ? choices : this.rules.kinds, this.rules.weights);
+    if (!kind) return;
+    this.callbacks.weatherStarted?.(manual);
     this.weather = this.lastKind = kind; this.endsAt = this.elapsed + this.rules.durationMs;
     document.body.dataset.weather = kind; this.layer.replaceChildren();
     const labels = { rain: '🌧️ 魔法雨', snow: '❄️ 雪花舞会', wind: '🍃 风精灵', meteors: '🌠 流星雨', icecream: '🍦 冰激凌雨', coins: '🪙 金币雨', sakura: '🌸 樱花雨', storm: '⛈️ 魔法大风暴' };
@@ -108,6 +110,7 @@ class MagicGarden {
     this.callbacks.weatherSound(kind);
   }
   endWeather() {
+    if (this.weather) this.callbacks.weatherFinished?.();
     this.weather = null; delete document.body.dataset.weather; this.layer.replaceChildren();
     this.nextAt = this.elapsed + this.rules.intervalMs; document.getElementById('weather-name').textContent = '⛅️'; document.getElementById('weather').title = '晴天，点击切换天气'; document.getElementById('weather').setAttribute('aria-label', '晴天，点击切换天气');
   }

@@ -6,7 +6,7 @@ export function normalizeGameConfig(config) {
     max, initial: integer(config?.energy?.initial, max, 0, max),
     warningThreshold: integer(config?.energy?.warningThreshold, 3, 0, max),
     drawCost: integer(config?.energy?.drawCost, 1, 1, max),
-    correctReward: integer(config?.energy?.correctReward, 1, 1, max)
+    correctReward: integer(config?.energy?.correctReward, 2, 1, max)
   };
   const difficulties = {};
   for (const [key, label, range] of [['easy', '简单', 10], ['medium', '中等', 20], ['hard', '困难', 100]]) {

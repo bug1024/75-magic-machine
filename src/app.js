@@ -5,7 +5,7 @@
   const STORE_KEY = '75-magic-machine:v1';
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let treasures = [], history = [], inventory = Object.create(null), muted = false, gentle = reducedMotion.matches;
-  let phase = 'idle', currentTreasure = null, spaceHeld = false, storageAvailable = true;
+  let phase = 'idle', currentTreasure = null, spaceHeld = false, storageAvailable = true, storageWritable = true;
   // 每次打开页面都默认关闭，作弊开关不写入持久化设置。
   let cheatMode = false;
   const rawGameRules = JSON.parse($('game-config').textContent);
@@ -13,14 +13,23 @@
   let savedEnergy = null, rechargeStation = null, savedWorld = null, world = null;
   let chamber = null, garden = null, savedGarden = null;
   let noticeTimer;
+  let acquiredAt = {}, unread = new Set(), tips = new Set();
+  const pacing = new ScenePacing();
+  const extraOverlay = () => $('settings-dialog').open || $('environment-dialog').open || !$('garden-story-panel').hidden;
+  const quietReady = () => pacing.ready && !extraOverlay();
+  function acquired(treasure) { acquiredAt[treasure.id] = Date.now(); if (!inventory[treasure.id]) unread.add(treasure.id); }
+  function tip(id, message) { if (tips.has(id)) return; tips.add(id); notice(message); save(); }
   function notice(message) {
     $('notice').textContent = message; $('notice').hidden = false;
     clearTimeout(noticeTimer); noticeTimer = setTimeout(() => { $('notice').hidden = true; }, 6500);
   }
   try {
     treasures = normalizeConfig(JSON.parse($('treasure-config').textContent));
-    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
-    if (saved?.version === 1) {
+    const rawSaved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+    if (rawSaved?.version > 2) storageWritable = false;
+    const saved = migrateSave(rawSaved);
+    if (saved?.version === 2) {
+      acquiredAt = saved.acquiredAt; unread = new Set(saved.unread); tips = new Set(saved.tips);
       history = validHistory(saved.history); inventory = normalizeInventory(saved.inventory, history);
       savedEnergy = saved.energy; savedWorld = saved.world; savedGarden = saved.garden;
       muted = typeof saved.muted === 'boolean' ? saved.muted : false;
@@ -32,14 +41,15 @@
       notice('宝物配置无法读取，请检查 treasures.json 后重新构建。');
     } else {
       storageAvailable = false;
-      notice('本地收藏暂时无法读取。这次仍可以玩，刷新后可能无法保留能量和收藏。');
+      notice(storageWritable ? '本地收藏暂时无法读取。这次仍可以玩，刷新后可能无法保留能量和收藏。' : '这是较新版本的存档，本页不会覆盖它。请用对应版本打开。');
     }
   }
   const pool = treasures.filter(t => t.enabled && t.weight > 0);
   if (!pool.length) { drawButton.disabled = true; $('draw-hint').textContent = '请先在配置中启用一个宝物'; }
   function save() {
+    if (!storageWritable) return;
     try {
-      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, history, inventory, muted, gentle, energy: rechargeStation?.snapshot() ?? normalizeEnergyState(savedEnergy, gameRules), garden: garden?.snapshot() ?? normalizeGardenState(savedGarden, treasures, history, inventory), world: world?.snapshot() ?? normalizeWorldState(savedWorld, history, gameRules.world) }));
+      localStorage.setItem(STORE_KEY, JSON.stringify({ version: 2, acquiredAt, unread: [...unread], tips: [...tips], history, inventory, muted, gentle, energy: rechargeStation?.snapshot() ?? normalizeEnergyState(savedEnergy, gameRules), garden: garden?.snapshot() ?? normalizeGardenState(savedGarden, treasures, history, inventory), world: world?.snapshot() ?? normalizeWorldState(savedWorld, history, gameRules.world) }));
       storageAvailable = true;
     } catch {
       storageAvailable = false;
@@ -64,10 +74,10 @@
     const empty = rechargeStation.balance < gameRules.energy.drawCost;
     energy(rechargeStation.balance / gameRules.energy.max);
     $('button-text').textContent = empty ? '补充魔法' : phase === 'result' ? '再来一次' : '开启魔法';
-    $('draw-hint').textContent = empty ? '答一道题，点亮一格能量' : phase === 'result' ? (currentTreasure?.effects.interaction ? '点点宝物，和它玩一玩' : '') : '按空格键，或点一下按钮';
+    $('draw-hint').textContent = empty ? '答一道题，点亮两格能量' : phase === 'result' ? (currentTreasure?.effects.interaction ? '点点宝物，和它玩一玩' : '') : '按空格键，或点一下按钮';
   }
   rechargeStation = new RechargeStation(gameRules, savedEnergy, {
-    canOpen: () => ['idle', 'result'].includes(phase) && !dialog.open && !world?.busy && !drawButton.disabled,
+    canOpen: () => ['idle', 'result'].includes(phase) && !extraOverlay() && !dialog.open && !world?.busy && !drawButton.disabled,
     onChange: () => { save(); syncDrawAction(); },
     onReward: full => { sound.unlock().then(() => sound.answerCorrect(full)); },
     onFailure: () => { sound.unlock().then(() => sound.answerWrong()); }
@@ -220,7 +230,7 @@
   }
   world = new MagicWorld(gameRules.world, savedWorld, history, {
     energy: () => rechargeStation.balance, warningThreshold: gameRules.energy.warningThreshold,
-    pickGift: eventId => { const ocean = pool.filter(t => ['water', 'ocean', 'sea', 'bubbles'].some(tag => t.tags.includes(tag)) || ['cloud-dolphin', 'mermaid-outfit', 'whale-cup'].includes(t.id)); return drawTreasure(eventId === 'mermaid' && ocean.length ? ocean : treasures, Math.random, { equalProbability: cheatMode }); },
+    pickGift: eventId => { const ocean = pool.filter(t => ['water', 'ocean', 'sea', 'bubbles'].some(tag => t.tags.includes(tag)) || ['cloud-dolphin', 'mermaid-outfit', 'whale-cup'].includes(t.id)); return drawTreasure(eventId === 'mermaid' && ocean.length ? ocean : treasures, Math.random, { equalProbability: cheatMode, inventory, preferUnowned: ['courier', 'mermaid'].includes(eventId) }); },
     pickAmmo: () => {
       const collected = pool.filter(treasure => history.some(record => record.prizeId === treasure.id));
       const ammo = collected.length ? collected : pool;
@@ -234,7 +244,7 @@
       if (event.id === 'ghost' && rechargeStation.balance <= gameRules.energy.warningThreshold) return { description: '小幽灵打了个饱嗝！', detail: '它没有拿走你的能量。' };
       if (['witch', 'bat', 'rock', 'dragon', 'courier', 'mermaid'].includes(event.id) || (event.id === 'fairy' && rechargeStation.full)) {
         const gift = pool.find(treasure => treasure.id === giftId) || drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
-        acquirePower(gift); inventory[gift.id] = (inventory[gift.id] || 0) + 1; history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
+        acquired(gift); acquirePower(gift); inventory[gift.id] = (inventory[gift.id] || 0) + 1; history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
         return { gift, description: `额外礼物：${gift.name}`, detail: gift.effects.onAcquire === 'refill-energy' ? '能量补满十格！爱心已经放进宝藏。' : '已经放进你的宝藏里！' };
       }
       const before = rechargeStation.balance; rechargeStation.change(event.energyDelta, false);
@@ -246,10 +256,10 @@
     drawButton.disabled = true; $('collection').disabled = true; $('cheat').disabled = true; rechargeStation.setLocked(true);
     try { await world.playPending(); }
     catch { notice('魔法伙伴歇了一会儿，刷新后会继续拜访。'); }
-    finally { drawButton.disabled = false; $('collection').disabled = false; $('cheat').disabled = false; rechargeStation.setLocked(false); syncDrawAction(); }
+    finally { pacing.quiet(6000); drawButton.disabled = false; $('collection').disabled = false; $('cheat').disabled = false; rechargeStation.setLocked(false); syncDrawAction(); }
   }
   const treasurePlay = new TreasurePlay($('treasure-art'), {
-    canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
+    canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
     feedback: (treasure, kind, count, event, line, reaction) => {
       sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !document.hidden) sound.interact(treasure, count, reaction); });
       if (reaction?.surprise) particles.shockwave(treasure.appearance.primaryColor);
@@ -257,21 +267,30 @@
     }
   });
   garden = new MagicGarden(rawGameRules.weather, savedGarden, treasures, history, {
-    inventory: () => inventory, reward: amount => rechargeStation.change(amount, false),
+    inventory: () => inventory, reward: amount => { rechargeStation.change(amount, false); syncDrawAction(); },
     art: makeArt, save, unlock: () => sound.unlock(),
-    canPlay: () => !garden?.stories?.busy && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
-    canStory: () => ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open,
-    canWeather: () => !garden?.stories?.busy && !world.busy && !dialog.open && !rechargeStation.dialog.open,
+    canPlay: () => !garden?.stories?.busy && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
+    canStory: () => ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !$('settings-dialog').open && !$('environment-dialog').open && !dialog.open && !rechargeStation.dialog.open,
+    canAutoStory: () => quietReady() && !world.state.pending.length && !garden?.weather,
+    storyFinished: () => pacing.quiet(6000),
+    weatherFinished: () => pacing.quiet(4000),
+    canWeather: () => !world.state.pending.length && quietReady() && ['idle', 'result'].includes(phase) && !drawButton.disabled && !garden?.stories?.busy && !world.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open,
     sound: (kind, count = 1, reaction, treasure) => sound.unlock().then(() => { if (!document.hidden && !world.busy) treasure ? sound.interact(treasure, count, reaction) : sound.treasureSound(kind, count); }),
     storySound: (kind, time, weather) => sound.story(kind, time, weather),
     weatherSound: kind => sound.weather(kind)
   }, rawGameRules.dayNight, rawGameRules.seasons, rawGameRules.gardenStories);
-  if (world.state.pending.length && pool.length) resumeWorld();
+  let pacingPrevious = performance.now();
+  const paceTick = now => {
+    const active = !document.hidden && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !garden.stories.busy && !dialog.open && !rechargeStation.dialog.open && !extraOverlay();
+    pacing.advance(Math.min(100, now - pacingPrevious), active); pacingPrevious = now;
+    if (active && pacing.ready && world.state.pending.length && pool.length) { garden.endWeather(); resumeWorld(); }
+    requestAnimationFrame(paceTick);
+  }; requestAnimationFrame(paceTick);
   // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
   async function draw() {
-    if (garden?.stories?.busy || !['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || world?.state.pending.length || !pool.length) return;
+    if (garden?.stories?.busy || !['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || extraOverlay() || !pool.length) return;
     if (rechargeStation.balance < gameRules.energy.drawCost) { rechargeStation.open(); return; }
-    const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
+    const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode, inventory, recentIds: history.filter(r => r.source !== 'event').slice(-3).reverse().map(r => r.prizeId) });
     treasurePlay.reset(); garden.choose(null); garden.stories.closePanel();
     rechargeStation.consume(); rechargeStation.setLocked(true);
     let awarded = false;
@@ -321,7 +340,7 @@
       currentTreasure = winner; machine.dataset.reveal = winner.effects.reveal;
       showTreasure(winner, true); setPhase('celebrating');
       $('button-text').textContent = '找到宝物啦！'; $('draw-hint').textContent = '这份魔法，属于你！';
-      acquirePower(winner); inventory[winner.id] = (inventory[winner.id] || 0) + 1; history.push(treasureRecord(winner)); awarded = true; history = history.slice(-1000); world.completedDraw(); save(); updateCount();
+      acquired(winner); acquirePower(winner); inventory[winner.id] = (inventory[winner.id] || 0) + 1; history.push(treasureRecord(winner)); awarded = true; history = history.slice(-1000); world.completedDraw(); save(); updateCount();
       $('announcement').textContent = `恭喜 75，获得${RARITIES[winner.rarity].label}：${winner.name}。${winner.description}`;
       sound.celebrate(winner.effects.sound, true); particles.shockwave(winner.appearance.primaryColor); particles.emit(winner);
       spellPop(winner.rarity === 'super' ? '超级宝物！' : winner.rarity === 'rare' ? '彩虹魔法！' : '找到宝物啦！');
@@ -330,7 +349,8 @@
       await wait(winner.effects.params.durationMs - 420);
       setPhase('result'); $('button-text').textContent = '再来一次';
       $('draw-hint').textContent = winner.effects.interaction ? '点点宝物，和它玩一玩' : '';
-      await world.playPending();
+      pacing.quiet(winner.rarity === 'super' ? 5000 : winner.rarity === 'rare' ? 3000 : 2000);
+      tip('treasure-play', '点一下宝物，它还有自己的小魔法！从收藏里可以把伙伴放进花园。');
     } catch {
       if (!awarded) rechargeStation.change(gameRules.energy.drawCost);
       setPhase('idle'); energy(0); $('treasure-art').hidden = true; $('button-text').textContent = '开启魔法';
@@ -399,26 +419,69 @@
       const last = history.filter(r => r.prizeId === id).at(-1);
       return { id, name: last?.name || '过去的宝物', description: last?.description || '一份过去发现的魔法。', rarity: last?.rarity || 'common', appearance: { icon: last?.icon || '✨', image: '' } };
     });
-    for (const treasure of [...treasures, ...archived]) {
+    const filter = $('collection-filter').value;
+    const items = collectionOrder([...treasures, ...archived], inventory, acquiredAt, $('collection-sort').value).filter(t => filter === 'all' || (filter === 'owned' ? !!inventory[t.id] : !inventory[t.id]));
+    for (const treasure of items) {
       const records = history.filter(r => r.prizeId === treasure.id), latest = records.at(-1);
       const owned = inventory[treasure.id] || 0, used = garden.used(treasure.id);
-      const card = document.createElement('article'); card.className = `treasure-card${owned ? '' : ' uncollected'}`;
+      const card = document.createElement('article'); card.dataset.treasure = treasure.id; card.className = `treasure-card${owned ? '' : ' uncollected'}`;
+      if (owned && unread.has(treasure.id)) { const badge = textElement('button', 'NEW', 'new-badge'); badge.type = 'button'; badge.setAttribute('aria-label', `标记${treasure.name}已看`); badge.onclick = () => { unread.delete(treasure.id); save(); badge.remove(); }; card.append(badge); }
       const art = document.createElement('div'); makeArt(treasure, art);
       // 收藏插画直接放入网格，保留图片失败时的图标降级。
       card.append(...art.childNodes);
       card.append(textElement('span', RARITIES[treasure.rarity].label, 'rarity'), textElement('h3', treasure.name), textElement('p', owned ? treasure.description : '还没发现，下一次也许就是它。', 'card-description'), textElement('span', owned ? `拥有 ${owned} · 已摆放 ${used} · 可摆放 ${Math.max(0, owned - used)}` : '等待发现', 'card-count'));
       if (treasure.effects?.guardian) card.append(textElement('span', used ? (treasure.effects.guardian === 'heart-shield' ? '🛡 已摆放 · 爱心助攻与护盾' : '🛡 已摆放 · 魔法助攻') : '🛡 放进花园后可守护', 'guardian-card-badge'));
-      if (latest) card.append(textElement('time', `最近发现 · ${new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(latest.timestamp)}`, 'last-date'));
+      const recentDate = acquiredAt[treasure.id] || latest?.timestamp;
+      if (recentDate) card.append(textElement('time', `最近获得 · ${new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(recentDate)}`, 'last-date'));
       if (owned && treasures.some(item => item.id === treasure.id)) {
         const place = textElement('button', owned > used ? '放进花园' : '已全部摆放', 'place-treasure'); place.type = 'button'; place.disabled = owned <= used || garden.stories.busy;
-        place.onclick = () => { if (garden.stories.busy || garden.available(treasure.id) <= 0) return; dialog.close(); garden.choose(treasure); }; card.append(place);
+        place.onclick = () => { if (garden.stories.busy || garden.available(treasure.id) <= 0) return; unread.delete(treasure.id); save(); dialog.close(); garden.choose(treasure); tip('garden-place', '点花园里的空位置，伙伴就住进来啦！不同伙伴放在一起，还会发现小故事。'); }; card.append(place);
       }
       $('collection-grid').append(card);
     }
+    if (!items.length) $('collection-grid').append(textElement('p', filter === 'missing' ? '宝藏已经收集齐啦！' : '这里暂时没有宝物。'));
     $('collection-summary').textContent += storageAvailable ? '' : ' 本次收藏暂未保存到浏览器。';
   }
+  $('collection-filter').onchange = renderCollection; $('collection-sort').onchange = renderCollection;
   $('collection').addEventListener('click', () => { renderCollection(); dialog.showModal(); });
   $('close-collection').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } });
   dialog.addEventListener('close', () => { if (garden?.chosen) garden.plots.querySelector('.garden-slot').focus(); else $('collection').focus(); });
+  for (const id of ['settings', 'environment']) {
+    const panel = $(`${id}-dialog`);
+    $(id).onclick = () => { if (!world.busy && !garden.stories.busy && ['idle', 'result'].includes(phase)) panel.showModal(); };
+    panel.querySelector('[data-close]').onclick = () => panel.close();
+    panel.addEventListener('click', event => { if (event.target === panel) { const r = panel.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) panel.close(); } });
+    panel.addEventListener('close', () => $(id).focus());
+  }
+  // 环境控件是主动操作，可以覆盖自动事件的等待时间。
+  for (const id of ['season', 'day-night', 'weather']) {
+    const original = $(id).onclick;
+    $(id).onclick = async () => { $('environment-dialog').close(); await original?.(); };
+  }
+  $('export-save').onclick = () => {
+    save(); if (!storageAvailable) return;
+    const blob = new Blob([JSON.stringify({ format: '75-magic-world', savedAt: new Date().toISOString(), save: JSON.parse(localStorage.getItem(STORE_KEY)) }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob), link = document.createElement('a'); link.href = url; link.download = `75-magic-world-${new Date().toISOString().slice(0, 10)}.json`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  let importCandidate = null;
+  $('import-save').onchange = async () => {
+    importCandidate = null; $('confirm-import').hidden = true;
+    try {
+      const file = $('import-save').files[0]; if (!file) return; if (file.size > 5000000) throw new Error('存档文件太大');
+      const data = JSON.parse(await file.text());
+      if (data.format !== '75-magic-world') throw new Error('这不是魔法世界存档');
+      const candidate = migrateSave(data.save); if (!candidate) throw new Error('存档为空');
+      candidate.history = validHistory(candidate.history); candidate.inventory = normalizeInventory(candidate.inventory, candidate.history);
+      candidate.energy = normalizeEnergyState(candidate.energy, gameRules); candidate.world = normalizeWorldState(candidate.world, candidate.history, gameRules.world);
+      candidate.garden = normalizeGardenState(candidate.garden, treasures, candidate.history, candidate.inventory);
+      importCandidate = candidate; $('import-preview').textContent = `将恢复 ${Object.keys(candidate.inventory).length} 种宝物、${candidate.energy.balance} 格能量和 ${candidate.world.completedDraws} 次抽奖。当前进度会替换，原存档将保留为本地备份。`;
+      $('confirm-import').hidden = false;
+    } catch (error) { $('import-preview').textContent = `无法导入：${error.message}`; }
+  };
+  $('confirm-import').onclick = () => {
+    if (!importCandidate || !storageWritable) return;
+    try { save(); if (!storageAvailable) throw new Error('无法备份当前进度'); localStorage.setItem(`${STORE_KEY}:backup`, localStorage.getItem(STORE_KEY)); localStorage.setItem(STORE_KEY, JSON.stringify(importCandidate)); location.reload(); }
+    catch { $('import-preview').textContent = '浏览器无法保存，当前进度没有替换。'; }
+  };
 })();

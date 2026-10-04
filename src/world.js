@@ -67,7 +67,7 @@ class MagicWorld {
     if (this.busy || !this.state.pending.length) return;
     this.busy = true; document.body.classList.add('world-busy');
     try {
-      while (this.state.pending.length) {
+      for (let scene = 0; scene < 1 && this.state.pending.length; scene++) {
         const item = this.state.pending[0];
         if (item.kind === 'upgrade' && item.level === 'life') { await this.awakenLifeTree(); continue; }
         if (item.kind === 'witch') {

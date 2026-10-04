@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
-const browser=await chromium.launch({channel:'chrome',headless:true});
+const browser=await chromium.launch({...(process.env.BROWSER_CHANNEL ? {channel:process.env.BROWSER_CHANNEL} : {}),headless:true});
 const url='file://'+process.cwd()+'/index.html',errors=[];
 const encounter={kind:'witch',opponent:'bat',hits:0,giftId:'cloud-dolphin'};
 async function battle(page){

@@ -7,7 +7,7 @@ test('花园恢复只接受已收藏的有效宝物，旧存档保留六块空�
 });
 test('天气参数限幅，非法天气不会执行，禁用设置保留', () => {
   const rules = normalizeWeatherRules({ enabled: false, firstAfterMs: -1, intervalMs: Infinity, durationMs: 999999, kinds: ['snow', 'evil'] });
-  assert.deepEqual(rules, { enabled: false, firstAfterMs: 1000, intervalMs: 40000, durationMs: 60000, kinds: ['snow'] });
+  assert.deepEqual(rules, { enabled: false, firstAfterMs: 1000, intervalMs: 65000, durationMs: 60000, kinds: ['snow'], weights: {rain:5,snow:4,wind:3,meteors:1,icecream:1,coins:1,sakura:2,storm:.4} });
 });
 
 test('昼夜规则限幅，旧存档交由初始规则决定，当前状态可恢复', () => {

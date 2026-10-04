@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({ ...(process.env.BROWSER_CHANNEL ? {channel:process.env.BROWSER_CHANNEL} : {}), headless: true });
 try {
   const page = await browser.newPage();
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   const url = pathToFileURL(`${process.cwd()}/index.html`).href;
-  for (const selector of ['#sound', '#motion', '#fullscreen', '#collection', '.wordmark', '#draw']) {
+  for (const selector of ['#sound', '#settings', '#environment', '#fullscreen', '#collection', '.wordmark', '#draw']) {
     await page.goto(url);
     await page.evaluate(() => {
       localStorage.removeItem('75-magic-machine:v1');

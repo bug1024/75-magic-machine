@@ -5,19 +5,20 @@ import { normalizeWorldRules, normalizeWorldState, advanceWorld, machineLevel, E
 const config = JSON.parse(await readFile(new URL('../game-config.json', import.meta.url), 'utf8'));
 const rules = normalizeWorldRules(config.world);
 const initial = () => normalizeWorldState(null, [], rules);
-test('前三次无事件，触发后至少间隔三次，连续八次无事件必定出现', () => {
+test('事件遵守配置间隔和保底，等待演出时允许继续抽奖', () => {
+  const rules = normalizeWorldRules({...config.world, rainbowAt:100, wingedAt:200,castleAt:300,lifeAt:400});
   let state = initial();
-  for (let draw = 1; draw <= 3; draw++) { state = advanceWorld(state, rules, 8, 3, () => 0); assert.equal(state.pending.length, 0); }
+  for (let draw = 1; draw <= rules.minGap; draw++) { state = advanceWorld(state, rules, 8, 3, () => 0); assert.equal(state.pending.length, 0); }
   state = advanceWorld(state, rules, 8, 3, () => 0); assert.equal(state.pending[0].id, 'fairy'); assert.equal(state.sinceEvent, 0);
-  assert.throws(() => advanceWorld(state, rules, 8, 3), /先完成/);
+  const waiting = advanceWorld(state, rules, 8, 3); assert.deepEqual(waiting.pending, state.pending); assert.equal(waiting.completedDraws, state.completedDraws + 1);
   state.pending = [];
-  for (let draw = 1; draw <= 3; draw++) { state = advanceWorld(state, rules, 8, 3, () => 0); assert.equal(state.pending.length, 0); }
+  for (let draw = 1; draw <= rules.minGap; draw++) { state = advanceWorld(state, rules, 8, 3, () => 0); assert.equal(state.pending.length, 0); }
   state = initial();
-  for (let draw = 1; draw <= 7; draw++) { state = advanceWorld(state, rules, 8, 3, () => .99); assert.equal(state.pending.length, 0); }
+  for (let draw = 1; draw < rules.guaranteeAfter; draw++) { state = advanceWorld(state, rules, 8, 3, () => .99); assert.equal(state.pending.length, 0); }
   state = advanceWorld(state, rules, 8, 3, () => .99); assert.equal(state.pending[0].id, 'mermaid');
 });
 test('按事件权重选择，低能量排除幽灵，禁用事件不参与抽取', () => {
-  const state = { ...initial(), sinceEvent: 7 };
+  const state = { ...initial(), sinceEvent: rules.guaranteeAfter - 1 };
   for (const [random, id] of [[.1,'fairy'], [.5,'ghost'], [.7,'courier'], [.9,'mermaid']]) assert.equal(advanceWorld(state, rules, 8, 3, () => random).pending[0].id, id);
   for (let balance = 0; balance <= 3; balance++) for (const random of [.1,.5,.9]) assert.notEqual(advanceWorld(state, rules, balance, 3, () => random).pending[0].id, 'ghost');
   const disabled = structuredClone(rules); disabled.enabled = false;
@@ -29,8 +30,8 @@ test('正常抽奖跨过10次才升级，赠品历史不计数，旧存档与待
   const history = [...Array.from({ length: 9 }, () => ({ source: 'draw' })), { source: 'event' }];
   const state = normalizeWorldState(null, history, rules); assert.equal(state.completedDraws, 9);
   const next = advanceWorld(state, rules, 0, 3, () => .99); assert.deepEqual(next.pending, [{ kind: 'upgrade', level: 'rainbow' }]);
-  const simultaneous = advanceWorld({ ...state, sinceEvent: 7 }, rules, 8, 3, () => .99);
-  assert.deepEqual(simultaneous.pending, [{ kind: 'upgrade', level: 'rainbow' }, { kind: 'event', id: 'mermaid' }]);
+  const simultaneous = advanceWorld({ ...state, sinceEvent: rules.guaranteeAfter - 1 }, rules, 8, 3, () => .99);
+  assert.deepEqual(simultaneous.pending, [{ kind: 'upgrade', level: 'rainbow' }]);
   next.pending = [];
   assert.ok(!advanceWorld(next, rules, 8, 3, () => .99).pending.some(item => item.kind === 'upgrade'));
   assert.equal(normalizeWorldState({ completedDraws: 1500, sinceEvent: 2, pending: [{ kind: 'event', id: 'courier', giftId: 'cloud-dolphin' }] }, history, rules).completedDraws, 1500);
@@ -87,10 +88,10 @@ test('生命树升级独占舞台，旧存档恢复最终形态，待处理升�
  assert.ok(after.pending.some(item=>item.kind==='witch'));
  assert.ok(!after.pending.some(item=>item.kind==='upgrade'));
 });
-test('仙子默认补5格、反派血量3/4/6/10、助攻/护盾进度与旧存档可恢复', () => {
+test('仙子默认补5格、反派血量3/4/6/8、助攻/护盾进度与旧存档可恢复', () => {
  assert.equal(rules.events.find(e=>e.id==='fairy').energyDelta,5);
  assert.equal(normalizeWorldRules({}).events.find(e=>e.id==='fairy').energyDelta,5);
- for (const [type,hits] of [['bat',3],['witch',4],['rock',6],['dragon',10]]) assert.equal(enemyRules(rules.witch,type).hits,hits);
+ for (const [type,hits] of [['bat',3],['witch',4],['rock',6],['dragon',8]]) assert.equal(enemyRules(rules.witch,type).hits,hits);
  const restored=normalizeWorldState({completedDraws:55,pending:[{kind:'witch',opponent:'dragon',hits:7,assistUsed:true,assistHits:3,usedGuardians:['a','b','a'],shieldUsed:true,interferenceUsed:true}]},[],rules);
  assert.equal(restored.pending[0].hits,7);assert.equal(restored.pending[0].assistHits,3);assert.deepEqual(restored.pending[0].usedGuardians,['a','b']);assert.equal(restored.pending[0].shieldUsed,true);
  const legacy=normalizeWorldState({completedDraws:40,pending:[{kind:'witch',hits:1,assistUsed:true}]},[],rules);

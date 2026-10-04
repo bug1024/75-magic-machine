@@ -3,5 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "build": "node build.mjs", "test": "node --test tests/*.test.mjs", "start": "python3 -m http.server 7575" }
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "start": "python3 -m http.server 7575",
+    "test:unit": "node --test tests/*.test.mjs",
+    "test:browser": "node tests/run-browser.mjs",
+    "check": "npm run build && npm run test:unit && npm run test:browser"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
 }

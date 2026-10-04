@@ -38,6 +38,7 @@ class RechargeStation {
       this.$('number-pad').append(button);
     }
     this.$('recharge').addEventListener('click', () => this.open());
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && this.dialog.open) { event.preventDefault(); this.dialog.close(); } });
     this.$('close-recharge').addEventListener('click', () => this.dialog.close());
     this.$('return-to-machine').addEventListener('click', () => this.dialog.close());
     this.$('math-form').addEventListener('submit', event => { event.preventDefault(); this.submit(); });
@@ -95,7 +96,7 @@ class RechargeStation {
     this.$('math-question').textContent = `${this.question.left} ${this.question.operator} ${this.question.right} =`;
     this.$('math-question').setAttribute('aria-label', `${this.question.left} ${this.question.operator === '+' ? '加' : '减'} ${this.question.right} 等于多少`);
     this.$('math-answer').value = ''; this.$('math-answer').disabled = false;
-    this.$('answer-submit').textContent = '送出答案 ✦'; this.$('answer-feedback').textContent = '答对一题，点亮一格魔法';
+    this.$('answer-submit').textContent = '送出答案 ✦'; this.$('answer-feedback').textContent = `答对一题，点亮${this.rules.energy.correctReward}格魔法`;
     this.$('answer-feedback').dataset.kind = 'neutral'; this.$('math-hint').hidden = true;
     this.$('number-pad').querySelectorAll('button').forEach(button => { button.disabled = false; });
     this.$('reward-star').classList.remove('fly'); this.$('full-energy').classList.remove('just-charged');
@@ -131,7 +132,7 @@ class RechargeStation {
     const before = this.balance;
     this.change(this.rules.energy.correctReward);
     feedback.textContent = `答对啦！魔法能量 +${this.balance - before}`; feedback.dataset.kind = 'correct';
-    this.$('math-hint').hidden = true; this.$('answer-submit').textContent = '再充一格 ✦';
+    this.$('math-hint').hidden = true; this.$('answer-submit').textContent = '再答一题 ✦';
     const star = this.$('reward-star'); star.classList.remove('fly'); void star.offsetWidth; star.classList.add('fly');
     if (this.full) { const full = this.$('full-energy'); full.classList.remove('just-charged'); void full.offsetWidth; full.classList.add('just-charged'); }
     this.onReward(this.full);
