@@ -6,9 +6,18 @@ class WitchGame {
     document.addEventListener('click', event => {
       if (event.target.closest('#witch-target') || !event.target.closest('button,a,input,dialog,#machine,.topbar,.witch-hud')) this.shoot(event);
     });
-    addEventListener('resize', () => this.position());
+    addEventListener('resize', () => { this.position(); this.positionBroadcast(); });
     addEventListener('scroll', () => this.position(), { passive: true });
+    new ResizeObserver(() => this.positionBroadcast()).observe(this.stage.querySelector('.witch-hud'));
     this.target.addEventListener('keydown', event => { if (event.key === 'Enter' && event.repeat) event.preventDefault(); });
+  }
+  positionBroadcast() {
+    const broadcast = this.$('garden-broadcast'), machine = this.$('machine').getBoundingClientRect();
+    const hud = this.stage.querySelector('.witch-hud').getBoundingClientRect();
+    if (innerWidth <= 650 && hud.top - machine.bottom >= 112) { broadcast.style.width = '120px'; broadcast.style.left = '12px'; broadcast.style.bottom = `${innerHeight - hud.top + 8}px`; return; }
+    const room = Math.max(machine.left, innerWidth - machine.right), width = Math.min(160, Math.max(32, room - 12));
+    const left = machine.left >= innerWidth - machine.right ? Math.max(4, machine.left - width - 8) : Math.min(innerWidth - width - 4, machine.right + 8);
+    broadcast.style.width = `${width}px`; broadcast.style.left = `${left}px`; broadcast.style.bottom = '22px';
   }
   updateHits() {
     this.$('witch-hit-count').textContent = `${this.item.hits} / ${this.challengeRules.hits}`;
@@ -94,7 +103,7 @@ class WitchGame {
     this.stage.dataset.action = 'won'; this.$('witch-title').textContent = `${this.enemyName}被你打跑啦！`;
     this.$('witch-instruction').textContent = '守护魔法世界，收到一份礼物！';
     this.$('witch-feedback').textContent = reward.gift.name;
-    this.$('garden-broadcast').dataset.action = 'rising'; this.$('broadcast-message').textContent = '花园安全啦！谢谢小小守护者！'; this.callbacks.sound('broadcast'); this.callbacks.voice?.('花园安全啦！谢谢小小守护者！');
+    this.positionBroadcast(); this.$('garden-broadcast').dataset.action = 'rising'; this.$('broadcast-message').textContent = innerWidth <= 650 ? '安全啦！' : '花园安全啦！谢谢小小守护者！'; this.callbacks.sound('broadcast'); this.callbacks.voice?.('花园安全啦！谢谢小小守护者！');
     this.$('witch-reward').hidden = false; this.callbacks.art(reward.gift, this.$('witch-reward'));
     this.$('witch-continue').hidden = false; this.callbacks.sound('witch-win');
     this.$('announcement').textContent = `${this.enemyName}被打跑了，获得额外宝物：${reward.gift.name}。`;
@@ -117,8 +126,8 @@ class WitchGame {
     else this.$('witch-face').textContent = item.opponent === 'bat' ? '🦇' : '🧙‍♀️';
     this.updateHits(); this.stage.hidden = false; this.stage.setAttribute('aria-label', `${this.enemyName}挑战`); document.body.classList.add('witch-active');
     this.$('announcement').textContent = `${this.enemyName}出现在花园里了！点击它，命中 ${this.challengeRules.hits} 次赶跑它。`;
-    const broadcast = this.$('garden-broadcast'); broadcast.hidden = false; broadcast.dataset.action = 'rising';
-    const warning = `注意！${this.enemyName}来捣蛋啦！`; this.$('broadcast-message').textContent = warning;
+    const broadcast = this.$('garden-broadcast'); broadcast.hidden = false; this.positionBroadcast(); requestAnimationFrame(() => this.positionBroadcast()); broadcast.dataset.action = 'rising';
+    const warning = `注意！${this.enemyName}来捣蛋啦！`; this.$('broadcast-message').textContent = innerWidth <= 650 ? `${this.enemyName}来了！` : warning;
     this.callbacks.sound('broadcast'); this.callbacks.voice?.(warning);
     let finish;
     const done = new Promise(resolve => { finish = resolve; });

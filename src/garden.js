@@ -9,7 +9,7 @@ class MagicGarden {
     document.getElementById('season').onclick = () => { if (callbacks.canPlay()) this.nextSeason(); };
     this.state.timeOfDay ||= this.dayNightRules.initial; this.renderTime();
     document.getElementById('day-night').onclick = () => { if (callbacks.canPlay()) this.toggleTime(); };
-    this.nextAt = this.rules.firstAfterMs; this.lastKind = null; this.lastTime = performance.now();
+    this.nextAt = this.rules.firstAfterMs; this.lastKind = null;
     this.plots = document.getElementById('garden-plots'); this.layer = document.getElementById('weather-layer');
     this.cancel = document.getElementById('garden-cancel'); this.cancel.onclick = () => this.choose(null);
     document.getElementById('weather').onclick = async () => {
@@ -19,18 +19,17 @@ class MagicGarden {
     this.render();
     this.stories = new GardenStories(this, storyRules);
     if (JSON.stringify(saved?.slots || []) !== JSON.stringify(this.state.slots) && saved?.slots) queueMicrotask(() => callbacks.save());
-    const tick = now => {
+    const tick = (now, elapsed) => {
       const active = callbacks.canWeather() && !document.hidden;
       document.body.classList.toggle('weather-paused', !active);
       if (active) {
-        const delta = Math.min(50, now - this.lastTime); this.elapsed += delta; this.dayElapsed += delta; this.seasonElapsed += delta;
+        const delta = elapsed; this.elapsed += delta; this.dayElapsed += delta; this.seasonElapsed += delta;
         if (this.seasonRules.enabled && this.seasonElapsed >= this.seasonRules.durationMs) this.nextSeason();
         if (this.dayNightRules.enabled && this.dayElapsed >= this.dayNightRules.durationMs) this.toggleTime();
         if (this.weather && this.elapsed >= this.endsAt) this.endWeather();
         if (!this.weather && this.rules.enabled && this.elapsed >= this.nextAt) this.startWeather(false);
       }
-      this.lastTime = now; requestAnimationFrame(tick);
-    }; requestAnimationFrame(tick);
+    }; new ForegroundLoop(tick, 250);
   }
   snapshot() { return { discoveredAt: {...this.state.discoveredAt}, discovered: [...this.state.discovered], season: this.state.season, timeOfDay: this.state.timeOfDay, slots: [...this.state.slots] }; }
   renderSeason() {

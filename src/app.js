@@ -68,6 +68,10 @@
     $('motion').title = gentle ? '关闭柔和动画' : '开启柔和动画';
   }
   syncPreferences();
+  let lastAction = performance.now();
+  const wakeScene = () => { lastAction = performance.now(); document.body.classList.remove('scene-resting'); };
+  addEventListener('pointerdown', wakeScene, { passive: true }); addEventListener('keydown', wakeScene);
+  new ForegroundLoop(now => document.body.classList.toggle('scene-resting', now - lastAction > 8000 && ['idle', 'result'].includes(phase) && !world?.busy && !garden?.stories?.busy), 1000);
   const sound = new MagicAudio(() => muted);
   function syncDrawAction() {
     if (!['idle', 'result'].includes(phase) || !pool.length) return;
@@ -142,10 +146,10 @@
     }
   }
   const particles = {
-    canvas: $('particles'), ctx: $('particles').getContext('2d'), items: [], waves: [], width: 0, height: 0, last: 0, ambientClock: 0, warningClock: 3.2,
+    canvas: $('particles'), ctx: $('particles').getContext('2d'), items: [], waves: [], width: 0, height: 0, last: 0, warningClock: 3.2,
     resize() {
       this.width = innerWidth; this.height = innerHeight;
-      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const dpr = Math.min(devicePixelRatio || 1, 1.5, Math.sqrt(3000000 / (this.width * this.height)));
       this.canvas.width = Math.round(this.width * dpr); this.canvas.height = Math.round(this.height * dpr);
       if (this.ctx) this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     },
@@ -160,6 +164,7 @@
         const rain = kind === 'golden-rain';
         this.items.push({ x: center.x + (rain ? (Math.random() - .5) * 580 : 0), y: rain ? center.y - 190 : center.y, vx: rain ? (Math.random() - .5) * 70 : Math.cos(angle) * speed, vy: rain ? 60 + Math.random() * 140 : Math.sin(angle) * speed - 70, life: 0, max: ambient ? 1.6 : 2.1 + Math.random() * 1.2, size: ambient ? 2 : 4 + Math.random() * 6, angle, color: colors[i % colors.length], gravity: rain ? 25 : 90, star: kind !== 'rainbow-trail' || i % 3 === 0 });
       }
+      this.wake();
     },
     sparkAt(x, y, colors = lampColors, amount = 12) {
       if (!this.ctx || document.hidden) return;
@@ -167,19 +172,23 @@
         const angle = Math.random() * Math.PI * 2, speed = gentle ? 25 : 50 + Math.random() * 110;
         this.items.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 0, max: .5 + Math.random() * .4, size: 2 + Math.random() * 3, angle, color: colors[i % colors.length], gravity: 25, star: true });
       }
+      this.wake();
     },
     shockwave(color) {
       if (gentle) return;
-      this.waves.push({ ...this.center(), color, life: 0 });
+      this.waves.push({ ...this.center(), color, life: 0 }); this.wake();
+    },
+    clear() {
+      this.items = []; this.waves = []; cancelAnimationFrame(this.frameId); clearTimeout(this.timer); this.frameId = null; this.timer = null;
+      if (this.ctx) this.ctx.clearRect(0, 0, this.width, this.height);
+    },
+    wake() {
+      if (!this.ctx || document.hidden || this.frameId || (!this.items.length && !this.waves.length)) return;
+      clearTimeout(this.timer); this.timer = null; this.frameId = requestAnimationFrame(now => this.frame(now));
     },
     frame(now) {
-      const dt = Math.min(.04, (now - (this.last || now)) / 1000); this.last = now;
-      const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !world?.busy && !document.hidden && !muted;
-      if (warningActive) {
-        this.warningClock += dt;
-        const interval = rechargeStation.balance <= 1 ? 2.4 : 3.2;
-        if (this.warningClock >= interval && sound.warning(rechargeStation.balance)) this.warningClock = 0;
-      } else { this.warningClock = 3.2; sound.stopWarning(); }
+      this.frameId = null;
+      const dt = Math.min(.066, (now - (this.last || now)) / 1000); this.last = now;
       if (this.ctx && !document.hidden) {
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.waves = this.waves.filter(wave => wave.life < 1);
@@ -189,10 +198,6 @@
           this.ctx.save(); this.ctx.globalAlpha = Math.max(0, .7 * (1 - wave.life));
           this.ctx.strokeStyle = wave.color; this.ctx.lineWidth = 8 * (1 - wave.life) + 1;
           this.ctx.beginPath(); this.ctx.arc(wave.x, wave.y, radius, 0, Math.PI * 2); this.ctx.stroke(); this.ctx.restore();
-        }
-        if (phase === 'result' && currentTreasure && !gentle && !dialog.open && !rechargeStation.dialog.open && !world?.busy) {
-          this.ambientClock += dt;
-          if (this.ambientClock > .8) { this.emit(currentTreasure, true); this.ambientClock = 0; }
         }
         this.items = this.items.filter(p => p.life < p.max);
         for (const p of this.items) {
@@ -205,10 +210,15 @@
           ctx.restore();
         }
       }
-      requestAnimationFrame(time => this.frame(time));
+      if (this.items.length || this.waves.length) this.timer = setTimeout(() => this.wake(), 16);
     }
   };
-  particles.resize(); requestAnimationFrame(time => particles.frame(time));
+  particles.resize();
+  new ForegroundLoop((now, elapsed) => {
+    const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !extraOverlay() && !world?.busy && !muted;
+    if (warningActive) { particles.warningClock += elapsed / 1000; const interval = rechargeStation.balance <= 1 ? 2.4 : 3.2; if (particles.warningClock >= interval && sound.warning(rechargeStation.balance)) particles.warningClock = 0; }
+    else { particles.warningClock = 3.2; if (sound.warningVoices.size) sound.stopWarning(); }
+  }, 500);
   addEventListener('resize', () => particles.resize());
   chamber = new GachaChamber($('magic-balls'), pool, makeArt, () => gentle, (treasure, x, y) => {
     if (dialog.open || rechargeStation.dialog.open || !['mixing', 'slowing'].includes(phase)) return;
@@ -229,7 +239,7 @@
     clearTimeout(refillTimer); refillTimer = setTimeout(() => machine.classList.remove('heart-refill'), 2600);
   }
   world = new MagicWorld(gameRules.world, savedWorld, history, {
-    energy: () => rechargeStation.balance, warningThreshold: gameRules.energy.warningThreshold,
+    energy: () => rechargeStation.balance, maxEnergy: gameRules.energy.max, energySound: () => sound.tone(520 + rechargeStation.balance * 65, .18), warningThreshold: gameRules.energy.warningThreshold,
     pickGift: eventId => { const ocean = pool.filter(t => ['water', 'ocean', 'sea', 'bubbles'].some(tag => t.tags.includes(tag)) || ['cloud-dolphin', 'mermaid-outfit', 'whale-cup'].includes(t.id)); return drawTreasure(eventId === 'mermaid' && ocean.length ? ocean : treasures, Math.random, { equalProbability: cheatMode, inventory, preferUnowned: ['courier', 'mermaid'].includes(eventId) }); },
     pickAmmo: () => {
       const collected = pool.filter(treasure => history.some(record => record.prizeId === treasure.id));
@@ -242,7 +252,7 @@
     wait, save, art: makeArt, sound: kind => { sound.stopWarning(); sound.encounter(kind); },
     apply: (event, giftId) => {
       if (event.id === 'ghost' && rechargeStation.balance <= gameRules.energy.warningThreshold) return { description: '小幽灵打了个饱嗝！', detail: '它没有拿走你的能量。' };
-      if (['witch', 'bat', 'rock', 'dragon', 'courier', 'mermaid'].includes(event.id) || (event.id === 'fairy' && rechargeStation.full)) {
+      if (['witch', 'bat', 'rock', 'dragon', 'courier', 'mermaid'].includes(event.id) || (event.id === 'fairy' && rechargeStation.full && event.energyDelta !== 1)) {
         const gift = pool.find(treasure => treasure.id === giftId) || drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
         acquired(gift); acquirePower(gift); inventory[gift.id] = (inventory[gift.id] || 0) + 1; history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
         return { gift, description: `额外礼物：${gift.name}`, detail: gift.effects.onAcquire === 'refill-energy' ? '能量补满十格！爱心已经放进宝藏。' : '已经放进你的宝藏里！' };
@@ -262,6 +272,7 @@
     canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
     feedback: (treasure, kind, count, event, line, reaction) => {
       sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !document.hidden) sound.interact(treasure, count, reaction); });
+      particles.emit(treasure, true);
       if (reaction?.surprise) particles.shockwave(treasure.appearance.primaryColor);
       $('announcement').textContent = line;
     }
@@ -279,13 +290,11 @@
     storySound: (kind, time, weather) => sound.story(kind, time, weather),
     weatherSound: kind => sound.weather(kind)
   }, rawGameRules.dayNight, rawGameRules.seasons, rawGameRules.gardenStories);
-  let pacingPrevious = performance.now();
-  const paceTick = now => {
+  const paceTick = (now, elapsed) => {
     const active = !document.hidden && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !garden.stories.busy && !dialog.open && !rechargeStation.dialog.open && !extraOverlay();
-    pacing.advance(Math.min(100, now - pacingPrevious), active); pacingPrevious = now;
+    pacing.advance(elapsed, active);
     if (active && pacing.ready && world.state.pending.length && pool.length) { garden.endWeather(); resumeWorld(); }
-    requestAnimationFrame(paceTick);
-  }; requestAnimationFrame(paceTick);
+    }; new ForegroundLoop(paceTick, () => pacing.remaining || world.state.pending.length ? 100 : 500);
   // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
   async function draw() {
     if (garden?.stories?.busy || !['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || extraOverlay() || !pool.length) return;
@@ -296,7 +305,7 @@
     let awarded = false;
     drawButton.disabled = true; drawButton.classList.add('pressed');
     $('collection').disabled = true; $('cheat').disabled = true;
-    particles.items = []; particles.waves = []; currentTreasure = null;
+    particles.clear(); currentTreasure = null;
     $('treasure-art').hidden = true; $('jackpot').classList.remove('show');
     machine.style.setProperty('--primary', '#ba9cff'); machine.style.setProperty('--accent', '#ffe1f5');
     setPhase('charging', winner); energy(.05); spellPop('魔法启动！');
@@ -392,15 +401,15 @@
   });
   $('motion').addEventListener('click', () => {
     if (reducedMotion.matches && gentle) { notice('正在遵循设备的减少动态效果设置。'); return; }
-    gentle = !gentle; particles.items = []; particles.waves = []; syncPreferences(); save();
+    gentle = !gentle; particles.clear(); syncPreferences(); save();
     notice(gentle ? '柔和动画已开启' : '完整动画已开启');
   });
-  reducedMotion.addEventListener('change', event => { if (event.matches) { gentle = true; particles.items = []; particles.waves = []; syncPreferences(); } });
+  reducedMotion.addEventListener('change', event => { if (event.matches) { gentle = true; particles.clear(); syncPreferences(); } });
   document.addEventListener('visibilitychange', () => {
     spaceHeld = false;
     document.body.classList.toggle('background-paused', document.hidden);
-    if (document.hidden) { sound.context?.suspend().catch(() => {}); globalThis.speechSynthesis?.cancel(); }
-    else if (!muted && sound.context) sound.context.resume().catch(() => {});
+    if (document.hidden) { cancelAnimationFrame(particles.frameId); clearTimeout(particles.timer); particles.frameId = null; sound.context?.suspend().catch(() => {}); globalThis.speechSynthesis?.cancel(); }
+    else { particles.last = 0; particles.wake(); if (!muted && sound.context) sound.context.resume().catch(() => {}); }
   });
   $('fullscreen').addEventListener('click', async () => {
     try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }

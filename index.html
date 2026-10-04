@@ -153,6 +153,8 @@ body.background-paused .world-visitor{animation-play-state:paused}
 @media(max-width:650px){.world-visitor{left:5px;width:155px;top:100px}.visitor-art{width:155px;height:155px}.visitor-message h2{font-size:13px}.visitor-message p{font-size:11px}.world-visitor[data-kind=mermaid]{right:5px}.world-visitor[data-kind=mermaid] .visitor-art:after{font-size:18px}}
 body.gentle .visitor-energy-heart{animation:none;opacity:1;position:absolute;left:50%!important;top:35%!important}body.gentle .visitor-art:after{animation:none!important}@media(prefers-reduced-motion:reduce){.visitor-energy-heart{animation:none;opacity:1;position:absolute;left:50%!important;top:35%!important}.visitor-art:after{animation:none!important}}
 body.background-paused .visitor-energy-heart{animation-play-state:paused}
+.visitor-energy-heart{z-index:19;pointer-events:none}.fairy-heart-arrived{animation:fairy-meter-pulse .45s ease-out}.garden-gift{position:fixed;left:clamp(8px,8vw,110px);bottom:105px;z-index:18;display:grid;justify-items:center;gap:8px;background:transparent;width:150px;padding:10px;color:#fff5d5;filter:drop-shadow(0 5px 9px #17382688)}#garden-gift-art{display:grid;place-items:center;width:100px;height:105px;font-size:78px}#garden-gift-art img{width:100%;height:100%;object-fit:contain}#garden-gift-label{padding:7px 10px;background:#21463ee8;border-radius:16px;font-size:13px;line-height:1.5}.garden-gift[data-action=falling]{animation:gift-drop 1.2s cubic-bezier(.2,.8,.4,1) both}.garden-gift[data-action=waiting] #garden-gift-art{animation:gift-wiggle 1.5s ease-in-out infinite}.garden-gift[data-action=opened] #garden-gift-art{animation:gift-bloom .65s ease-out both}@keyframes gift-drop{0%{opacity:0;transform:translateY(-65vh) rotate(-20deg)}65%{opacity:1;transform:translateY(0) rotate(8deg)}80%{transform:translateY(-28px) rotate(-6deg)}100%{transform:none}}@keyframes gift-wiggle{0%,70%,100%{transform:none}80%{transform:rotate(-9deg)}90%{transform:rotate(9deg)}}@keyframes fairy-meter-pulse{50%{filter:drop-shadow(0 0 14px #ffbcdf);transform:scale(1.12)}}body.background-paused .garden-gift,body.background-paused .garden-gift span{animation-play-state:paused}body.gentle .garden-gift,body.gentle .garden-gift span,body.gentle .fairy-heart-arrived{animation:none!important}@media(prefers-reduced-motion:reduce){.garden-gift,.garden-gift span,.fairy-heart-arrived{animation:none!important}}@media(max-width:650px){.garden-gift{left:4px;bottom:95px;width:105px}#garden-gift-art{width:75px;height:85px;font-size:62px}#garden-gift-label{font-size:11px;padding:5px 7px}}
+.garden-gift:focus-visible{outline:none}.garden-gift:focus-visible #garden-gift-art{outline:3px solid #fff0bb;outline-offset:4px;border-radius:22px}
 
 /* 每种出场动作对应配置中的 reveal；互动只作用于当前奖品图片。 */
 .machine[data-state=result] .treasure-art[data-interactive=true]{animation:none}
@@ -314,6 +316,8 @@ body.gentle .garden-broadcast,body.gentle .witch-stage #witch-face{animation:non
 
 .witch-progress b{white-space:nowrap;flex-shrink:0}.witch-stage[data-health="10"] #witch-hit-stars{display:grid;grid-template-columns:repeat(5,20px);gap:4px}.witch-stage[data-health="10"] .witch-progress{gap:12px}
 body.background-paused .garden-broadcast,body.background-paused .enemy-fog:before{animation-play-state:paused}
+.garden-broadcast{bottom:22px;width:160px}.broadcast-flower{width:70px;height:96px;border:0;border-radius:0;scale:1}.broadcast-flower:before{display:none}.broadcast-flower svg{display:block;width:70px;height:91px}.broadcast-flower i{right:-1px;top:12px;font-size:19px}.garden-broadcast p{font-size:11px;line-height:1.5;overflow-wrap:anywhere;padding:8px;border-radius:12px}@media(max-width:650px){.broadcast-flower{width:54px;height:76px;scale:1}.broadcast-flower svg{width:54px;height:71px}.garden-broadcast p{font-size:10px;padding:6px}.broadcast-flower i{font-size:16px}}
+.broadcast-flower{max-width:100%;height:auto;aspect-ratio:100/137}.broadcast-flower svg{width:100%;height:auto}.broadcast-flower i{right:0}@media(max-width:650px){.broadcast-flower svg{height:auto}.broadcast-flower i{font-size:12px;top:0}.garden-broadcast p{padding:5px 3px}}
 
 /* 月光花园：远景固定，六块花圃与机器共享主屏幕。 */
 .sky{background:radial-gradient(ellipse at 50% 8%,#71769f88,transparent 65%),linear-gradient(#233b59 0%,#4d7580 48%,#35574e 72%,#203e37 100%)}.sky:after{opacity:.15}.garden-scenery{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.garden-moon{fill:#fff1b8;filter:drop-shadow(0 0 28px #fff1b899)}.garden-plant{transform-box:fill-box;transform-origin:50% 100%;animation:plant-sway 5s ease-in-out infinite alternate}.garden-plant:nth-child(even){animation-delay:-2s}.garden-fireflies{fill:#fff6ac;animation:garden-glow 3s ease-in-out infinite alternate}.garden-toolbar{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;margin:0 auto 12px;position:relative;z-index:3;font-size:12px}.garden-toolbar button{border-radius:22px;padding:9px 14px;background:#1c453ccb;border:1px solid #b0dfbe55;color:#e7ffdf;min-height:38px}.garden-toolbar #garden-cancel{color:#ffe7bd}.garden-plots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;max-width:650px;margin:8px auto 12px}.garden-plot{position:relative;min-width:0}.garden-slot{padding:0;min-width:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:140px;background:radial-gradient(ellipse at 50% 72%,#92d99860,transparent 65%);border:1px solid #a7e8ae25;border-radius:50% 50% 35% 35%;overflow:visible}.garden-slot:before{content:'';position:absolute;bottom:4px;width:95%;height:32px;border-radius:50%;background:linear-gradient(#78ba78,#335e47);box-shadow:0 7px 0 #234c3c,0 12px 20px #102e3455;z-index:-1}.garden-art{display:block;width:104px;height:104px;font-size:60px;line-height:104px;filter:drop-shadow(0 7px 5px #163e3b66)}.garden-art img{width:100%;height:100%;object-fit:contain}.garden-name{font-size:11px;color:#eaffdb;text-shadow:0 2px 4px #183d32;max-width:100%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.garden-remove{position:absolute;right:4px;top:6px;width:32px;height:32px;border-radius:50%;background:#183d36c9;color:#e6f5db;border:1px solid #b8dfb444;font-size:21px}.placing .garden-slot{border:2px dashed #fff1ac;box-shadow:0 0 25px #e4fda633}.garden-slot[data-playing] .garden-art{animation:garden-hop .65s ease-in-out 2}.garden-sparkles{position:absolute;top:10px;color:#fff1a9;font-size:24px;animation:garden-sparkle 1.5s ease-out both}.place-treasure{margin-top:8px;padding:9px 12px;border-radius:14px;background:#496650;color:#edffda;width:100%;font-size:12px;font-weight:700}.weather-layer{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}.weather-layer i{position:absolute;left:var(--x);top:-30px;font-style:normal;animation-duration:var(--duration);animation-delay:var(--delay);animation-iteration-count:infinite;animation-timing-function:linear}.weather-layer i{animation-name:weather-fall}body[data-weather=rain] .weather-layer i{width:2px;height:24px;background:linear-gradient(transparent,#bfebff);transform:rotate(15deg)}body[data-weather=snow] .weather-layer i{color:#eaffff;font-size:var(--size);text-shadow:0 0 7px #d1f4ff}body[data-weather=wind] .weather-layer i{font-size:var(--size);animation-name:weather-wind}body[data-weather=meteors] .weather-layer i{width:140px;height:3px;border-radius:50%;background:linear-gradient(90deg,transparent,#ffeec0);box-shadow:5px 0 10px #fff0ab;animation-name:weather-meteor}body[data-weather=rain] .sky{filter:brightness(.83) saturate(.85)}body[data-weather=snow] .sky{filter:saturate(.65) brightness(1.12)}body[data-weather=meteors] .sky{filter:hue-rotate(25deg) brightness(.78)}body[data-weather=wind] .garden-plant{animation-duration:.7s}.weather-paused .weather-layer i{animation-play-state:paused}body.witch-active .garden-plots,body.witch-active .garden-toolbar{pointer-events:none;opacity:.4}
@@ -390,6 +394,11 @@ body.gentle .garden-story-stage .story-actor{scale:1;opacity:1}@media(prefers-re
 .collection-tools{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0 18px;position:sticky;top:88px;background:#211c38;z-index:2;padding:10px;border-radius:14px}.collection-tools label{display:flex;align-items:center;gap:8px;font-size:13px}.collection-tools select{background:#392c51;color:#fff0d7;border:1px solid #c8b1e655;border-radius:10px;padding:10px;font:inherit;min-height:40px}.treasure-card{position:relative}.new-badge{position:absolute;top:10px;right:10px;border-radius:20px;background:#ffe297;color:#62415a;padding:5px 9px;font-size:11px;z-index:1;font-weight:bold}.dialog-header{position:sticky;top:0;z-index:3;background:#211c38;padding:10px 0}.preferences-dialog{width:min(380px,calc(100vw - 32px));color:#fff0d7;background:#211c38;border:1px solid #c8b1e655;border-radius:24px;padding:22px}.preference-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #ffffff12}.preferences-dialog h2{font-size:21px}.save-controls{display:flex;gap:12px;margin-top:24px}.save-controls button,.import-label,#confirm-import{font:inherit;font-size:13px;padding:12px;border-radius:12px;background:#d6bff3;color:#312246;cursor:pointer}.import-label input{display:block;max-width:190px;font-size:11px;margin-top:8px}.preferences-dialog p{font-size:13px;line-height:1.7}.story-shade{position:fixed;inset:0;border:0;border-radius:0;background:#071e1a99;z-index:19}.garden-story-dock:has(.garden-story-panel:not([hidden])){z-index:20}.garden-story-panel{width:min(380px,calc(100vw - 44px));padding-top:0;overscroll-behavior:contain}.garden-story-header{position:sticky;top:0;z-index:2;background:#183a34;padding:14px 0}.story-recipe{display:flex;gap:7px;align-items:center;margin:10px 0;flex-wrap:wrap}.recipe-companion{width:48px;height:48px;border-radius:14px;background:#ffffff12;display:grid;place-items:center;border:1px solid #f4d49b77}.recipe-companion img{width:100%;height:100%;object-fit:contain}.recipe-companion.missing{opacity:.45;border-style:dashed}.story-recipe>span{color:#f4d49b}.preferences-dialog::backdrop{background:#0a1027aa}
 @media(max-width:600px){.collection-tools{top:80px;gap:8px}.collection-tools select{max-width:155px}.utilities{gap:5px}.preferences-dialog{padding:16px}.garden-story-panel{max-height:65svh}}
 body:has(dialog[open]) #notice,body:has(#garden-story-panel:not([hidden])) #notice{visibility:hidden}
+/* 静置时暂停装饰；实际抽奖、战斗、访客和天气仍按自己的状态运行。 */
+.scene-resting :is(.lamp,.halo,.floating-spark,.garden-plant,.garden-fireflies,.machine-wing svg,.life-canopy,.life-fruits,.reveal-rays,.treasure-art,.treasure-art img,.light-strip,.idle-art){animation-play-state:paused!important}
+.background-paused *,.background-paused *::before,.background-paused *::after{animation-play-state:paused!important}
+body:has(dialog[open]) :is(.lamp,.halo,.floating-spark,.garden-plant,.garden-fireflies,.machine-wing svg,.life-canopy,.life-fruits,.reveal-rays,.treasure-art,.treasure-art img,.light-strip,.idle-art){animation-play-state:paused!important}
+@keyframes lamp-chase{0%,100%{opacity:.4}30%,50%{opacity:1}}
 </style></head>
 <body>
 <div class="sky" aria-hidden="true"><svg class="garden-celestial" viewBox="0 0 120 120"><circle class="garden-sun" cx="60" cy="60" r="32"/><g class="garden-sun-rays" stroke="#ffe4a1" stroke-width="3" stroke-linecap="round"><path d="M60 18v-9m0 93v9M18 60H9m93 0h9M30 30l-7-7m67 67 7 7M30 90l-7 7m67-67 7-7"/></g><circle class="garden-moon" cx="60" cy="60" r="33"/><g class="moon-craters" fill="#d6c887" opacity=".2"><circle cx="47" cy="46" r="7"/><circle cx="76" cy="68" r="10"/><circle cx="44" cy="78" r="5"/></g></svg><svg class="garden-scenery" viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="hill" x2="0" y2="1"><stop class="hill-light" stop-color="#508877"/><stop class="hill-dark" offset="1" stop-color="#234e45"/></linearGradient><linearGradient id="garden-tree" x2="1" y2="1"><stop class="tree-light" stop-color="#71ad83"/><stop class="tree-dark" offset="1" stop-color="#315d54"/></linearGradient></defs><g fill="#b6d5dd" opacity=".15"><ellipse cx="220" cy="125" rx="170" ry="30"/><ellipse cx="840" cy="220" rx="240" ry="24"/></g><path d="M0 570Q240 400 480 600T1000 550T1440 570V1000H0Z" class="hill-far" fill="#426b68"/><path d="M0 730Q240 520 560 690T1100 630T1440 650V1000H0Z" fill="url(#hill)"/><path d="M520 1000Q510 860 665 740Q700 715 720 700Q740 715 775 740Q930 860 920 1000" fill="#acc69d" opacity=".23"/><g class="garden-plant"><g transform="translate(95 700) scale(1.2)"><path d="M-14 0L-8-210H8L18 0" fill="#547365"/><path d="M0-360C-130-360-135-190-70-170C-155-110-100-40-15-65C50-10 170-95 95-160C160-235 110-360 0-360Z" fill="url(#garden-tree)"/><g class="garden-petals" fill="#f8b5dc"><circle cx="-60" cy="-220" r="13"/><circle cx="40" cy="-285" r="10"/><circle cx="65" cy="-120" r="14"/></g></g></g><g class="garden-plant"><g transform="translate(1320 710) scale(1.4)"><path d="M-14 0L-8-210H8L18 0" fill="#547365"/><path d="M0-360C-130-360-135-190-70-170C-155-110-100-40-15-65C50-10 170-95 95-160C160-235 110-360 0-360Z" fill="url(#garden-tree)"/><g class="garden-petals" fill="#f8b5dc"><circle cx="-60" cy="-220" r="13"/><circle cx="40" cy="-285" r="10"/><circle cx="65" cy="-120" r="14"/></g></g></g><g class="garden-plant"><g transform="translate(275 620) scale(0.7)"><path d="M-14 0L-8-210H8L18 0" fill="#547365"/><path d="M0-360C-130-360-135-190-70-170C-155-110-100-40-15-65C50-10 170-95 95-160C160-235 110-360 0-360Z" fill="url(#garden-tree)"/><g class="garden-petals" fill="#f8b5dc"><circle cx="-60" cy="-220" r="13"/><circle cx="40" cy="-285" r="10"/><circle cx="65" cy="-120" r="14"/></g></g></g><g class="garden-plant"><g transform="translate(1170 650) scale(0.8)"><path d="M-14 0L-8-210H8L18 0" fill="#547365"/><path d="M0-360C-130-360-135-190-70-170C-155-110-100-40-15-65C50-10 170-95 95-160C160-235 110-360 0-360Z" fill="url(#garden-tree)"/><g class="garden-petals" fill="#f8b5dc"><circle cx="-60" cy="-220" r="13"/><circle cx="40" cy="-285" r="10"/><circle cx="65" cy="-120" r="14"/></g></g></g><g class="garden-plant"><path d="M28 820q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="19" cy="763" r="10"/><circle cx="37" cy="763" r="10"/><circle cx="28" cy="752" r="10"/></g><circle cx="28" cy="765" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M201 867q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="192" cy="810" r="10"/><circle cx="210" cy="810" r="10"/><circle cx="201" cy="799" r="10"/></g><circle cx="201" cy="812" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M374 914q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="365" cy="857" r="10"/><circle cx="383" cy="857" r="10"/><circle cx="374" cy="846" r="10"/></g><circle cx="374" cy="859" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M547 961q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="538" cy="904" r="10"/><circle cx="556" cy="904" r="10"/><circle cx="547" cy="893" r="10"/></g><circle cx="547" cy="906" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M720 828q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="711" cy="771" r="10"/><circle cx="729" cy="771" r="10"/><circle cx="720" cy="760" r="10"/></g><circle cx="720" cy="773" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M893 875q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="884" cy="818" r="10"/><circle cx="902" cy="818" r="10"/><circle cx="893" cy="807" r="10"/></g><circle cx="893" cy="820" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M1066 922q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="1057" cy="865" r="10"/><circle cx="1075" cy="865" r="10"/><circle cx="1066" cy="854" r="10"/></g><circle cx="1066" cy="867" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M1239 969q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="1230" cy="912" r="10"/><circle cx="1248" cy="912" r="10"/><circle cx="1239" cy="901" r="10"/></g><circle cx="1239" cy="914" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M1412 836q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="1403" cy="779" r="10"/><circle cx="1421" cy="779" r="10"/><circle cx="1412" cy="768" r="10"/></g><circle cx="1412" cy="781" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M145 883q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="136" cy="826" r="10"/><circle cx="154" cy="826" r="10"/><circle cx="145" cy="815" r="10"/></g><circle cx="145" cy="828" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M318 930q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="309" cy="873" r="10"/><circle cx="327" cy="873" r="10"/><circle cx="318" cy="862" r="10"/></g><circle cx="318" cy="875" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M491 977q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="482" cy="920" r="10"/><circle cx="500" cy="920" r="10"/><circle cx="491" cy="909" r="10"/></g><circle cx="491" cy="922" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M664 844q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="655" cy="787" r="10"/><circle cx="673" cy="787" r="10"/><circle cx="664" cy="776" r="10"/></g><circle cx="664" cy="789" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M837 891q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="828" cy="834" r="10"/><circle cx="846" cy="834" r="10"/><circle cx="837" cy="823" r="10"/></g><circle cx="837" cy="836" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M1010 938q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="1001" cy="881" r="10"/><circle cx="1019" cy="881" r="10"/><circle cx="1010" cy="870" r="10"/></g><circle cx="1010" cy="883" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M1183 985q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="1174" cy="928" r="10"/><circle cx="1192" cy="928" r="10"/><circle cx="1183" cy="917" r="10"/></g><circle cx="1183" cy="930" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M1356 852q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="1347" cy="795" r="10"/><circle cx="1365" cy="795" r="10"/><circle cx="1356" cy="784" r="10"/></g><circle cx="1356" cy="797" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M89 899q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="80" cy="842" r="10"/><circle cx="98" cy="842" r="10"/><circle cx="89" cy="831" r="10"/></g><circle cx="89" cy="844" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M262 946q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="253" cy="889" r="10"/><circle cx="271" cy="889" r="10"/><circle cx="262" cy="878" r="10"/></g><circle cx="262" cy="891" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M435 993q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="426" cy="936" r="10"/><circle cx="444" cy="936" r="10"/><circle cx="435" cy="925" r="10"/></g><circle cx="435" cy="938" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M608 860q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="599" cy="803" r="10"/><circle cx="617" cy="803" r="10"/><circle cx="608" cy="792" r="10"/></g><circle cx="608" cy="805" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M781 907q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="772" cy="850" r="10"/><circle cx="790" cy="850" r="10"/><circle cx="781" cy="839" r="10"/></g><circle cx="781" cy="852" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M954 954q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="945" cy="897" r="10"/><circle cx="963" cy="897" r="10"/><circle cx="954" cy="886" r="10"/></g><circle cx="954" cy="899" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M1127 821q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="1118" cy="764" r="10"/><circle cx="1136" cy="764" r="10"/><circle cx="1127" cy="753" r="10"/></g><circle cx="1127" cy="766" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M1300 868q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="1291" cy="811" r="10"/><circle cx="1309" cy="811" r="10"/><circle cx="1300" cy="800" r="10"/></g><circle cx="1300" cy="813" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M33 915q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="24" cy="858" r="10"/><circle cx="42" cy="858" r="10"/><circle cx="33" cy="847" r="10"/></g><circle cx="33" cy="860" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M206 962q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="197" cy="905" r="10"/><circle cx="215" cy="905" r="10"/><circle cx="206" cy="894" r="10"/></g><circle cx="206" cy="907" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M379 829q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#efb1dc"><circle cx="370" cy="772" r="10"/><circle cx="388" cy="772" r="10"/><circle cx="379" cy="761" r="10"/></g><circle cx="379" cy="774" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M552 876q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#f9de98"><circle cx="543" cy="819" r="10"/><circle cx="561" cy="819" r="10"/><circle cx="552" cy="808" r="10"/></g><circle cx="552" cy="821" r="6" fill="#fff0bb"/></g><g class="garden-plant"><path d="M725 923q-8-30 0-54m0 32q-30-23-25-5m25-4q32-24 26-3" fill="none" stroke="#85b782" stroke-width="5" stroke-linecap="round"/><g class="garden-petals" fill="#bdb4ff"><circle cx="716" cy="866" r="10"/><circle cx="734" cy="866" r="10"/><circle cx="725" cy="855" r="10"/></g><circle cx="725" cy="868" r="6" fill="#fff0bb"/></g><g class="garden-fireflies"><circle cx="43" cy="390" r="2"/><circle cx="240" cy="473" r="3"/><circle cx="437" cy="556" r="4"/><circle cx="634" cy="639" r="2"/><circle cx="831" cy="722" r="3"/><circle cx="1028" cy="805" r="4"/><circle cx="1225" cy="888" r="2"/><circle cx="1422" cy="451" r="3"/><circle cx="179" cy="534" r="4"/><circle cx="376" cy="617" r="2"/><circle cx="573" cy="700" r="3"/><circle cx="770" cy="783" r="4"/><circle cx="967" cy="866" r="2"/><circle cx="1164" cy="429" r="3"/><circle cx="1361" cy="512" r="4"/><circle cx="118" cy="595" r="2"/><circle cx="315" cy="678" r="3"/><circle cx="512" cy="761" r="4"/></g></svg></div><div id="weather-layer" class="weather-layer" aria-hidden="true"></div>
@@ -443,6 +452,7 @@ body:has(dialog[open]) #notice,body:has(#garden-story-panel:not([hidden])) #noti
 <div class="garden-toolbar"><span id="garden-selection" role="status"></span><button id="garden-cancel" type="button" hidden>取消摆放</button></div><section id="garden-plots" class="garden-plots" aria-label="魔法花园的六块花圃"></section>
 </main>
 <aside class="bottom" aria-label="宝藏入口"><button id="collection" class="collection-button" aria-label="打开我的宝藏" title="我的宝藏"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 7V5a4 4 0 0 1 8 0v2M5 7h14l2 14H3L5 7Z" stroke-linejoin="round"/><path d="m12 10 1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4L12 10Z" stroke-linejoin="round"/></svg> <span id="collection-count" class="count">0</span></button></aside>
+<button id="garden-gift" class="garden-gift" type="button" hidden><span id="garden-gift-art"></span><span id="garden-gift-label"></span></button>
 <section id="world-visitor" class="world-visitor" hidden role="status"><div id="visitor-art" class="visitor-art" aria-hidden="true"></div><div class="visitor-message"><h2 id="visitor-title"></h2><p id="visitor-outcome"></p><div id="visitor-gift" class="visitor-gift" aria-hidden="true"></div></div></section>
 <section id="life-upgrade-banner" class="life-upgrade-banner" hidden role="status"><h2>生命树醒来了！</h2><p id="life-upgrade-caption"></p></section>
 <button id="garden-story-shade" class="story-shade" aria-label="关闭花园故事" hidden></button><aside class="garden-story-dock"><button id="garden-story-button" type="button" aria-label="打开花园故事" aria-expanded="false" aria-controls="garden-story-panel">📖<span id="garden-story-count">0/10</span></button><section id="garden-story-panel" class="garden-story-panel" role="dialog" aria-modal="true" tabindex="-1" aria-label="花园故事图鉴" hidden><div class="garden-story-header"><h2>花园故事</h2><button id="close-garden-stories" type="button" aria-label="关闭花园故事">×</button></div><div id="garden-story-list"></div></section></aside>
@@ -457,7 +467,7 @@ body:has(dialog[open]) #notice,body:has(#garden-story-panel:not([hidden])) #noti
 <div id="counting-stars" class="counting-stars" role="img"></div><p id="math-hint" class="math-hint" hidden></p><p id="answer-feedback" class="answer-feedback" role="status" aria-live="polite">答对一题，点亮两格魔法</p><div id="number-pad" class="number-pad" role="group" aria-label="数字键盘"></div><button id="answer-submit" type="submit" class="answer-submit">送出答案 ✦</button></form>
 <span id="reward-star" class="reward-star" aria-hidden="true">✦</span><button id="return-to-machine" class="return-to-machine" type="button">带着能量继续玩</button></dialog>
 <dialog id="world-dialog" aria-labelledby="scene-title" aria-describedby="scene-description scene-outcome" tabindex="-1"><p class="scene-eyebrow">✦ MAGIC ENCOUNTER ✦</p><h2 id="scene-title"></h2><p id="scene-description"></p><div class="scene-stage"><div class="scene-orbit" aria-hidden="true"></div><div id="scene-avatar" class="scene-avatar"></div><div id="scene-reward" class="scene-reward" aria-hidden="true"></div><div id="upgrade-emblem" class="upgrade-emblem" hidden aria-hidden="true"><svg viewBox="-45 -40 290 290" fill="none"><g class="mini-wings"><use href="#magic-wing" x="-38" y="45" width="85" height="125"/><use href="#magic-wing" x="-238" y="45" width="85" height="125" transform="scale(-1 1)"/></g><use class="mini-cloud" href="#magic-cloud" x="3" y="192" width="195" height="38"/><g class="mini-castle"><use href="#magic-tower" x="18" y="-12" width="50" height="86"/><use href="#magic-tower" x="134" y="-12" width="50" height="86"/><use href="#magic-crown" x="45" y="-26" width="110" height="35"/></g><defs><linearGradient id="mini-rainbow" x2="1" y2="1"><stop stop-color="#ffb3d7"/><stop offset=".25" stop-color="#ffe7a9"/><stop offset=".5" stop-color="#a8f4dc"/><stop offset=".75" stop-color="#a9c4ff"/><stop offset="1" stop-color="#cda2ff"/></linearGradient></defs><path d="M25 84Q25 19 100 19Q175 19 175 84" stroke="url(#mini-rainbow)" stroke-width="13"/><rect x="34" y="52" width="132" height="162" rx="30" fill="url(#mini-rainbow)" stroke="#fff0d9" stroke-width="3"/><rect x="48" y="72" width="104" height="87" rx="22" fill="#332b57"/><g fill="url(#mini-rainbow)" stroke="#fff0df"><circle cx="76" cy="100" r="14"/><circle cx="117" cy="105" r="14"/><circle cx="96" cy="136" r="14"/></g><rect x="65" y="174" width="70" height="24" rx="12" fill="#fff0b7"/><path d="m100 8 5 13 14 2-10 9 3 14-12-7-12 7 3-14-10-9 14-2Z" fill="#fff2bc"/></svg></div></div><p id="scene-outcome" role="status"></p><button id="continue-world" type="button">继续玩 ✦</button></dialog>
-<section id="garden-broadcast" class="garden-broadcast" hidden role="status"><div class="broadcast-flower" aria-hidden="true"><span>✿</span><i>♪</i></div><p id="broadcast-message"></p></section>
+<section id="garden-broadcast" class="garden-broadcast" hidden role="status"><div class="broadcast-flower" aria-hidden="true"><svg viewBox="0 0 100 130"><path d="M50 119V53M50 104Q20 103 15 82M50 111Q79 103 85 81" stroke="#489768" stroke-width="8" stroke-linecap="round" fill="none"/><g fill="#ffdc8b" stroke="#d9a259" stroke-width="2"><ellipse cx="50" cy="25" rx="17" ry="22"/><ellipse cx="50" cy="73" rx="17" ry="22"/><ellipse cx="27" cy="49" rx="22" ry="17"/><ellipse cx="73" cy="49" rx="22" ry="17"/></g><circle cx="50" cy="49" r="21" fill="#8f627f" stroke="#fff2b4" stroke-width="5"/><path d="M35 40H65M33 48H67M35 56H65" stroke="#e4b5d5" stroke-width="4" stroke-linecap="round"/></svg><i>♪</i></div><p id="broadcast-message"></p></section>
 <section id="witch-stage" class="witch-stage" aria-label="花园中的女巫挑战" hidden>
 <div class="witch-hud"><h2 id="witch-title">邪恶女巫来捣蛋啦！</h2><p id="witch-instruction"></p><div class="witch-progress"><div id="witch-hit-stars" aria-hidden="true"></div><b id="witch-hit-count">0 / 3</b></div><p id="witch-feedback" class="witch-feedback" role="status" aria-live="polite"></p><div id="witch-reward" class="witch-reward" hidden></div><button id="witch-continue" type="button" hidden>继续玩 ✦</button></div>
 <button id="witch-target" class="witch-target" type="button" aria-label="点女巫，发射宝物"><span class="witch-flash" aria-hidden="true"></span><span id="witch-face"></span><span class="witch-panic" aria-hidden="true">哎呀！快逃！</span><span class="witch-dust" aria-hidden="true">💨 ✦ 💨</span></button>
@@ -493,6 +503,18 @@ function chooseWeather(kinds, weights, random = Math.random) {
   if (!total) return null;
   let cursor = Math.min(.999999, Math.max(0, random())) * total;
   return kinds.find(kind => (cursor -= weights[kind] ?? 1) < 0) || kinds.at(-1);
+}
+// 低频逻辑不占用显示帧；后台彻底停表，返回时从当前时刻继续。
+class ForegroundLoop {
+  constructor(callback, cadence = 250) {
+    this.callback = callback; this.cadence = cadence; this.timer = null;
+    this.onVisibility = () => { clearTimeout(this.timer); this.timer = null; this.previous = performance.now(); this.schedule(); };
+    document.addEventListener('visibilitychange', this.onVisibility); this.previous = performance.now(); this.schedule();
+  }
+  schedule() {
+    if (document.hidden || this.timer !== null) return;
+    this.timer = setTimeout(() => { this.timer = null; const now = performance.now(), elapsed = Math.min(1000, now - this.previous); this.previous = now; if (!document.hidden) this.callback(now, elapsed); this.schedule(); }, typeof this.cadence === 'function' ? this.cadence() : this.cadence);
+  }
 }
 
 const RARITIES = { common: { label: '闪亮宝物', english: 'STARLIGHT' }, rare: { label: '稀有宝物', english: 'RAINBOW MAGIC' }, super: { label: '超级宝物', english: 'SUPER LUCKY!' } };
@@ -564,7 +586,7 @@ class GachaChamber {
     }
     this.reset();
     new ResizeObserver(() => this.resize()).observe(container);
-    requestAnimationFrame(now => this.frame(now));
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(this.frameId); this.frameId = null; } else this.wake(); });
   }
   resize() {
     const width = this.container.clientWidth, height = this.container.clientHeight;
@@ -573,7 +595,7 @@ class GachaChamber {
     this.width = width; this.height = height;
     this.radius = Math.max(24, Math.min(35, width * .103));
     this.container.style.setProperty('--ball-size', `${this.radius * 2}px`);
-    for (const ball of this.balls) ball.radius = this.radius;
+    for (const ball of this.balls) { ball.radius = this.radius; this.paint(ball); }
   }
   reset(winner) {
     this.resize(); this.selected = null; this.elapsed = 0;
@@ -594,12 +616,14 @@ class GachaChamber {
       ball.x = this.width * ((col + .5) / columns); ball.y = this.height * (.33 + row * .37);
       ball.vx = (ball.seed % 2 ? 1 : -1) * (190 + ball.seed * 23); ball.vy = -170 - ball.seed * 25;
       ball.squash = 0;
-      ball.node.classList.remove('chosen', 'bump'); ball.node.style.opacity = '1';
+      ball.node.classList.remove('chosen', 'bump'); ball.node.style.opacity = '1'; this.paint(ball);
     }
   }
   setPhase(phase, winner) {
+    cancelAnimationFrame(this.frameId); this.frameId = null; this.last = 0;
     this.phase = phase; this.elapsed = 0;
     if (phase === 'charging') this.reset(winner);
+    this.wake();
     if (phase === 'selecting') {
       this.selected = this.balls.find(ball => ball.treasure.id === winner.id);
       if (!this.selected) throw new Error('中奖宝物没有对应的魔法球');
@@ -608,6 +632,15 @@ class GachaChamber {
         this.origin = { x: this.selected.x, y: this.selected.y };
       }
     }
+  }
+  wake() {
+    if (document.hidden || this.frameId != null || !['mixing', 'slowing', 'selecting'].includes(this.phase) || (this.isGentle() && this.phase !== 'selecting')) return;
+    this.last = 0; this.frameId = requestAnimationFrame(now => this.frame(now));
+  }
+  paint(ball) {
+    const r = ball.radius, squash = this.isGentle() ? 0 : ball.squash || 0;
+    const transform = `translate(${ball.x - r}px,${ball.y - r}px) rotate(${ball.angle}deg) scale(${1 + squash},${1 - squash})`;
+    if (transform !== ball.transform) { ball.node.style.transform = transform; ball.transform = transform; }
   }
   hit(ball) {
     ball.squash = .25;
@@ -619,6 +652,7 @@ class GachaChamber {
     this.onCollision(ball.treasure, ball.x, ball.y);
   }
   frame(now) {
+    this.frameId = null;
     const dt = Math.min(.032, (now - (this.last || now)) / 1000); this.last = now;
     if (!document.hidden) {
       this.elapsed += dt; this.hitCooldown -= dt;
@@ -655,15 +689,13 @@ class GachaChamber {
         }
       }
       for (const ball of this.balls) {
-        const idleFloat = this.phase === 'idle' && !this.isGentle() ? Math.sin(now / 900 + ball.seed) * 5 : 0;
         const r = ball.radius;
         if (mixing) { ball.x = Math.max(r, Math.min(this.width - r, ball.x)); ball.y = Math.max(r, Math.min(this.height - r, ball.y)); }
         ball.squash = Math.max(0, ball.squash - dt * 1.8);
-        const squash = this.isGentle() ? 0 : ball.squash;
-        ball.node.style.transform = `translate(${ball.x - r}px,${ball.y - r + idleFloat}px) rotate(${ball.angle}deg) scale(${1 + squash},${1 - squash})`;
+        this.paint(ball);
       }
     }
-    requestAnimationFrame(time => this.frame(time));
+    if (!document.hidden && (['mixing', 'slowing'].includes(this.phase) || this.phase === 'selecting' && this.elapsed < .8) && !this.isGentle()) this.frameId = requestAnimationFrame(time => this.frame(time));
   }
 }
 
@@ -1177,13 +1209,13 @@ function normalizeWorldRules(value) {
 function normalizeWorldState(saved, history, rules) {
   const natural = (value, fallback) => Number.isSafeInteger(value) && value >= 0 ? value : fallback;
   const completedDraws = natural(saved?.completedDraws, history.filter(record => record.source !== 'event').length);
-  const pending = Array.isArray(saved?.pending) ? saved.pending.filter(item => item && (item.kind === 'upgrade' || item.kind === 'witch' || (item.kind === 'event' && rules.events.some(event => event.id === item.id)))).map(item => item.kind === 'upgrade' ? { kind: 'upgrade', level: MACHINE_LEVELS.some(level => level.threshold && level.id === item.level) ? item.level : 'rainbow' } : item.kind === 'witch' ? { kind: 'witch', ...(ENEMIES.some(e => e.id === item.opponent) ? { opponent: item.opponent } : {}), assistUsed: item.assistUsed === true, usedGuardians: Array.isArray(item.usedGuardians) ? [...new Set(item.usedGuardians.filter(id => typeof id === 'string'))].slice(0, 6) : [], assistHits: Math.min(5, natural(item.assistHits, item.assistUsed ? 1 : 0)), shieldUsed: item.shieldUsed === true, interferenceUsed: item.interferenceUsed === true, milestone: natural(item.milestone, completedDraws), hits: Math.min(enemyRules(rules.witch, item.opponent).hits, natural(item.hits, 0)), giftId: typeof item.giftId === 'string' ? item.giftId : null } : { kind: 'event', id: item.id, giftId: typeof item.giftId === 'string' ? item.giftId : null }).slice(0, 8) : [];
+  const pending = Array.isArray(saved?.pending) ? saved.pending.filter(item => item && (item.kind === 'upgrade' || item.kind === 'witch' || (item.kind === 'event' && rules.events.some(event => event.id === item.id)))).map(item => item.kind === 'upgrade' ? { kind: 'upgrade', level: MACHINE_LEVELS.some(level => level.threshold && level.id === item.level) ? item.level : 'rainbow' } : item.kind === 'witch' ? { kind: 'witch', ...(ENEMIES.some(e => e.id === item.opponent) ? { opponent: item.opponent } : {}), assistUsed: item.assistUsed === true, usedGuardians: Array.isArray(item.usedGuardians) ? [...new Set(item.usedGuardians.filter(id => typeof id === 'string'))].slice(0, 6) : [], assistHits: Math.min(5, natural(item.assistHits, item.assistUsed ? 1 : 0)), shieldUsed: item.shieldUsed === true, interferenceUsed: item.interferenceUsed === true, milestone: natural(item.milestone, completedDraws), hits: Math.min(enemyRules(rules.witch, item.opponent).hits, natural(item.hits, 0)), giftId: typeof item.giftId === 'string' ? item.giftId : null } : { kind: 'event', id: item.id, ...(Number.isInteger(item.chargeRemaining) ? { chargeRemaining: Math.max(0, Math.min(10, item.chargeRemaining)) } : {}), giftId: typeof item.giftId === 'string' ? item.giftId : null }).slice(0, 8) : [];
   const oldChallenge = pending.find(item => item.kind === 'witch');
   const fallbackWitch = oldChallenge ? Math.min(completedDraws, oldChallenge.milestone) : history.some(record => ENEMIES.some(enemy => enemy.id === record.eventId)) ? completedDraws : null;
   const candidateWitch = natural(saved?.lastWitchDraw, fallbackWitch);
   const lastWitchDraw = candidateWitch === null ? null : Math.min(completedDraws, candidateWitch);
   const seenOpponents = Array.isArray(saved?.seenOpponents) ? [...new Set(saved.seenOpponents.filter(id => ENEMIES.some(e => e.id === id)))] : saved ? ENEMIES.filter(e => completedDraws >= rules[e.threshold] && (e.id === 'bat' || e.id === 'witch')).map(e => e.id) : [];
-  return { completedDraws, seenOpponents, lastWitchDraw, witchWait: Math.min(rules.witch.guaranteeAfter, natural(saved?.witchWait, 0)), sinceEvent: Math.min(rules.guaranteeAfter, natural(saved?.sinceEvent, 0)), pending };
+  return { completedDraws, seenEvents: Array.isArray(saved?.seenEvents) ? [...new Set(saved.seenEvents.filter(id => rules.events.some(e => e.id === id)))] : [], seenOpponents, lastWitchDraw, witchWait: Math.min(rules.witch.guaranteeAfter, natural(saved?.witchWait, 0)), sinceEvent: Math.min(rules.guaranteeAfter, natural(saved?.sinceEvent, 0)), pending };
 }
 function advanceWorld(state, rules, balance, warningThreshold, random = Math.random) {
   const next = { ...state, completedDraws: state.completedDraws + 1, sinceEvent: state.sinceEvent + 1, pending: [...state.pending] };
@@ -1199,19 +1231,21 @@ function advanceWorld(state, rules, balance, warningThreshold, random = Math.ran
   if (unlocked.length && !next.pending.some(item => item.kind === 'upgrade')) {
     next.witchWait = (state.witchWait || 0) + 1;
     const canVisit = state.lastWitchDraw == null || next.completedDraws - state.lastWitchDraw > rules.witch.minGap;
-    if (rules.witch.enabled && (debut || (canVisit && (next.witchWait >= rules.witch.guaranteeAfter || random() < rules.witch.chance)))) {
+    if (rules.witch.enabled && (debut || (!(rules.enabled && next.sinceEvent >= rules.guaranteeAfter && rules.events.some(e => e.enabled && e.weight > 0)) && canVisit && (next.witchWait >= rules.witch.guaranteeAfter || random() < rules.witch.chance)))) {
       const enemy = debut || unlocked[Math.min(unlocked.length - 1, Math.floor(Math.max(0, Math.min(.999999, random())) * unlocked.length))];
       next.pending.push({ kind: 'witch', opponent: enemy.id, assistUsed: false, usedGuardians: [], assistHits: 0, shieldUsed: false, interferenceUsed: false, milestone: next.completedDraws, hits: 0, giftId: null });
       next.seenOpponents = [...new Set([...seen, enemy.id])];
-      next.lastWitchDraw = next.completedDraws; next.witchWait = 0; next.sinceEvent = 0;
+      next.lastWitchDraw = next.completedDraws; next.witchWait = 0;
       return next;
     }
   }
-  const eligible = rules.events.filter(event => event.enabled && event.weight > 0 && (event.id !== 'ghost' || balance > warningThreshold));
+  let eligible = rules.events.filter(event => event.enabled && event.weight > 0);
+  const unseen = eligible.filter(event => !(state.seenEvents || []).includes(event.id));
+  if (unseen.length) eligible = unseen;
   if (rules.enabled && eligible.length && next.sinceEvent > rules.minGap && (next.sinceEvent >= rules.guaranteeAfter || random() < rules.chance)) {
     let cursor = Math.max(0, Math.min(1 - Number.EPSILON, random())) * eligible.reduce((sum, event) => sum + event.weight, 0);
     const event = eligible.find(event => { cursor -= event.weight; return cursor < 0; }) || eligible.at(-1);
-    next.pending.push({ kind: 'event', id: event.id }); next.sinceEvent = 0;
+    next.pending.push({ kind: 'event', id: event.id }); next.seenEvents = [...new Set([...(state.seenEvents || []), event.id])]; next.sinceEvent = 0;
   }
   return next;
 }
@@ -1224,9 +1258,18 @@ class WitchGame {
     document.addEventListener('click', event => {
       if (event.target.closest('#witch-target') || !event.target.closest('button,a,input,dialog,#machine,.topbar,.witch-hud')) this.shoot(event);
     });
-    addEventListener('resize', () => this.position());
+    addEventListener('resize', () => { this.position(); this.positionBroadcast(); });
     addEventListener('scroll', () => this.position(), { passive: true });
+    new ResizeObserver(() => this.positionBroadcast()).observe(this.stage.querySelector('.witch-hud'));
     this.target.addEventListener('keydown', event => { if (event.key === 'Enter' && event.repeat) event.preventDefault(); });
+  }
+  positionBroadcast() {
+    const broadcast = this.$('garden-broadcast'), machine = this.$('machine').getBoundingClientRect();
+    const hud = this.stage.querySelector('.witch-hud').getBoundingClientRect();
+    if (innerWidth <= 650 && hud.top - machine.bottom >= 112) { broadcast.style.width = '120px'; broadcast.style.left = '12px'; broadcast.style.bottom = `${innerHeight - hud.top + 8}px`; return; }
+    const room = Math.max(machine.left, innerWidth - machine.right), width = Math.min(160, Math.max(32, room - 12));
+    const left = machine.left >= innerWidth - machine.right ? Math.max(4, machine.left - width - 8) : Math.min(innerWidth - width - 4, machine.right + 8);
+    broadcast.style.width = `${width}px`; broadcast.style.left = `${left}px`; broadcast.style.bottom = '22px';
   }
   updateHits() {
     this.$('witch-hit-count').textContent = `${this.item.hits} / ${this.challengeRules.hits}`;
@@ -1312,7 +1355,7 @@ class WitchGame {
     this.stage.dataset.action = 'won'; this.$('witch-title').textContent = `${this.enemyName}被你打跑啦！`;
     this.$('witch-instruction').textContent = '守护魔法世界，收到一份礼物！';
     this.$('witch-feedback').textContent = reward.gift.name;
-    this.$('garden-broadcast').dataset.action = 'rising'; this.$('broadcast-message').textContent = '花园安全啦！谢谢小小守护者！'; this.callbacks.sound('broadcast'); this.callbacks.voice?.('花园安全啦！谢谢小小守护者！');
+    this.positionBroadcast(); this.$('garden-broadcast').dataset.action = 'rising'; this.$('broadcast-message').textContent = innerWidth <= 650 ? '安全啦！' : '花园安全啦！谢谢小小守护者！'; this.callbacks.sound('broadcast'); this.callbacks.voice?.('花园安全啦！谢谢小小守护者！');
     this.$('witch-reward').hidden = false; this.callbacks.art(reward.gift, this.$('witch-reward'));
     this.$('witch-continue').hidden = false; this.callbacks.sound('witch-win');
     this.$('announcement').textContent = `${this.enemyName}被打跑了，获得额外宝物：${reward.gift.name}。`;
@@ -1335,8 +1378,8 @@ class WitchGame {
     else this.$('witch-face').textContent = item.opponent === 'bat' ? '🦇' : '🧙‍♀️';
     this.updateHits(); this.stage.hidden = false; this.stage.setAttribute('aria-label', `${this.enemyName}挑战`); document.body.classList.add('witch-active');
     this.$('announcement').textContent = `${this.enemyName}出现在花园里了！点击它，命中 ${this.challengeRules.hits} 次赶跑它。`;
-    const broadcast = this.$('garden-broadcast'); broadcast.hidden = false; broadcast.dataset.action = 'rising';
-    const warning = `注意！${this.enemyName}来捣蛋啦！`; this.$('broadcast-message').textContent = warning;
+    const broadcast = this.$('garden-broadcast'); broadcast.hidden = false; this.positionBroadcast(); requestAnimationFrame(() => this.positionBroadcast()); broadcast.dataset.action = 'rising';
+    const warning = `注意！${this.enemyName}来捣蛋啦！`; this.$('broadcast-message').textContent = innerWidth <= 650 ? `${this.enemyName}来了！` : warning;
     this.callbacks.sound('broadcast'); this.callbacks.voice?.(warning);
     let finish;
     const done = new Promise(resolve => { finish = resolve; });
@@ -1380,35 +1423,68 @@ class MagicWorld {
   }
   completedDraw() {
     this.state = advanceWorld(this.state, this.rules, this.callbacks.energy(), this.callbacks.warningThreshold, Math.random);
-    for (const pending of this.state.pending) if (pending.kind === 'witch' || (pending.kind === 'event' && pending.id !== 'ghost')) pending.giftId = this.callbacks.pickGift(pending.id).id;
+    for (const pending of this.state.pending) if (!pending.giftId && (pending.kind === 'witch' || (pending.kind === 'event' && pending.id !== 'ghost'))) pending.giftId = this.callbacks.pickGift(pending.id).id;
     this.render(false);
+  }
+  async flyingHeart() {
+    const from = this.$('visitor-art').getBoundingClientRect(), to = this.$('power-cells').getBoundingClientRect();
+    const heart = document.createElement('span'); heart.className = 'visitor-energy-heart'; heart.textContent = '♥';
+    heart.style.left = `${from.left + from.width / 2}px`; heart.style.top = `${from.top + from.height / 2}px`;
+    heart.style.setProperty('--dx', `${to.left + to.width / 2 - from.left - from.width / 2}px`);
+    heart.style.setProperty('--dy', `${to.top + to.height / 2 - from.top - from.height / 2}px`); heart.style.setProperty('--delay', '0s');
+    document.body.append(heart); await this.callbacks.wait(1200); heart.remove();
+  }
+  async dropGift(item, event) {
+    const gift = this.$('garden-gift'), art = this.$('garden-gift-art'), label = this.$('garden-gift-label');
+    gift.hidden = false; gift.disabled = true; gift.dataset.action = 'falling'; art.replaceChildren();
+    art.textContent = '🎁'; label.textContent = '礼物落下来啦！'; gift.setAttribute('aria-label', '打开花园礼物');
+    this.$('visitor-title').textContent = '送你一份惊喜！'; this.$('visitor-outcome').textContent = '看！礼物掉到草地上啦！';
+    try {
+      await this.callbacks.wait(1200); gift.dataset.action = 'waiting'; gift.disabled = false;
+      label.textContent = '点我拆开 ✦'; gift.focus(); this.$('world-visitor').dataset.action = 'departing';
+      await new Promise(resolve => { gift.onclick = () => { if (gift.disabled) return; gift.disabled = true; gift.onclick = null; resolve(); }; });
+      const result = this.callbacks.apply(event, item.giftId);
+      this.state.pending.shift(); this.callbacks.save(); this.render();
+      gift.dataset.action = 'opened'; art.replaceChildren(); if (result.gift) this.callbacks.art(result.gift, art);
+      label.textContent = result.description; this.$('announcement').textContent = `${result.description}。${result.detail}`;
+      this.callbacks.sound('courier'); await this.callbacks.wait(2200);
+    } finally { gift.onclick = null; gift.hidden = true; art.replaceChildren(); }
   }
   async visit(item) {
     const event = this.rules.events.find(event => event.id === item.id), stage = this.$('world-visitor');
     stage.dataset.kind = item.id; stage.dataset.action = 'arriving'; stage.hidden = false;
     this.$('visitor-art').replaceChildren(); this.$('visitor-gift').replaceChildren();
     if (event.image) { const image = document.createElement('img'); image.src = event.image; image.alt = ''; this.$('visitor-art').append(image); }
-    else this.$('visitor-art').textContent = item.id === 'fairy' ? '🧚' : item.id === 'mermaid' ? '🧜‍♀️' : '👻';
-    this.$('visitor-title').textContent = `${event.name}来啦！`; this.$('visitor-outcome').textContent = item.id === 'fairy' ? '送你五颗爱心魔法！' : item.id === 'mermaid' ? '听！海洋的歌声来了！' : '咦，谁想偷吸一口魔法？';
+    else this.$('visitor-art').textContent = item.id === 'fairy' ? '🧚' : item.id === 'mermaid' ? '🧜‍♀️' : item.id === 'courier' ? '🧝' : '👻';
+    this.$('visitor-title').textContent = `${event.name}来啦！`;
+    this.$('visitor-outcome').textContent = item.id === 'fairy' ? '送你五颗爱心魔法！' : item.id === 'ghost' ? '咦，谁想偷吸一口魔法？' : '带来了一份小惊喜！';
+    if (!item.giftId && item.id !== 'ghost') { item.giftId = this.callbacks.pickGift(item.id).id; this.callbacks.save(); }
     this.callbacks.sound(item.id);
     try {
-      await this.callbacks.wait(1400);
-      const result = this.callbacks.apply(event, item.giftId);
-      this.state.pending.shift(); this.callbacks.save(); this.render();
-      stage.dataset.action = 'visiting'; this.$('visitor-title').textContent = result.description; this.$('visitor-outcome').textContent = result.detail;
-      if (result.gift) this.callbacks.art(result.gift, this.$('visitor-gift'));
-      if (item.id === 'fairy' && !result.gift) {
-        const from = this.$('visitor-art').getBoundingClientRect(), to = this.$('power-count').getBoundingClientRect();
-        for (let i = 0; i < Math.min(5, result.delta || 0); i++) {
-          const heart = document.createElement('span'); heart.className = 'visitor-energy-heart'; heart.textContent = '♥';
-          heart.style.left = `${from.left + from.width / 2}px`; heart.style.top = `${from.top + from.height / 2}px`;
-          heart.style.setProperty('--dx', `${to.left + to.width / 2 - from.left - from.width / 2}px`); heart.style.setProperty('--dy', `${to.top - from.top - from.height / 2}px`); heart.style.setProperty('--delay', `${i * .14}s`); document.body.append(heart);
-        }
+      await this.callbacks.wait(1600); stage.dataset.action = 'visiting';
+      if (item.id === 'courier' || item.id === 'mermaid' || (item.id === 'fairy' && item.chargeRemaining == null && this.callbacks.energy() >= this.callbacks.maxEnergy)) {
+        await this.dropGift(item, event); return;
       }
+      let result;
+      if (item.id === 'fairy') {
+        if (item.chargeRemaining == null) { item.chargeRemaining = Math.min(event.energyDelta, this.callbacks.maxEnergy - this.callbacks.energy()); this.callbacks.save(); }
+        while (item.chargeRemaining > 0) {
+          this.$('visitor-outcome').textContent = '爱心飞过来啦……'; await this.flyingHeart();
+          result = this.callbacks.apply({ ...event, energyDelta: 1 }, item.giftId);
+          item.chargeRemaining--; this.callbacks.save();
+          this.callbacks.energySound?.();
+          const cells = this.$('power-cells'); cells.classList.remove('fairy-heart-arrived'); void cells.offsetWidth; cells.classList.add('fairy-heart-arrived');
+          this.$('visitor-outcome').textContent = `♥ 魔法能量 ${this.callbacks.energy()}/${this.callbacks.maxEnergy}`;
+          await this.callbacks.wait(240);
+        }
+        result = { description: '爱心魔法补充啦！', detail: `魔法能量 ${this.callbacks.energy()}/${this.callbacks.maxEnergy}` };
+      } else result = this.callbacks.apply(event, item.giftId);
+      this.state.pending.shift(); this.callbacks.save(); this.render();
+      this.$('visitor-title').textContent = result.description; this.$('visitor-outcome').textContent = result.detail;
       this.$('announcement').textContent = `${result.description}。${result.detail}`;
-      await this.callbacks.wait(Math.max(500, event.durationMs - 3000));
+      await this.callbacks.wait(item.id === 'fairy' ? 1000 : Math.max(500, event.durationMs - 3200));
       stage.dataset.action = 'departing'; await this.callbacks.wait(1600);
-    } finally { stage.hidden = true; document.querySelectorAll('.visitor-energy-heart').forEach(el => el.remove()); this.$('visitor-art').replaceChildren(); this.$('visitor-gift').replaceChildren(); }
+    } finally { stage.hidden = true; document.querySelectorAll('.visitor-energy-heart').forEach(el => el.remove()); this.$('visitor-art').replaceChildren(); this.$('visitor-gift').replaceChildren(); this.$('power-cells').classList.remove('fairy-heart-arrived'); }
   }
   async awakenLifeTree() {
     const machine = this.$('machine'), banner = this.$('life-upgrade-banner');
@@ -1440,7 +1516,7 @@ class MagicWorld {
           });
           continue;
         }
-        if (item.kind === 'event' && ['fairy', 'ghost', 'mermaid'].includes(item.id)) { await this.visit(item); continue; }
+        if (item.kind === 'event' && ['fairy', 'ghost', 'mermaid', 'courier'].includes(item.id)) { await this.visit(item); continue; }
         const event = item.kind === 'event' ? this.rules.events.find(event => event.id === item.id) : null;
         const upgradeLevel = item.level || 'rainbow';
         const upgradeName = MACHINE_LEVELS.find(level => level.id === upgradeLevel)?.name || '彩虹机器';
@@ -1522,9 +1598,9 @@ class TreasurePlay {
     const patterns = { 'burp-bubbles': ['🫧'], 'candy-rain': ['🍬'], 'jelly-hop': ['✦'], 'rainbow-flight': ['🌈'], 'mushroom-notes': ['♪'], 'flower-bloom': ['✿'], 'space-trip': ['⭐'], 'sock-giggle': ['♫'] };
     const symbols = reaction?.symbols?.length ? reaction.symbols : treasure.effects.interactionSymbols?.length ? treasure.effects.interactionSymbols : patterns[kind] || ['✦'];
     const layer = document.createElement('span'); layer.className = 'play-bits'; layer.setAttribute('aria-hidden', 'true');
+    const rect = this.target.getBoundingClientRect();
     for (let i = 0; i < (reaction?.surprise ? 13 : 7); i++) {
       const bit = document.createElement('i'); bit.textContent = symbols[i % symbols.length];
-      const rect = this.target.getBoundingClientRect();
       const x = Number.isFinite(event?.clientX) && event.clientX > 0 ? event.clientX - rect.left : rect.width / 2;
       const y = Number.isFinite(event?.clientY) && event.clientY > 0 ? event.clientY - rect.top : rect.height / 2;
       bit.style.setProperty('--aim-x', `${x}px`); bit.style.setProperty('--aim-y', `${y}px`);
@@ -1598,20 +1674,19 @@ class GardenStories {
     document.getElementById('garden-story-shade').onclick = () => this.closePanel();
     document.addEventListener('keydown', event => { if (!this.panel.hidden && event.key === 'Escape') { event.preventDefault(); this.closePanel(); this.button.focus(); } });
     this.panel.addEventListener('keydown', event => { if (event.key !== 'Tab') return; const controls = [...this.panel.querySelectorAll('button:not(:disabled)')]; const first = controls[0], last = controls.at(-1); if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); } });
-    this.render(); let previous = performance.now();
-    const tick = now => {
+    this.render();
+    const tick = (now, elapsed) => {
       const active = !document.hidden && (garden.callbacks.canStory?.() ?? garden.callbacks.canPlay());
       document.body.classList.toggle('story-paused', this.busy && !active);
       this.stage.style.visibility = this.busy && !active ? 'hidden' : '';
-      if (this.busy && active) { this.clock += Math.min(50, now - previous); this.renderBeat(); if (this.clock >= this.current.durationMs) this.finish(); }
+      if (this.busy && active) { this.clock += elapsed; this.renderBeat(); if (this.clock >= this.current.durationMs) this.finish(); }
       else if (!this.busy && active && !garden.chosen && !this.panel.hidden) { /* 查看图鉴时不自动打断。 */ }
       else if (!this.busy && active && !garden.chosen && now >= this.quietUntil && (garden.callbacks.canAutoStory?.() ?? true)) {
         const ready = this.rules.filter(story => !garden.state.discovered.includes(story.id) && this.match(story));
         const next = ready.find(story => story.requirements.some(role => role.id)) || ready[0];
         if (next) this.play(next);
       }
-      previous = now; requestAnimationFrame(tick);
-    }; requestAnimationFrame(tick);
+    }; new ForegroundLoop(tick, () => this.busy ? 100 : 250);
   }
   match(story) { return matchGardenStory(story, this.garden.state.slots, this.garden.treasures); }
   closePanel() { const wasOpen = !this.panel.hidden; this.panel.hidden = true; document.getElementById('garden-story-shade').hidden = true; if (wasOpen) this.button.focus(); this.button.setAttribute('aria-expanded', 'false'); }
@@ -1705,7 +1780,7 @@ class MagicGarden {
     document.getElementById('season').onclick = () => { if (callbacks.canPlay()) this.nextSeason(); };
     this.state.timeOfDay ||= this.dayNightRules.initial; this.renderTime();
     document.getElementById('day-night').onclick = () => { if (callbacks.canPlay()) this.toggleTime(); };
-    this.nextAt = this.rules.firstAfterMs; this.lastKind = null; this.lastTime = performance.now();
+    this.nextAt = this.rules.firstAfterMs; this.lastKind = null;
     this.plots = document.getElementById('garden-plots'); this.layer = document.getElementById('weather-layer');
     this.cancel = document.getElementById('garden-cancel'); this.cancel.onclick = () => this.choose(null);
     document.getElementById('weather').onclick = async () => {
@@ -1715,18 +1790,17 @@ class MagicGarden {
     this.render();
     this.stories = new GardenStories(this, storyRules);
     if (JSON.stringify(saved?.slots || []) !== JSON.stringify(this.state.slots) && saved?.slots) queueMicrotask(() => callbacks.save());
-    const tick = now => {
+    const tick = (now, elapsed) => {
       const active = callbacks.canWeather() && !document.hidden;
       document.body.classList.toggle('weather-paused', !active);
       if (active) {
-        const delta = Math.min(50, now - this.lastTime); this.elapsed += delta; this.dayElapsed += delta; this.seasonElapsed += delta;
+        const delta = elapsed; this.elapsed += delta; this.dayElapsed += delta; this.seasonElapsed += delta;
         if (this.seasonRules.enabled && this.seasonElapsed >= this.seasonRules.durationMs) this.nextSeason();
         if (this.dayNightRules.enabled && this.dayElapsed >= this.dayNightRules.durationMs) this.toggleTime();
         if (this.weather && this.elapsed >= this.endsAt) this.endWeather();
         if (!this.weather && this.rules.enabled && this.elapsed >= this.nextAt) this.startWeather(false);
       }
-      this.lastTime = now; requestAnimationFrame(tick);
-    }; requestAnimationFrame(tick);
+    }; new ForegroundLoop(tick, 250);
   }
   snapshot() { return { discoveredAt: {...this.state.discoveredAt}, discovered: [...this.state.discovered], season: this.state.season, timeOfDay: this.state.timeOfDay, slots: [...this.state.slots] }; }
   renderSeason() {
@@ -1882,6 +1956,10 @@ class MagicGarden {
     $('motion').title = gentle ? '关闭柔和动画' : '开启柔和动画';
   }
   syncPreferences();
+  let lastAction = performance.now();
+  const wakeScene = () => { lastAction = performance.now(); document.body.classList.remove('scene-resting'); };
+  addEventListener('pointerdown', wakeScene, { passive: true }); addEventListener('keydown', wakeScene);
+  new ForegroundLoop(now => document.body.classList.toggle('scene-resting', now - lastAction > 8000 && ['idle', 'result'].includes(phase) && !world?.busy && !garden?.stories?.busy), 1000);
   const sound = new MagicAudio(() => muted);
   function syncDrawAction() {
     if (!['idle', 'result'].includes(phase) || !pool.length) return;
@@ -1956,10 +2034,10 @@ class MagicGarden {
     }
   }
   const particles = {
-    canvas: $('particles'), ctx: $('particles').getContext('2d'), items: [], waves: [], width: 0, height: 0, last: 0, ambientClock: 0, warningClock: 3.2,
+    canvas: $('particles'), ctx: $('particles').getContext('2d'), items: [], waves: [], width: 0, height: 0, last: 0, warningClock: 3.2,
     resize() {
       this.width = innerWidth; this.height = innerHeight;
-      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const dpr = Math.min(devicePixelRatio || 1, 1.5, Math.sqrt(3000000 / (this.width * this.height)));
       this.canvas.width = Math.round(this.width * dpr); this.canvas.height = Math.round(this.height * dpr);
       if (this.ctx) this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     },
@@ -1974,6 +2052,7 @@ class MagicGarden {
         const rain = kind === 'golden-rain';
         this.items.push({ x: center.x + (rain ? (Math.random() - .5) * 580 : 0), y: rain ? center.y - 190 : center.y, vx: rain ? (Math.random() - .5) * 70 : Math.cos(angle) * speed, vy: rain ? 60 + Math.random() * 140 : Math.sin(angle) * speed - 70, life: 0, max: ambient ? 1.6 : 2.1 + Math.random() * 1.2, size: ambient ? 2 : 4 + Math.random() * 6, angle, color: colors[i % colors.length], gravity: rain ? 25 : 90, star: kind !== 'rainbow-trail' || i % 3 === 0 });
       }
+      this.wake();
     },
     sparkAt(x, y, colors = lampColors, amount = 12) {
       if (!this.ctx || document.hidden) return;
@@ -1981,19 +2060,23 @@ class MagicGarden {
         const angle = Math.random() * Math.PI * 2, speed = gentle ? 25 : 50 + Math.random() * 110;
         this.items.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 0, max: .5 + Math.random() * .4, size: 2 + Math.random() * 3, angle, color: colors[i % colors.length], gravity: 25, star: true });
       }
+      this.wake();
     },
     shockwave(color) {
       if (gentle) return;
-      this.waves.push({ ...this.center(), color, life: 0 });
+      this.waves.push({ ...this.center(), color, life: 0 }); this.wake();
+    },
+    clear() {
+      this.items = []; this.waves = []; cancelAnimationFrame(this.frameId); clearTimeout(this.timer); this.frameId = null; this.timer = null;
+      if (this.ctx) this.ctx.clearRect(0, 0, this.width, this.height);
+    },
+    wake() {
+      if (!this.ctx || document.hidden || this.frameId || (!this.items.length && !this.waves.length)) return;
+      clearTimeout(this.timer); this.timer = null; this.frameId = requestAnimationFrame(now => this.frame(now));
     },
     frame(now) {
-      const dt = Math.min(.04, (now - (this.last || now)) / 1000); this.last = now;
-      const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !world?.busy && !document.hidden && !muted;
-      if (warningActive) {
-        this.warningClock += dt;
-        const interval = rechargeStation.balance <= 1 ? 2.4 : 3.2;
-        if (this.warningClock >= interval && sound.warning(rechargeStation.balance)) this.warningClock = 0;
-      } else { this.warningClock = 3.2; sound.stopWarning(); }
+      this.frameId = null;
+      const dt = Math.min(.066, (now - (this.last || now)) / 1000); this.last = now;
       if (this.ctx && !document.hidden) {
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.waves = this.waves.filter(wave => wave.life < 1);
@@ -2003,10 +2086,6 @@ class MagicGarden {
           this.ctx.save(); this.ctx.globalAlpha = Math.max(0, .7 * (1 - wave.life));
           this.ctx.strokeStyle = wave.color; this.ctx.lineWidth = 8 * (1 - wave.life) + 1;
           this.ctx.beginPath(); this.ctx.arc(wave.x, wave.y, radius, 0, Math.PI * 2); this.ctx.stroke(); this.ctx.restore();
-        }
-        if (phase === 'result' && currentTreasure && !gentle && !dialog.open && !rechargeStation.dialog.open && !world?.busy) {
-          this.ambientClock += dt;
-          if (this.ambientClock > .8) { this.emit(currentTreasure, true); this.ambientClock = 0; }
         }
         this.items = this.items.filter(p => p.life < p.max);
         for (const p of this.items) {
@@ -2019,10 +2098,15 @@ class MagicGarden {
           ctx.restore();
         }
       }
-      requestAnimationFrame(time => this.frame(time));
+      if (this.items.length || this.waves.length) this.timer = setTimeout(() => this.wake(), 16);
     }
   };
-  particles.resize(); requestAnimationFrame(time => particles.frame(time));
+  particles.resize();
+  new ForegroundLoop((now, elapsed) => {
+    const warningActive = rechargeStation.balance <= gameRules.energy.warningThreshold && ['idle', 'result'].includes(phase) && !dialog.open && !rechargeStation.dialog.open && !extraOverlay() && !world?.busy && !muted;
+    if (warningActive) { particles.warningClock += elapsed / 1000; const interval = rechargeStation.balance <= 1 ? 2.4 : 3.2; if (particles.warningClock >= interval && sound.warning(rechargeStation.balance)) particles.warningClock = 0; }
+    else { particles.warningClock = 3.2; if (sound.warningVoices.size) sound.stopWarning(); }
+  }, 500);
   addEventListener('resize', () => particles.resize());
   chamber = new GachaChamber($('magic-balls'), pool, makeArt, () => gentle, (treasure, x, y) => {
     if (dialog.open || rechargeStation.dialog.open || !['mixing', 'slowing'].includes(phase)) return;
@@ -2043,7 +2127,7 @@ class MagicGarden {
     clearTimeout(refillTimer); refillTimer = setTimeout(() => machine.classList.remove('heart-refill'), 2600);
   }
   world = new MagicWorld(gameRules.world, savedWorld, history, {
-    energy: () => rechargeStation.balance, warningThreshold: gameRules.energy.warningThreshold,
+    energy: () => rechargeStation.balance, maxEnergy: gameRules.energy.max, energySound: () => sound.tone(520 + rechargeStation.balance * 65, .18), warningThreshold: gameRules.energy.warningThreshold,
     pickGift: eventId => { const ocean = pool.filter(t => ['water', 'ocean', 'sea', 'bubbles'].some(tag => t.tags.includes(tag)) || ['cloud-dolphin', 'mermaid-outfit', 'whale-cup'].includes(t.id)); return drawTreasure(eventId === 'mermaid' && ocean.length ? ocean : treasures, Math.random, { equalProbability: cheatMode, inventory, preferUnowned: ['courier', 'mermaid'].includes(eventId) }); },
     pickAmmo: () => {
       const collected = pool.filter(treasure => history.some(record => record.prizeId === treasure.id));
@@ -2056,7 +2140,7 @@ class MagicGarden {
     wait, save, art: makeArt, sound: kind => { sound.stopWarning(); sound.encounter(kind); },
     apply: (event, giftId) => {
       if (event.id === 'ghost' && rechargeStation.balance <= gameRules.energy.warningThreshold) return { description: '小幽灵打了个饱嗝！', detail: '它没有拿走你的能量。' };
-      if (['witch', 'bat', 'rock', 'dragon', 'courier', 'mermaid'].includes(event.id) || (event.id === 'fairy' && rechargeStation.full)) {
+      if (['witch', 'bat', 'rock', 'dragon', 'courier', 'mermaid'].includes(event.id) || (event.id === 'fairy' && rechargeStation.full && event.energyDelta !== 1)) {
         const gift = pool.find(treasure => treasure.id === giftId) || drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
         acquired(gift); acquirePower(gift); inventory[gift.id] = (inventory[gift.id] || 0) + 1; history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
         return { gift, description: `额外礼物：${gift.name}`, detail: gift.effects.onAcquire === 'refill-energy' ? '能量补满十格！爱心已经放进宝藏。' : '已经放进你的宝藏里！' };
@@ -2076,6 +2160,7 @@ class MagicGarden {
     canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
     feedback: (treasure, kind, count, event, line, reaction) => {
       sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !document.hidden) sound.interact(treasure, count, reaction); });
+      particles.emit(treasure, true);
       if (reaction?.surprise) particles.shockwave(treasure.appearance.primaryColor);
       $('announcement').textContent = line;
     }
@@ -2093,13 +2178,11 @@ class MagicGarden {
     storySound: (kind, time, weather) => sound.story(kind, time, weather),
     weatherSound: kind => sound.weather(kind)
   }, rawGameRules.dayNight, rawGameRules.seasons, rawGameRules.gardenStories);
-  let pacingPrevious = performance.now();
-  const paceTick = now => {
+  const paceTick = (now, elapsed) => {
     const active = !document.hidden && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !garden.stories.busy && !dialog.open && !rechargeStation.dialog.open && !extraOverlay();
-    pacing.advance(Math.min(100, now - pacingPrevious), active); pacingPrevious = now;
+    pacing.advance(elapsed, active);
     if (active && pacing.ready && world.state.pending.length && pool.length) { garden.endWeather(); resumeWorld(); }
-    requestAnimationFrame(paceTick);
-  }; requestAnimationFrame(paceTick);
+    }; new ForegroundLoop(paceTick, () => pacing.remaining || world.state.pending.length ? 100 : 500);
   // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
   async function draw() {
     if (garden?.stories?.busy || !['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || extraOverlay() || !pool.length) return;
@@ -2110,7 +2193,7 @@ class MagicGarden {
     let awarded = false;
     drawButton.disabled = true; drawButton.classList.add('pressed');
     $('collection').disabled = true; $('cheat').disabled = true;
-    particles.items = []; particles.waves = []; currentTreasure = null;
+    particles.clear(); currentTreasure = null;
     $('treasure-art').hidden = true; $('jackpot').classList.remove('show');
     machine.style.setProperty('--primary', '#ba9cff'); machine.style.setProperty('--accent', '#ffe1f5');
     setPhase('charging', winner); energy(.05); spellPop('魔法启动！');
@@ -2206,15 +2289,15 @@ class MagicGarden {
   });
   $('motion').addEventListener('click', () => {
     if (reducedMotion.matches && gentle) { notice('正在遵循设备的减少动态效果设置。'); return; }
-    gentle = !gentle; particles.items = []; particles.waves = []; syncPreferences(); save();
+    gentle = !gentle; particles.clear(); syncPreferences(); save();
     notice(gentle ? '柔和动画已开启' : '完整动画已开启');
   });
-  reducedMotion.addEventListener('change', event => { if (event.matches) { gentle = true; particles.items = []; particles.waves = []; syncPreferences(); } });
+  reducedMotion.addEventListener('change', event => { if (event.matches) { gentle = true; particles.clear(); syncPreferences(); } });
   document.addEventListener('visibilitychange', () => {
     spaceHeld = false;
     document.body.classList.toggle('background-paused', document.hidden);
-    if (document.hidden) { sound.context?.suspend().catch(() => {}); globalThis.speechSynthesis?.cancel(); }
-    else if (!muted && sound.context) sound.context.resume().catch(() => {});
+    if (document.hidden) { cancelAnimationFrame(particles.frameId); clearTimeout(particles.timer); particles.frameId = null; sound.context?.suspend().catch(() => {}); globalThis.speechSynthesis?.cancel(); }
+    else { particles.last = 0; particles.wake(); if (!muted && sound.context) sound.context.resume().catch(() => {}); }
   });
   $('fullscreen').addEventListener('click', async () => {
     try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); }

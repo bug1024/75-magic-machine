@@ -18,35 +18,68 @@ class MagicWorld {
   }
   completedDraw() {
     this.state = advanceWorld(this.state, this.rules, this.callbacks.energy(), this.callbacks.warningThreshold, Math.random);
-    for (const pending of this.state.pending) if (pending.kind === 'witch' || (pending.kind === 'event' && pending.id !== 'ghost')) pending.giftId = this.callbacks.pickGift(pending.id).id;
+    for (const pending of this.state.pending) if (!pending.giftId && (pending.kind === 'witch' || (pending.kind === 'event' && pending.id !== 'ghost'))) pending.giftId = this.callbacks.pickGift(pending.id).id;
     this.render(false);
+  }
+  async flyingHeart() {
+    const from = this.$('visitor-art').getBoundingClientRect(), to = this.$('power-cells').getBoundingClientRect();
+    const heart = document.createElement('span'); heart.className = 'visitor-energy-heart'; heart.textContent = '♥';
+    heart.style.left = `${from.left + from.width / 2}px`; heart.style.top = `${from.top + from.height / 2}px`;
+    heart.style.setProperty('--dx', `${to.left + to.width / 2 - from.left - from.width / 2}px`);
+    heart.style.setProperty('--dy', `${to.top + to.height / 2 - from.top - from.height / 2}px`); heart.style.setProperty('--delay', '0s');
+    document.body.append(heart); await this.callbacks.wait(1200); heart.remove();
+  }
+  async dropGift(item, event) {
+    const gift = this.$('garden-gift'), art = this.$('garden-gift-art'), label = this.$('garden-gift-label');
+    gift.hidden = false; gift.disabled = true; gift.dataset.action = 'falling'; art.replaceChildren();
+    art.textContent = '🎁'; label.textContent = '礼物落下来啦！'; gift.setAttribute('aria-label', '打开花园礼物');
+    this.$('visitor-title').textContent = '送你一份惊喜！'; this.$('visitor-outcome').textContent = '看！礼物掉到草地上啦！';
+    try {
+      await this.callbacks.wait(1200); gift.dataset.action = 'waiting'; gift.disabled = false;
+      label.textContent = '点我拆开 ✦'; gift.focus(); this.$('world-visitor').dataset.action = 'departing';
+      await new Promise(resolve => { gift.onclick = () => { if (gift.disabled) return; gift.disabled = true; gift.onclick = null; resolve(); }; });
+      const result = this.callbacks.apply(event, item.giftId);
+      this.state.pending.shift(); this.callbacks.save(); this.render();
+      gift.dataset.action = 'opened'; art.replaceChildren(); if (result.gift) this.callbacks.art(result.gift, art);
+      label.textContent = result.description; this.$('announcement').textContent = `${result.description}。${result.detail}`;
+      this.callbacks.sound('courier'); await this.callbacks.wait(2200);
+    } finally { gift.onclick = null; gift.hidden = true; art.replaceChildren(); }
   }
   async visit(item) {
     const event = this.rules.events.find(event => event.id === item.id), stage = this.$('world-visitor');
     stage.dataset.kind = item.id; stage.dataset.action = 'arriving'; stage.hidden = false;
     this.$('visitor-art').replaceChildren(); this.$('visitor-gift').replaceChildren();
     if (event.image) { const image = document.createElement('img'); image.src = event.image; image.alt = ''; this.$('visitor-art').append(image); }
-    else this.$('visitor-art').textContent = item.id === 'fairy' ? '🧚' : item.id === 'mermaid' ? '🧜‍♀️' : '👻';
-    this.$('visitor-title').textContent = `${event.name}来啦！`; this.$('visitor-outcome').textContent = item.id === 'fairy' ? '送你五颗爱心魔法！' : item.id === 'mermaid' ? '听！海洋的歌声来了！' : '咦，谁想偷吸一口魔法？';
+    else this.$('visitor-art').textContent = item.id === 'fairy' ? '🧚' : item.id === 'mermaid' ? '🧜‍♀️' : item.id === 'courier' ? '🧝' : '👻';
+    this.$('visitor-title').textContent = `${event.name}来啦！`;
+    this.$('visitor-outcome').textContent = item.id === 'fairy' ? '送你五颗爱心魔法！' : item.id === 'ghost' ? '咦，谁想偷吸一口魔法？' : '带来了一份小惊喜！';
+    if (!item.giftId && item.id !== 'ghost') { item.giftId = this.callbacks.pickGift(item.id).id; this.callbacks.save(); }
     this.callbacks.sound(item.id);
     try {
-      await this.callbacks.wait(1400);
-      const result = this.callbacks.apply(event, item.giftId);
-      this.state.pending.shift(); this.callbacks.save(); this.render();
-      stage.dataset.action = 'visiting'; this.$('visitor-title').textContent = result.description; this.$('visitor-outcome').textContent = result.detail;
-      if (result.gift) this.callbacks.art(result.gift, this.$('visitor-gift'));
-      if (item.id === 'fairy' && !result.gift) {
-        const from = this.$('visitor-art').getBoundingClientRect(), to = this.$('power-count').getBoundingClientRect();
-        for (let i = 0; i < Math.min(5, result.delta || 0); i++) {
-          const heart = document.createElement('span'); heart.className = 'visitor-energy-heart'; heart.textContent = '♥';
-          heart.style.left = `${from.left + from.width / 2}px`; heart.style.top = `${from.top + from.height / 2}px`;
-          heart.style.setProperty('--dx', `${to.left + to.width / 2 - from.left - from.width / 2}px`); heart.style.setProperty('--dy', `${to.top - from.top - from.height / 2}px`); heart.style.setProperty('--delay', `${i * .14}s`); document.body.append(heart);
-        }
+      await this.callbacks.wait(1600); stage.dataset.action = 'visiting';
+      if (item.id === 'courier' || item.id === 'mermaid' || (item.id === 'fairy' && item.chargeRemaining == null && this.callbacks.energy() >= this.callbacks.maxEnergy)) {
+        await this.dropGift(item, event); return;
       }
+      let result;
+      if (item.id === 'fairy') {
+        if (item.chargeRemaining == null) { item.chargeRemaining = Math.min(event.energyDelta, this.callbacks.maxEnergy - this.callbacks.energy()); this.callbacks.save(); }
+        while (item.chargeRemaining > 0) {
+          this.$('visitor-outcome').textContent = '爱心飞过来啦……'; await this.flyingHeart();
+          result = this.callbacks.apply({ ...event, energyDelta: 1 }, item.giftId);
+          item.chargeRemaining--; this.callbacks.save();
+          this.callbacks.energySound?.();
+          const cells = this.$('power-cells'); cells.classList.remove('fairy-heart-arrived'); void cells.offsetWidth; cells.classList.add('fairy-heart-arrived');
+          this.$('visitor-outcome').textContent = `♥ 魔法能量 ${this.callbacks.energy()}/${this.callbacks.maxEnergy}`;
+          await this.callbacks.wait(240);
+        }
+        result = { description: '爱心魔法补充啦！', detail: `魔法能量 ${this.callbacks.energy()}/${this.callbacks.maxEnergy}` };
+      } else result = this.callbacks.apply(event, item.giftId);
+      this.state.pending.shift(); this.callbacks.save(); this.render();
+      this.$('visitor-title').textContent = result.description; this.$('visitor-outcome').textContent = result.detail;
       this.$('announcement').textContent = `${result.description}。${result.detail}`;
-      await this.callbacks.wait(Math.max(500, event.durationMs - 3000));
+      await this.callbacks.wait(item.id === 'fairy' ? 1000 : Math.max(500, event.durationMs - 3200));
       stage.dataset.action = 'departing'; await this.callbacks.wait(1600);
-    } finally { stage.hidden = true; document.querySelectorAll('.visitor-energy-heart').forEach(el => el.remove()); this.$('visitor-art').replaceChildren(); this.$('visitor-gift').replaceChildren(); }
+    } finally { stage.hidden = true; document.querySelectorAll('.visitor-energy-heart').forEach(el => el.remove()); this.$('visitor-art').replaceChildren(); this.$('visitor-gift').replaceChildren(); this.$('power-cells').classList.remove('fairy-heart-arrived'); }
   }
   async awakenLifeTree() {
     const machine = this.$('machine'), banner = this.$('life-upgrade-banner');
@@ -78,7 +111,7 @@ class MagicWorld {
           });
           continue;
         }
-        if (item.kind === 'event' && ['fairy', 'ghost', 'mermaid'].includes(item.id)) { await this.visit(item); continue; }
+        if (item.kind === 'event' && ['fairy', 'ghost', 'mermaid', 'courier'].includes(item.id)) { await this.visit(item); continue; }
         const event = item.kind === 'event' ? this.rules.events.find(event => event.id === item.id) : null;
         const upgradeLevel = item.level || 'rainbow';
         const upgradeName = MACHINE_LEVELS.find(level => level.id === upgradeLevel)?.name || '彩虹机器';

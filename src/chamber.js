@@ -15,7 +15,7 @@ class GachaChamber {
     }
     this.reset();
     new ResizeObserver(() => this.resize()).observe(container);
-    requestAnimationFrame(now => this.frame(now));
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(this.frameId); this.frameId = null; } else this.wake(); });
   }
   resize() {
     const width = this.container.clientWidth, height = this.container.clientHeight;
@@ -24,7 +24,7 @@ class GachaChamber {
     this.width = width; this.height = height;
     this.radius = Math.max(24, Math.min(35, width * .103));
     this.container.style.setProperty('--ball-size', `${this.radius * 2}px`);
-    for (const ball of this.balls) ball.radius = this.radius;
+    for (const ball of this.balls) { ball.radius = this.radius; this.paint(ball); }
   }
   reset(winner) {
     this.resize(); this.selected = null; this.elapsed = 0;
@@ -45,12 +45,14 @@ class GachaChamber {
       ball.x = this.width * ((col + .5) / columns); ball.y = this.height * (.33 + row * .37);
       ball.vx = (ball.seed % 2 ? 1 : -1) * (190 + ball.seed * 23); ball.vy = -170 - ball.seed * 25;
       ball.squash = 0;
-      ball.node.classList.remove('chosen', 'bump'); ball.node.style.opacity = '1';
+      ball.node.classList.remove('chosen', 'bump'); ball.node.style.opacity = '1'; this.paint(ball);
     }
   }
   setPhase(phase, winner) {
+    cancelAnimationFrame(this.frameId); this.frameId = null; this.last = 0;
     this.phase = phase; this.elapsed = 0;
     if (phase === 'charging') this.reset(winner);
+    this.wake();
     if (phase === 'selecting') {
       this.selected = this.balls.find(ball => ball.treasure.id === winner.id);
       if (!this.selected) throw new Error('中奖宝物没有对应的魔法球');
@@ -59,6 +61,15 @@ class GachaChamber {
         this.origin = { x: this.selected.x, y: this.selected.y };
       }
     }
+  }
+  wake() {
+    if (document.hidden || this.frameId != null || !['mixing', 'slowing', 'selecting'].includes(this.phase) || (this.isGentle() && this.phase !== 'selecting')) return;
+    this.last = 0; this.frameId = requestAnimationFrame(now => this.frame(now));
+  }
+  paint(ball) {
+    const r = ball.radius, squash = this.isGentle() ? 0 : ball.squash || 0;
+    const transform = `translate(${ball.x - r}px,${ball.y - r}px) rotate(${ball.angle}deg) scale(${1 + squash},${1 - squash})`;
+    if (transform !== ball.transform) { ball.node.style.transform = transform; ball.transform = transform; }
   }
   hit(ball) {
     ball.squash = .25;
@@ -70,6 +81,7 @@ class GachaChamber {
     this.onCollision(ball.treasure, ball.x, ball.y);
   }
   frame(now) {
+    this.frameId = null;
     const dt = Math.min(.032, (now - (this.last || now)) / 1000); this.last = now;
     if (!document.hidden) {
       this.elapsed += dt; this.hitCooldown -= dt;
@@ -106,14 +118,12 @@ class GachaChamber {
         }
       }
       for (const ball of this.balls) {
-        const idleFloat = this.phase === 'idle' && !this.isGentle() ? Math.sin(now / 900 + ball.seed) * 5 : 0;
         const r = ball.radius;
         if (mixing) { ball.x = Math.max(r, Math.min(this.width - r, ball.x)); ball.y = Math.max(r, Math.min(this.height - r, ball.y)); }
         ball.squash = Math.max(0, ball.squash - dt * 1.8);
-        const squash = this.isGentle() ? 0 : ball.squash;
-        ball.node.style.transform = `translate(${ball.x - r}px,${ball.y - r + idleFloat}px) rotate(${ball.angle}deg) scale(${1 + squash},${1 - squash})`;
+        this.paint(ball);
       }
     }
-    requestAnimationFrame(time => this.frame(time));
+    if (!document.hidden && (['mixing', 'slowing'].includes(this.phase) || this.phase === 'selecting' && this.elapsed < .8) && !this.isGentle()) this.frameId = requestAnimationFrame(time => this.frame(time));
   }
 }

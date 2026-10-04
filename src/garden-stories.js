@@ -9,20 +9,19 @@ class GardenStories {
     document.getElementById('garden-story-shade').onclick = () => this.closePanel();
     document.addEventListener('keydown', event => { if (!this.panel.hidden && event.key === 'Escape') { event.preventDefault(); this.closePanel(); this.button.focus(); } });
     this.panel.addEventListener('keydown', event => { if (event.key !== 'Tab') return; const controls = [...this.panel.querySelectorAll('button:not(:disabled)')]; const first = controls[0], last = controls.at(-1); if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); } });
-    this.render(); let previous = performance.now();
-    const tick = now => {
+    this.render();
+    const tick = (now, elapsed) => {
       const active = !document.hidden && (garden.callbacks.canStory?.() ?? garden.callbacks.canPlay());
       document.body.classList.toggle('story-paused', this.busy && !active);
       this.stage.style.visibility = this.busy && !active ? 'hidden' : '';
-      if (this.busy && active) { this.clock += Math.min(50, now - previous); this.renderBeat(); if (this.clock >= this.current.durationMs) this.finish(); }
+      if (this.busy && active) { this.clock += elapsed; this.renderBeat(); if (this.clock >= this.current.durationMs) this.finish(); }
       else if (!this.busy && active && !garden.chosen && !this.panel.hidden) { /* 查看图鉴时不自动打断。 */ }
       else if (!this.busy && active && !garden.chosen && now >= this.quietUntil && (garden.callbacks.canAutoStory?.() ?? true)) {
         const ready = this.rules.filter(story => !garden.state.discovered.includes(story.id) && this.match(story));
         const next = ready.find(story => story.requirements.some(role => role.id)) || ready[0];
         if (next) this.play(next);
       }
-      previous = now; requestAnimationFrame(tick);
-    }; requestAnimationFrame(tick);
+    }; new ForegroundLoop(tick, () => this.busy ? 100 : 250);
   }
   match(story) { return matchGardenStory(story, this.garden.state.slots, this.garden.treasures); }
   closePanel() { const wasOpen = !this.panel.hidden; this.panel.hidden = true; document.getElementById('garden-story-shade').hidden = true; if (wasOpen) this.button.focus(); this.button.setAttribute('aria-expanded', 'false'); }

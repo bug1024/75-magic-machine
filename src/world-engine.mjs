@@ -40,13 +40,13 @@ export function normalizeWorldRules(value) {
 export function normalizeWorldState(saved, history, rules) {
   const natural = (value, fallback) => Number.isSafeInteger(value) && value >= 0 ? value : fallback;
   const completedDraws = natural(saved?.completedDraws, history.filter(record => record.source !== 'event').length);
-  const pending = Array.isArray(saved?.pending) ? saved.pending.filter(item => item && (item.kind === 'upgrade' || item.kind === 'witch' || (item.kind === 'event' && rules.events.some(event => event.id === item.id)))).map(item => item.kind === 'upgrade' ? { kind: 'upgrade', level: MACHINE_LEVELS.some(level => level.threshold && level.id === item.level) ? item.level : 'rainbow' } : item.kind === 'witch' ? { kind: 'witch', ...(ENEMIES.some(e => e.id === item.opponent) ? { opponent: item.opponent } : {}), assistUsed: item.assistUsed === true, usedGuardians: Array.isArray(item.usedGuardians) ? [...new Set(item.usedGuardians.filter(id => typeof id === 'string'))].slice(0, 6) : [], assistHits: Math.min(5, natural(item.assistHits, item.assistUsed ? 1 : 0)), shieldUsed: item.shieldUsed === true, interferenceUsed: item.interferenceUsed === true, milestone: natural(item.milestone, completedDraws), hits: Math.min(enemyRules(rules.witch, item.opponent).hits, natural(item.hits, 0)), giftId: typeof item.giftId === 'string' ? item.giftId : null } : { kind: 'event', id: item.id, giftId: typeof item.giftId === 'string' ? item.giftId : null }).slice(0, 8) : [];
+  const pending = Array.isArray(saved?.pending) ? saved.pending.filter(item => item && (item.kind === 'upgrade' || item.kind === 'witch' || (item.kind === 'event' && rules.events.some(event => event.id === item.id)))).map(item => item.kind === 'upgrade' ? { kind: 'upgrade', level: MACHINE_LEVELS.some(level => level.threshold && level.id === item.level) ? item.level : 'rainbow' } : item.kind === 'witch' ? { kind: 'witch', ...(ENEMIES.some(e => e.id === item.opponent) ? { opponent: item.opponent } : {}), assistUsed: item.assistUsed === true, usedGuardians: Array.isArray(item.usedGuardians) ? [...new Set(item.usedGuardians.filter(id => typeof id === 'string'))].slice(0, 6) : [], assistHits: Math.min(5, natural(item.assistHits, item.assistUsed ? 1 : 0)), shieldUsed: item.shieldUsed === true, interferenceUsed: item.interferenceUsed === true, milestone: natural(item.milestone, completedDraws), hits: Math.min(enemyRules(rules.witch, item.opponent).hits, natural(item.hits, 0)), giftId: typeof item.giftId === 'string' ? item.giftId : null } : { kind: 'event', id: item.id, ...(Number.isInteger(item.chargeRemaining) ? { chargeRemaining: Math.max(0, Math.min(10, item.chargeRemaining)) } : {}), giftId: typeof item.giftId === 'string' ? item.giftId : null }).slice(0, 8) : [];
   const oldChallenge = pending.find(item => item.kind === 'witch');
   const fallbackWitch = oldChallenge ? Math.min(completedDraws, oldChallenge.milestone) : history.some(record => ENEMIES.some(enemy => enemy.id === record.eventId)) ? completedDraws : null;
   const candidateWitch = natural(saved?.lastWitchDraw, fallbackWitch);
   const lastWitchDraw = candidateWitch === null ? null : Math.min(completedDraws, candidateWitch);
   const seenOpponents = Array.isArray(saved?.seenOpponents) ? [...new Set(saved.seenOpponents.filter(id => ENEMIES.some(e => e.id === id)))] : saved ? ENEMIES.filter(e => completedDraws >= rules[e.threshold] && (e.id === 'bat' || e.id === 'witch')).map(e => e.id) : [];
-  return { completedDraws, seenOpponents, lastWitchDraw, witchWait: Math.min(rules.witch.guaranteeAfter, natural(saved?.witchWait, 0)), sinceEvent: Math.min(rules.guaranteeAfter, natural(saved?.sinceEvent, 0)), pending };
+  return { completedDraws, seenEvents: Array.isArray(saved?.seenEvents) ? [...new Set(saved.seenEvents.filter(id => rules.events.some(e => e.id === id)))] : [], seenOpponents, lastWitchDraw, witchWait: Math.min(rules.witch.guaranteeAfter, natural(saved?.witchWait, 0)), sinceEvent: Math.min(rules.guaranteeAfter, natural(saved?.sinceEvent, 0)), pending };
 }
 export function advanceWorld(state, rules, balance, warningThreshold, random = Math.random) {
   const next = { ...state, completedDraws: state.completedDraws + 1, sinceEvent: state.sinceEvent + 1, pending: [...state.pending] };
@@ -62,19 +62,21 @@ export function advanceWorld(state, rules, balance, warningThreshold, random = M
   if (unlocked.length && !next.pending.some(item => item.kind === 'upgrade')) {
     next.witchWait = (state.witchWait || 0) + 1;
     const canVisit = state.lastWitchDraw == null || next.completedDraws - state.lastWitchDraw > rules.witch.minGap;
-    if (rules.witch.enabled && (debut || (canVisit && (next.witchWait >= rules.witch.guaranteeAfter || random() < rules.witch.chance)))) {
+    if (rules.witch.enabled && (debut || (!(rules.enabled && next.sinceEvent >= rules.guaranteeAfter && rules.events.some(e => e.enabled && e.weight > 0)) && canVisit && (next.witchWait >= rules.witch.guaranteeAfter || random() < rules.witch.chance)))) {
       const enemy = debut || unlocked[Math.min(unlocked.length - 1, Math.floor(Math.max(0, Math.min(.999999, random())) * unlocked.length))];
       next.pending.push({ kind: 'witch', opponent: enemy.id, assistUsed: false, usedGuardians: [], assistHits: 0, shieldUsed: false, interferenceUsed: false, milestone: next.completedDraws, hits: 0, giftId: null });
       next.seenOpponents = [...new Set([...seen, enemy.id])];
-      next.lastWitchDraw = next.completedDraws; next.witchWait = 0; next.sinceEvent = 0;
+      next.lastWitchDraw = next.completedDraws; next.witchWait = 0;
       return next;
     }
   }
-  const eligible = rules.events.filter(event => event.enabled && event.weight > 0 && (event.id !== 'ghost' || balance > warningThreshold));
+  let eligible = rules.events.filter(event => event.enabled && event.weight > 0);
+  const unseen = eligible.filter(event => !(state.seenEvents || []).includes(event.id));
+  if (unseen.length) eligible = unseen;
   if (rules.enabled && eligible.length && next.sinceEvent > rules.minGap && (next.sinceEvent >= rules.guaranteeAfter || random() < rules.chance)) {
     let cursor = Math.max(0, Math.min(1 - Number.EPSILON, random())) * eligible.reduce((sum, event) => sum + event.weight, 0);
     const event = eligible.find(event => { cursor -= event.weight; return cursor < 0; }) || eligible.at(-1);
-    next.pending.push({ kind: 'event', id: event.id }); next.sinceEvent = 0;
+    next.pending.push({ kind: 'event', id: event.id }); next.seenEvents = [...new Set([...(state.seenEvents || []), event.id])]; next.sinceEvent = 0;
   }
   return next;
 }

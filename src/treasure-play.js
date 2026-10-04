@@ -35,9 +35,9 @@ class TreasurePlay {
     const patterns = { 'burp-bubbles': ['🫧'], 'candy-rain': ['🍬'], 'jelly-hop': ['✦'], 'rainbow-flight': ['🌈'], 'mushroom-notes': ['♪'], 'flower-bloom': ['✿'], 'space-trip': ['⭐'], 'sock-giggle': ['♫'] };
     const symbols = reaction?.symbols?.length ? reaction.symbols : treasure.effects.interactionSymbols?.length ? treasure.effects.interactionSymbols : patterns[kind] || ['✦'];
     const layer = document.createElement('span'); layer.className = 'play-bits'; layer.setAttribute('aria-hidden', 'true');
+    const rect = this.target.getBoundingClientRect();
     for (let i = 0; i < (reaction?.surprise ? 13 : 7); i++) {
       const bit = document.createElement('i'); bit.textContent = symbols[i % symbols.length];
-      const rect = this.target.getBoundingClientRect();
       const x = Number.isFinite(event?.clientX) && event.clientX > 0 ? event.clientX - rect.left : rect.width / 2;
       const y = Number.isFinite(event?.clientY) && event.clientY > 0 ? event.clientY - rect.top : rect.height / 2;
       bit.style.setProperty('--aim-x', `${x}px`); bit.style.setProperty('--aim-y', `${y}px`);

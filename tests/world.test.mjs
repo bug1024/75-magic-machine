@@ -17,10 +17,10 @@ test('事件遵守配置间隔和保底，等待演出时允许继续抽奖', ()
   for (let draw = 1; draw < rules.guaranteeAfter; draw++) { state = advanceWorld(state, rules, 8, 3, () => .99); assert.equal(state.pending.length, 0); }
   state = advanceWorld(state, rules, 8, 3, () => .99); assert.equal(state.pending[0].id, 'mermaid');
 });
-test('按事件权重选择，低能量排除幽灵，禁用事件不参与抽取', () => {
+test('按事件权重选择，低能量仍可遇见幽灵，禁用事件不参与抽取', () => {
   const state = { ...initial(), sinceEvent: rules.guaranteeAfter - 1 };
   for (const [random, id] of [[.1,'fairy'], [.5,'ghost'], [.7,'courier'], [.9,'mermaid']]) assert.equal(advanceWorld(state, rules, 8, 3, () => random).pending[0].id, id);
-  for (let balance = 0; balance <= 3; balance++) for (const random of [.1,.5,.9]) assert.notEqual(advanceWorld(state, rules, balance, 3, () => random).pending[0].id, 'ghost');
+  for (let balance = 0; balance <= 3; balance++) assert.equal(advanceWorld(state, rules, balance, 3, () => .5).pending[0].id, 'ghost');
   const disabled = structuredClone(rules); disabled.enabled = false;
   assert.equal(advanceWorld(state, disabled, 8, 3, () => 0).pending.length, 0);
   disabled.enabled = true; disabled.events.forEach(event => { event.enabled = false; });
@@ -97,4 +97,13 @@ test('仙子默认补5格、反派血量3/4/6/8、助攻/护盾进度与旧存�
  const legacy=normalizeWorldState({completedDraws:40,pending:[{kind:'witch',hits:1,assistUsed:true}]},[],rules);
  assert.equal(legacy.pending[0].opponent,undefined);assert.equal(legacy.pending[0].assistHits,1);assert.equal(legacy.pending[0].assistUsed,true);
  assert.deepEqual(legacy.seenOpponents,['bat','witch']);
+});
+
+test('首轮访客轮流出现、战斗不清空访客保底，充能余量可恢复', () => {
+ let state={...initial(), completedDraws:60,seenOpponents:ENEMIES.map(e=>e.id),sinceEvent:rules.guaranteeAfter-1,lastWitchDraw:0};
+ const visits=[];
+ for(let i=0;i<4;i++){ state=advanceWorld({...state,pending:[],sinceEvent:rules.guaranteeAfter-1},rules,1,3,()=>0); assert.equal(state.pending[0].kind,'event');visits.push(state.pending[0].id); }
+ assert.equal(new Set(visits).size,4);assert.ok(visits.includes('ghost'));
+ const saved=normalizeWorldState({...initial(),pending:[{kind:'event',id:'fairy',chargeRemaining:3}]},[],rules);assert.equal(saved.pending[0].chargeRemaining,3);
+ const battle=advanceWorld({...initial(),completedDraws:60,seenOpponents:ENEMIES.map(e=>e.id),sinceEvent:5,lastWitchDraw:0},rules,8,3,()=>0);assert.equal(battle.pending[0].kind,'witch');assert.equal(battle.sinceEvent,6);
 });

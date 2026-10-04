@@ -27,3 +27,15 @@ export function chooseWeather(kinds, weights, random = Math.random) {
   let cursor = Math.min(.999999, Math.max(0, random())) * total;
   return kinds.find(kind => (cursor -= weights[kind] ?? 1) < 0) || kinds.at(-1);
 }
+// 低频逻辑不占用显示帧；后台彻底停表，返回时从当前时刻继续。
+class ForegroundLoop {
+  constructor(callback, cadence = 250) {
+    this.callback = callback; this.cadence = cadence; this.timer = null;
+    this.onVisibility = () => { clearTimeout(this.timer); this.timer = null; this.previous = performance.now(); this.schedule(); };
+    document.addEventListener('visibilitychange', this.onVisibility); this.previous = performance.now(); this.schedule();
+  }
+  schedule() {
+    if (document.hidden || this.timer !== null) return;
+    this.timer = setTimeout(() => { this.timer = null; const now = performance.now(), elapsed = Math.min(1000, now - this.previous); this.previous = now; if (!document.hidden) this.callback(now, elapsed); this.schedule(); }, typeof this.cadence === 'function' ? this.cadence() : this.cadence);
+  }
+}
