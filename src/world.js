@@ -18,8 +18,35 @@ class MagicWorld {
   }
   completedDraw() {
     this.state = advanceWorld(this.state, this.rules, this.callbacks.energy(), this.callbacks.warningThreshold, Math.random);
-    for (const pending of this.state.pending) if (pending.kind === 'witch' || (pending.kind === 'event' && pending.id !== 'ghost')) pending.giftId = this.callbacks.pickGift().id;
+    for (const pending of this.state.pending) if (pending.kind === 'witch' || (pending.kind === 'event' && pending.id !== 'ghost')) pending.giftId = this.callbacks.pickGift(pending.id).id;
     this.render(false);
+  }
+  async visit(item) {
+    const event = this.rules.events.find(event => event.id === item.id), stage = this.$('world-visitor');
+    stage.dataset.kind = item.id; stage.dataset.action = 'arriving'; stage.hidden = false;
+    this.$('visitor-art').replaceChildren(); this.$('visitor-gift').replaceChildren();
+    if (event.image) { const image = document.createElement('img'); image.src = event.image; image.alt = ''; this.$('visitor-art').append(image); }
+    else this.$('visitor-art').textContent = item.id === 'fairy' ? '🧚' : item.id === 'mermaid' ? '🧜‍♀️' : '👻';
+    this.$('visitor-title').textContent = `${event.name}来啦！`; this.$('visitor-outcome').textContent = item.id === 'fairy' ? '送你五颗爱心魔法！' : item.id === 'mermaid' ? '听！海洋的歌声来了！' : '咦，谁想偷吸一口魔法？';
+    this.callbacks.sound(item.id);
+    try {
+      await this.callbacks.wait(1400);
+      const result = this.callbacks.apply(event, item.giftId);
+      this.state.pending.shift(); this.callbacks.save(); this.render();
+      stage.dataset.action = 'visiting'; this.$('visitor-title').textContent = result.description; this.$('visitor-outcome').textContent = result.detail;
+      if (result.gift) this.callbacks.art(result.gift, this.$('visitor-gift'));
+      if (item.id === 'fairy' && !result.gift) {
+        const from = this.$('visitor-art').getBoundingClientRect(), to = this.$('power-count').getBoundingClientRect();
+        for (let i = 0; i < Math.min(5, result.delta || 0); i++) {
+          const heart = document.createElement('span'); heart.className = 'visitor-energy-heart'; heart.textContent = '♥';
+          heart.style.left = `${from.left + from.width / 2}px`; heart.style.top = `${from.top + from.height / 2}px`;
+          heart.style.setProperty('--dx', `${to.left + to.width / 2 - from.left - from.width / 2}px`); heart.style.setProperty('--dy', `${to.top - from.top - from.height / 2}px`); heart.style.setProperty('--delay', `${i * .14}s`); document.body.append(heart);
+        }
+      }
+      this.$('announcement').textContent = `${result.description}。${result.detail}`;
+      await this.callbacks.wait(Math.max(500, event.durationMs - 3000));
+      stage.dataset.action = 'departing'; await this.callbacks.wait(1600);
+    } finally { stage.hidden = true; document.querySelectorAll('.visitor-energy-heart').forEach(el => el.remove()); this.$('visitor-art').replaceChildren(); this.$('visitor-gift').replaceChildren(); }
   }
   async awakenLifeTree() {
     const machine = this.$('machine'), banner = this.$('life-upgrade-banner');
@@ -45,12 +72,13 @@ class MagicWorld {
         if (item.kind === 'upgrade' && item.level === 'life') { await this.awakenLifeTree(); continue; }
         if (item.kind === 'witch') {
           await this.witch.play(item, () => {
-            const result = this.callbacks.apply({ id: 'witch' }, item.giftId);
+            const result = this.callbacks.apply({ id: item.opponent || 'witch' }, item.giftId);
             this.state.pending.shift(); this.callbacks.save(); this.render();
             return result;
           });
           continue;
         }
+        if (item.kind === 'event' && ['fairy', 'ghost', 'mermaid'].includes(item.id)) { await this.visit(item); continue; }
         const event = item.kind === 'event' ? this.rules.events.find(event => event.id === item.id) : null;
         const upgradeLevel = item.level || 'rainbow';
         const upgradeName = MACHINE_LEVELS.find(level => level.id === upgradeLevel)?.name || '彩虹机器';

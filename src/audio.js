@@ -95,6 +95,8 @@ class MagicAudio {
     else this.celebrate('bubble-giggle');
   }
   weather(kind) {
+    if (kind === 'storm') { this.noiseHit(0, .35, .055, 250); this.tone(65, .8, .08, .08, 'sine', 38); this.noiseHit(.45, .3, .035, 800); return; }
+    if (['icecream', 'coins', 'sakura'].includes(kind)) { const notes = kind === 'coins' ? [1568, 2093, 1568, 2637] : kind === 'icecream' ? [523, 659, 784, 1047] : [784, 988, 1175, 1568]; notes.forEach((n, i) => this.tone(n, .4, i * .18, .045, 'sine')); return; }
     if (kind === 'rain' || kind === 'wind') { for (let i = 0; i < 6; i++) this.noiseHit(i * .18, .28, kind === 'rain' ? .025 : .035, kind === 'rain' ? 2000 : 700); }
     else (kind === 'snow' ? [1568, 1319, 1047, 784] : [523, 784, 1047, 1568, 2093]).forEach((note, i) => this.tone(note, .4, i * .14, .04, 'sine'));
   }
@@ -126,6 +128,12 @@ class MagicAudio {
     this.chord([523, 659, 784, 1047], end, .6); this.kick(end, true);
   }
   encounter(kind) {
+    if (kind === 'broadcast') { this.tone(523, .16, 0, .055, 'sine'); this.tone(784, .25, .22, .055, 'sine'); return; }
+    if (kind === 'guardian-shield') { this.treasureSound('warm-hug'); return; }
+    if (kind === 'rock-arrive') { [0,.25,.5].forEach(at => this.noiseHit(at,.2,.04,500)); this.machineNotes([.5,.75,1], .4); return; }
+    if (kind === 'dragon-arrive') { this.tone(110,.8,0,.07,'sine',65); this.machineNotes([.5,.75,1,1.5],.45); return; }
+    if (kind === 'mermaid') { [659,784,988,1175,988,784,659].forEach((n,i)=>this.tone(n,.5,i*.3,.05,'sine')); return; }
+    if (kind === 'bat-arrive') { this.noiseHit(0, .2, .04, 1500); this.noiseHit(.25, .2, .04, 1500); this.machineNotes([1, .75, 1.25], .25); return; }
     if (kind === 'witch-arrive') { [330, 247, 294, 220].forEach((note, i) => this.tone(note, .3, i * .17, .065)); this.chord([147, 220, 294], .3, .6); return; }
     if (kind === 'witch-shot') { this.tone(220, .18, 0, .075, 'sine', 880); this.noiseHit(.03, .06, .035, 2800); return; }
     if (kind === 'witch-hit') { this.kick(0, true); this.tone(784, .16, .04, .085, 'triangle', 392); this.tone(1047, .2, .18, .075); return; }
@@ -138,7 +146,10 @@ class MagicAudio {
     const notes = kind === 'fairy' ? [784, 1047, 1319, 1568, 1319] : [523, 659, 784, 1047];
     notes.forEach((note, i) => this.tone(note, .25, i * .14, .08)); this.chord([262, 330, 392], .6, .5);
   }
-  treasureSound(kind, count = 1) {
+  treasureSound(kind, count = 1, reaction) {
+    if (reaction?.surprise) [1319,1760,2093].forEach((n,i)=>this.tone(n,.25,.9+i*.12,.04,'sine'));
+    else if (reaction?.motion === 'launch' || reaction?.motion === 'fountain') this.tone(330,.3,.8,.035,'sine',1320);
+    else if (reaction?.motion === 'peek') this.tone(1568,.12,.8,.035,'sine',1047);
     const scores = {
       'burp-bubbles': [262, 330, 523, 659], 'candy-rain': [1047, 784, 659, 523, 784, 1047],
       'jelly-hop': [330, 523, 784, 523, 1047], 'rainbow-flight': [523, 659, 784, 1047, 1319, 1568],

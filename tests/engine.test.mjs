@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { normalizeConfig, drawTreasure, validHistory } from '../src/engine.mjs';
+import { normalizeConfig, drawTreasure, validHistory, chooseReaction } from '../src/engine.mjs';
 const config = JSON.parse(await readFile(new URL('../treasures.json', import.meta.url), 'utf8'));
 test('完整奖池的每个宝物均按自身权重抽取，停用奖品不会进入奖池', () => {
   const pool = normalizeConfig(config);
@@ -61,4 +61,16 @@ test('损坏历史被过滤，收藏最多保留最近 1000 次', () => {
   assert.deepEqual(validHistory(null), []);
   assert.equal(validHistory([null, {}, { ...record, timestamp: 'bad' }, record]).length, 1);
   assert.equal(validHistory(Array.from({ length: 1005 }, (_, i) => ({ ...record, drawId: String(i) }))).length, 1000);
+});
+
+test('互动分支覆盖全部宝物，第三次组合动作，随机不连续重复且稀有惊喜可触发', () => {
+ const treasures = normalizeConfig(config);
+ for (const treasure of treasures) {
+  const reactions = treasure.effects.reactions;
+  assert.equal(reactions.length,4);
+  const first=chooseReaction(reactions,1,'',()=>0);
+  assert.notEqual(chooseReaction(reactions,2,first.id,()=>0).id,first.id);
+  assert.equal(chooseReaction(reactions,3,first.id,()=>0).trigger,'combo');
+  assert.equal(chooseReaction(reactions,1,'',()=>.999).surprise,true);
+ }
 });

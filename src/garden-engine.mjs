@@ -1,5 +1,5 @@
 export const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
-export const WEATHER_KINDS = ['rain', 'snow', 'wind', 'meteors'];
+export const WEATHER_KINDS = ['rain', 'snow', 'wind', 'meteors', 'icecream', 'coins', 'sakura', 'storm'];
 export function normalizeWeatherRules(raw = {}) {
   const bounded = (value, fallback, min, max) => Number.isFinite(value) ? Math.min(max, Math.max(min, Math.round(value))) : fallback;
   return { enabled: raw.enabled !== false, firstAfterMs: bounded(raw.firstAfterMs, 12000, 1000, 300000), intervalMs: bounded(raw.intervalMs, 40000, 5000, 300000), durationMs: bounded(raw.durationMs, 16000, 3000, 60000), kinds: WEATHER_KINDS.filter(kind => !Array.isArray(raw.kinds) || raw.kinds.includes(kind)) };

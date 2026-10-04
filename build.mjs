@@ -7,6 +7,7 @@ const rawGame = JSON.parse(await readFile('game-config.json', 'utf8'));
 const gardenStories = normalizeStoryRules(JSON.parse(await readFile('garden-stories.json', 'utf8')));
 const gameConfig = { ...normalizeGameConfig(rawGame), world: normalizeWorldRules(rawGame.world), weather: normalizeWeatherRules(rawGame.weather), dayNight: normalizeDayNightRules(rawGame.dayNight), seasons: normalizeSeasonRules(rawGame.seasons), gardenStories };
 for (const event of gameConfig.world.events) if (event.image.startsWith('assets/')) event.image = `data:image/svg+xml;base64,${(await readFile(event.image)).toString('base64')}`;
+for (const type of ['bat', 'rock', 'dragon']) if (gameConfig.world.witch[type].image.startsWith('assets/')) gameConfig.world.witch[type].image = `data:image/svg+xml;base64,${(await readFile(gameConfig.world.witch[type].image)).toString('base64')}`;
 if (gameConfig.world.witch.image.startsWith('assets/')) gameConfig.world.witch.image = `data:image/svg+xml;base64,${(await readFile(gameConfig.world.witch.image)).toString('base64')}`;
 const config = { version: 1, treasures: normalizeConfig(JSON.parse(await readFile('treasures.json', 'utf8'))) };
 for (const treasure of config.treasures) {

@@ -35,7 +35,7 @@
         "image": "assets/event-fairy.svg",
         "enabled": true,
         "weight": 4,
-        "energyDelta": 2,
+        "energyDelta": 5,
         "durationMs": 10000
       },
       {
@@ -53,20 +53,48 @@
         "weight": 3,
         "energyDelta": 0,
         "durationMs": 10000
+      },
+      {
+        "id": "mermaid",
+        "image": "assets/event-mermaid.svg",
+        "enabled": true,
+        "weight": 3,
+        "energyDelta": 0,
+        "durationMs": 10000
       }
     ],
     "wingedAt": 20,
     "castleAt": 35,
     "witch": {
       "enabled": true,
-      "hits": 3,
+      "hits": 4,
       "visibleMs": 2800,
       "hiddenMs": 450,
       "image": "assets/witch.svg",
       "chance": 0.25,
-      "minGap": 8,
-      "firstGuaranteeAfter": 4,
-      "guaranteeAfter": 14
+      "minGap": 5,
+      "guaranteeAfter": 10,
+      "bat": {
+        "enabled": true,
+        "image": "assets/evil-bat.svg",
+        "visibleMs": 2400,
+        "hiddenMs": 550,
+        "hits": 3
+      },
+      "rock": {
+        "enabled": true,
+        "hits": 6,
+        "image": "assets/evil-rock.svg",
+        "visibleMs": 4300,
+        "hiddenMs": 650
+      },
+      "dragon": {
+        "enabled": true,
+        "hits": 10,
+        "image": "assets/evil-dragon.svg",
+        "visibleMs": 5000,
+        "hiddenMs": 700
+      }
     },
     "lifeAt": 50
   },
@@ -79,7 +107,11 @@
       "rain",
       "snow",
       "wind",
-      "meteors"
+      "meteors",
+      "icecream",
+      "coins",
+      "sakura",
+      "storm"
     ]
   },
   "dayNight": {

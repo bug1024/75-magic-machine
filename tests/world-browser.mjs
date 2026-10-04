@@ -15,7 +15,7 @@ async function seed(page, balance, world, count = 0) {
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } }); page.on('pageerror', e => errors.push(e.message));
   // 保底事件在真实开奖后出现，赠品写入收藏但不会增长升级次数。
-  await page.addInitScript(() => { Math.random = () => .9; });
+  await page.addInitScript(() => { Math.random = () => .7; });
   await seed(page, 8, { completedDraws: 3, sinceEvent: 7, pending: [] }, 3);
   await page.keyboard.press('Space');
   await page.waitForSelector('#world-dialog[open][data-scene="courier"]');
@@ -34,27 +34,25 @@ try {
   assert.equal(await page.locator('#world-dialog').evaluate(el => el.open), false);
   // 未结算仙子事件恢复后补能量，只到上限；结算后刷新不重复。
   await seed(page, 9, { completedDraws: 4, sinceEvent: 0, pending: [{ kind: 'event', id: 'fairy', giftId: 'cloud-dolphin' }] }, 4);
-  await page.waitForSelector('#world-dialog.acted');
+  await page.waitForSelector('#world-visitor[data-action=visiting]');
   assert.equal(await page.locator('#power-count').textContent(), '10 / 10');
   assert.equal(await page.locator('#collection-count').textContent(), '4');
   await page.screenshot({ path: 'artifacts/world/fairy.png' });
   await page.reload(); assert.equal(await page.locator('#power-count').textContent(), '10 / 10');
   // 满格仙子改送宝物。
   await seed(page, 10, { completedDraws: 4, sinceEvent: 0, pending: [{ kind: 'event', id: 'fairy', giftId: 'cloud-dolphin' }] }, 4);
-  await page.waitForSelector('#world-dialog.acted');
+  await page.waitForSelector('#world-visitor[data-action=visiting]');
   assert.equal(await page.locator('#collection-count').textContent(), '5');
-  assert.match(await page.locator('#scene-title').textContent(), /云朵小海豚/);
-  await page.locator('#continue-world').click();
+  assert.match(await page.locator('#visitor-title').textContent(), /云朵小海豚/);
   // 幽灵吸能量；不会偷走收藏，3格及以下不吸能量。
   await seed(page, 5, { completedDraws: 4, sinceEvent: 0, pending: [{ kind: 'event', id: 'ghost' }] }, 4);
-  await page.waitForSelector('#world-dialog.acted');
+  await page.waitForSelector('#world-visitor[data-action=visiting]');
   assert.equal(await page.locator('#power-count').textContent(), '4 / 10');
   assert.equal(await page.locator('#collection-count').textContent(), '4');
   await page.screenshot({ path: 'artifacts/world/ghost.png' });
   await page.reload(); assert.equal(await page.locator('#power-count').textContent(), '4 / 10');
   await seed(page, 2, { completedDraws: 4, sinceEvent: 0, pending: [{ kind: 'event', id: 'ghost' }] }, 4);
-  await page.waitForSelector('#world-dialog.acted'); assert.equal(await page.locator('#power-count').textContent(), '2 / 10');
-  await page.locator('#continue-world').click();
+  await page.waitForSelector('#world-visitor[data-action=visiting]'); assert.equal(await page.locator('#power-count').textContent(), '2 / 10');
   // 第10次正常抽奖升级，能量耗尽也能完成，升级不消费资源。
   await seed(page, 1, { completedDraws: 9, sinceEvent: 0, pending: [] }, 9);
   await page.locator('#draw').click();

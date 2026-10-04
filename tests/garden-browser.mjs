@@ -24,7 +24,7 @@ try {
   await page.evaluate(() => { Math.random = () => 0; });
   for (const desired of ['rain', 'snow', 'wind', 'meteors']) {
     const previous = await page.locator('body').getAttribute('data-weather');
-    const choices = ['rain', 'snow', 'wind', 'meteors'].filter(kind => kind !== previous);
+    const choices = ['rain', 'snow', 'wind', 'meteors', 'icecream', 'coins', 'sakura', 'storm'].filter(kind => kind !== previous);
     const value = (choices.indexOf(desired) + .1) / choices.length;
     await page.evaluate(value => { Math.random = () => value; }, value);
     await page.locator('#weather').click();

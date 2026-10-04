@@ -31,6 +31,40 @@
         "interactionLines": [
           "裙摆转出一圈星光！",
           "今天我是星光公主！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "orbit",
+            "line": "转个小圈，闪亮魔法追着你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "咻！偷偷飞起来啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "星光公主裙的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "连点三次！闪亮舞会开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -68,6 +102,40 @@
         "interactionLines": [
           "独角兽带你追彩虹！",
           "彩虹桥，出发！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "orbit",
+            "line": "转个小圈，闪亮魔法追着你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "咻！偷偷飞起来啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "彩虹独角兽的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "连点三次！闪亮舞会开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -106,6 +174,40 @@
         "interactionLines": [
           "月亮城堡亮灯啦！",
           "城堡里有人在向你招手！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "月亮城堡的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -144,6 +246,40 @@
         "interactionLines": [
           "啾——跃过泡泡海！",
           "小海豚又翻了一个跟头！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "翻个身，偷偷看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "fountain",
+            "line": "接住泡泡，再顶出一条小彩虹！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "云朵小海豚的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "海豚表演超级大跳跃！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -181,6 +317,40 @@
         "interactionLines": [
           "吱吱！你在叫我吗？",
           "歪歪头，发现你啦！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "歪歪脑袋，吱吱在看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "flip",
+            "line": "咦？吱吱怎么倒着飞啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "吱吱猫头鹰的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "launch",
+            "line": "吱吱突然瞪大眼睛，冲上天空！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -218,6 +388,40 @@
         "interactionLines": [
           "摇呀摇，我不会倒！",
           "雪王送你一朵小雪花！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "摇摇雪王的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -255,6 +459,40 @@
         "interactionLines": [
           "刷刷刷，洗出泡泡彩虹！",
           "小泡泡，把烦恼带走！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "泡泡魔法刷的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -292,6 +530,40 @@
         "interactionLines": [
           "叮当！存下一颗小愿望！",
           "小猪的肚子唱起歌啦！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "爱心小猪存钱罐的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -329,6 +601,40 @@
         "interactionLines": [
           "转个圈，仙鹤飞起来！",
           "裙子里藏着一阵花香！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "orbit",
+            "line": "转个小圈，闪亮魔法追着你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "咻！偷偷飞起来啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "丹鹤流云汉服裙的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "连点三次！闪亮舞会开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -366,6 +672,40 @@
         "interactionLines": [
           "披风鼓起来，飞向彩虹！",
           "追上云朵的小尾巴！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "orbit",
+            "line": "转个小圈，闪亮魔法追着你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "咻！偷偷飞起来啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "追彩虹披风的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "连点三次！闪亮舞会开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -403,6 +743,40 @@
         "interactionLines": [
           "小美人鱼摆摆尾巴！",
           "海底的珍珠亮起来啦！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "翻个身，偷偷看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "fountain",
+            "line": "接住泡泡，再顶出一条小彩虹！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "珍珠美人鱼套装的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "海豚表演超级大跳跃！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -440,11 +814,47 @@
         "interactionLines": [
           "精灵宝石，闪闪发光！",
           "一颗宝石点亮小翅膀！"
+        ],
+        "guardian": "star-shot",
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "orbit",
+            "line": "转个小圈，闪亮魔法追着你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "咻！偷偷飞起来啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "翅膀精灵宝石的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "连点三次！闪亮舞会开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
         "magic",
-        "gem"
+        "gem",
+        "guardian"
       ]
     },
     {
@@ -477,6 +887,40 @@
         "interactionLines": [
           "噗——宝宝自己也笑啦！",
           "谁放了一个彩虹屁？"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "sneeze",
+            "line": "憋住憋住……噗！彩虹屁来啦！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "噗——把自己弹飞啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "噗噗开心宝宝的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "三连彩虹屁，绕出一朵彩虹云！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -514,10 +958,46 @@
         "interactionLines": [
           "妈妈给你一个暖暖抱抱！",
           "小宝贝，你是我的小太阳！"
+        ],
+        "guardian": "heart-shield",
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "hug",
+            "line": "张开手，送你一个暖暖抱抱！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "妈妈陪你跳一小段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "亲爱的暖暖妈妈的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "hug",
+            "line": "超级抱抱！爱心都来找你啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
-        "family"
+        "family",
+        "guardian"
       ]
     },
     {
@@ -550,11 +1030,47 @@
         "interactionLines": [
           "噗噗！超级粑粑发射彩虹屁！",
           "嘿嘿，彩虹屁云飘走啦！"
+        ],
+        "guardian": "rainbow-shot",
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "sneeze",
+            "line": "憋住憋住……噗！彩虹屁来啦！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "噗——把自己弹飞啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "超级粑粑的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "三连彩虹屁，绕出一朵彩虹云！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
         "toilet",
-        "funny"
+        "funny",
+        "guardian"
       ]
     },
     {
@@ -587,6 +1103,40 @@
         "interactionLines": [
           "喵呜～丫丫蹭蹭你！",
           "呼噜呼噜，丫丫好喜欢你！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "丫丫躲起来，露个小脑袋！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "flip",
+            "line": "翻个肚皮，邀请你摸摸！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "丫丫三花猫的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "丫丫开始踩奶舞啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -623,6 +1173,40 @@
         "interactionLines": [
           "追风滑板车，嗖——！",
           "小风精灵，来比赛！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "zoom",
+            "line": "往后退一点，准备冲刺！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "flip",
+            "line": "哇！来了一个帅气小翻转！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "追风超级滑板车的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "环游花园的小赛车出发！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -659,6 +1243,40 @@
         "interactionLines": [
           "叮铃铃，花篮自行车出发！",
           "一路骑，一路开小花！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "zoom",
+            "line": "往后退一点，准备冲刺！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "flip",
+            "line": "哇！来了一个帅气小翻转！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "粉红花篮自行车的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "环游花园的小赛车出发！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -695,11 +1313,47 @@
         "interactionLines": [
           "星心魔法，变变变！",
           "一挥魔法棒，星星蹦出来！"
+        ],
+        "guardian": "star-shot",
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "orbit",
+            "line": "转个小圈，闪亮魔法追着你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "咻！偷偷飞起来啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "美少女星心魔法棒的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "连点三次！闪亮舞会开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
         "magic",
-        "wand"
+        "wand",
+        "guardian"
       ]
     },
     {
@@ -732,12 +1386,48 @@
         "interactionLines": [
           "啵！发射一颗月亮泡泡！",
           "月亮泡泡，飞高高！"
+        ],
+        "guardian": "bubble-shot",
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "月亮泡泡枪的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
         "moon",
         "bubbles",
-        "toy"
+        "toy",
+        "guardian"
       ]
     },
     {
@@ -770,6 +1460,40 @@
         "interactionLines": [
           "项链里藏着一片星海！",
           "宝石滴答，亮了一整串！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "orbit",
+            "line": "转个小圈，闪亮魔法追着你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "咻！偷偷飞起来啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "星海宝石项链的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "连点三次！闪亮舞会开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -807,6 +1531,40 @@
         "interactionLines": [
           "兔耳朵，左摇右摇！",
           "戴上花花，一起蹦蹦！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "兔耳花花发箍的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -843,6 +1601,40 @@
         "interactionLines": [
           "左扭右扭，出发啦！",
           "扭扭车画了一个小圈圈！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "薄荷糖扭扭车的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -879,6 +1671,40 @@
         "interactionLines": [
           "叮铃铃！快乐时间到！",
           "小闹钟跳起来唱早安！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "叮铃微笑小闹钟的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -916,6 +1742,40 @@
         "interactionLines": [
           "咕噜咕噜，鲸鲸喷水啦！",
           "喝口水，吹一个小泡泡！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "小鲸鱼偷偷冒出水面！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "fountain",
+            "line": "噗！喷出一朵泡泡花！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "鲸鲸咕噜水杯的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "fountain",
+            "line": "超级鲸鱼喷泉开演啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -947,6 +1807,40 @@
         },
         "interactionLines": [
           "嗝！小恐龙从蛋里钻出来，喷出彩色泡泡。"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "打嗝小恐龙的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -978,6 +1872,40 @@
         },
         "interactionLines": [
           "戳一戳软软的小云朵，下一场糖果雨。"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "棉花糖小云朵的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -1009,6 +1937,40 @@
         },
         "interactionLines": [
           "软乎乎的果冻兔，压扁一点，弹高一点！"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "蹦蹦果冻兔的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -1039,12 +2001,48 @@
         },
         "interactionLines": [
           "小翅膀扑一扑，带着七彩尾巴飞起来。"
+        ],
+        "guardian": "rainbow-shot",
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "orbit",
+            "line": "转个小圈，闪亮魔法追着你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "launch",
+            "line": "咻！偷偷飞起来啦！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "彩虹小飞龙的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "dance",
+            "line": "连点三次！闪亮舞会开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
         "animal",
         "magic",
-        "rainbow"
+        "rainbow",
+        "guardian"
       ]
     },
     {
@@ -1071,6 +2069,40 @@
         },
         "interactionLines": [
           "三只小蘑菇，一起唱出森林里的快乐音符。"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "会唱歌的蘑菇的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -1103,6 +2135,40 @@
         },
         "interactionLines": [
           "点一点小星星，种出一朵发光的魔法花。"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "星星种子的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -1134,6 +2200,40 @@
         },
         "interactionLines": [
           "三、二、一！带着小兔子去星球上玩。"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "泡泡宇宙飞船的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [
@@ -1166,6 +2266,40 @@
         },
         "interactionLines": [
           "左脚跳，右脚跳，两只小袜子偷偷笑。"
+        ],
+        "reactions": [
+          {
+            "id": "hello",
+            "motion": "peek",
+            "line": "悄悄藏起来，又探头看你！",
+            "weight": 46
+          },
+          {
+            "id": "play",
+            "motion": "dance",
+            "line": "摇一摇，跟你玩一段快乐舞！",
+            "weight": 46
+          },
+          {
+            "id": "secret",
+            "motion": "flip",
+            "line": "偷笑小袜子的秘密惊喜：星星跟斗！",
+            "symbols": [
+              "🌟",
+              "🌈",
+              "✨"
+            ],
+            "weight": 8,
+            "surprise": true
+          },
+          {
+            "id": "combo",
+            "motion": "orbit",
+            "line": "连点三次！秘密小表演开始啦！",
+            "trigger": "combo",
+            "weight": 1,
+            "surprise": true
+          }
         ]
       },
       "tags": [

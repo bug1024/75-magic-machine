@@ -72,8 +72,9 @@ class MagicGarden {
       button.append(art); const label = document.createElement('span'); label.className = 'garden-name'; label.textContent = treasure?.name || (this.chosen ? '放这里' : '待摆放'); button.append(label);
       const play = treasure ? new TreasurePlay(button, {
         canPlay: () => this.callbacks.canPlay() && !this.chosen,
-        feedback: (item, kind, count, event, line) => { this.callbacks.sound(kind, count); document.getElementById('announcement').textContent = line; }
+        feedback: (item, kind, count, event, line, reaction) => { this.callbacks.sound(kind, count, reaction); document.getElementById('announcement').textContent = line; }
       }, false) : null;
+      if (treasure?.effects.guardian) { const badge = document.createElement('span'); badge.className = 'guardian-badge'; badge.textContent = '🛡'; badge.title = treasure.effects.guardian === 'heart-shield' ? '守护已生效：每场抵挡一次迷雾，移走后失效' : '守护已生效：每件每场最多助攻一次，总助攻不超过一半血量，移走后失效'; button.append(badge); }
       if (play) { const actionLabel = button.getAttribute('aria-label'); play.set(treasure); if (this.chosen) button.setAttribute('aria-label', actionLabel); this.players.push(play); }
       button.onclick = event => {
         if (!this.callbacks.canPlay()) return;
@@ -96,12 +97,13 @@ class MagicGarden {
     const kind = (choices.length ? choices : this.rules.kinds)[Math.floor(Math.random() * (choices.length || this.rules.kinds.length))];
     this.weather = this.lastKind = kind; this.endsAt = this.elapsed + this.rules.durationMs;
     document.body.dataset.weather = kind; this.layer.replaceChildren();
-    const labels = { rain: '🌧️ 魔法雨', snow: '❄️ 雪花舞会', wind: '🍃 风精灵', meteors: '🌠 流星雨' };
+    const labels = { rain: '🌧️ 魔法雨', snow: '❄️ 雪花舞会', wind: '🍃 风精灵', meteors: '🌠 流星雨', icecream: '🍦 冰激凌雨', coins: '🪙 金币雨', sakura: '🌸 樱花雨', storm: '⛈️ 魔法大风暴' };
     document.getElementById('weather-name').textContent = labels[kind].split(' ')[0]; document.getElementById('weather').title = `${labels[kind]}，点击切换天气`; document.getElementById('weather').setAttribute('aria-label', `${labels[kind]}，点击切换天气`);
-    const count = kind === 'rain' ? 64 : kind === 'snow' ? 40 : kind === 'wind' ? 20 : 12;
+    const count = kind === 'storm' ? 72 : kind === 'rain' ? 64 : kind === 'snow' || kind === 'sakura' ? 40 : kind === 'wind' ? 20 : kind === 'meteors' ? 12 : 28;
     for (let i = 0; i < count; i++) {
-      const bit = document.createElement('i'); bit.style.setProperty('--x', `${Math.random() * 100}%`); bit.style.setProperty('--delay', `${-Math.random() * 8}s`); bit.style.setProperty('--duration', `${kind === 'rain' ? .65 + Math.random() * .4 : 3 + Math.random() * 5}s`); bit.style.setProperty('--size', `${8 + Math.random() * 14}px`);
-      bit.textContent = kind === 'snow' ? '❄' : kind === 'wind' ? '🍃' : ''; this.layer.append(bit);
+      const bit = document.createElement('i'); bit.style.setProperty('--x', `${Math.random() * 100}%`); bit.style.setProperty('--delay', `${-Math.random() * 8}s`); bit.style.setProperty('--duration', `${['rain', 'storm'].includes(kind) ? .65 + Math.random() * .4 : 3 + Math.random() * 5}s`); bit.style.setProperty('--size', `${8 + Math.random() * 14}px`);
+      bit.textContent = { snow: '❄', wind: '🍃', icecream: ['🍦','🍨'][i % 2], coins: '★', sakura: '🌸' }[kind] || '';
+      if (kind === 'storm' && i % 5 === 0) { bit.textContent = '🍃'; bit.className = 'storm-leaf'; } this.layer.append(bit);
     }
     this.callbacks.weatherSound(kind);
   }
