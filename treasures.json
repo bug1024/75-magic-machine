@@ -17,11 +17,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "dress-twirl",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "dress-twirl",
+        "interactionSymbols": [
+          "✦",
+          "👑",
+          "✧"
+        ],
+        "interactionLines": [
+          "裙摆转出一圈星光！",
+          "今天我是星光公主！"
+        ]
       },
       "tags": [
         "outfit",
@@ -44,11 +54,21 @@
       "effects": {
         "reveal": "rainbow-ring",
         "ambient": "rainbow-trail",
-        "sound": "rainbow-song",
+        "sound": "rainbow-flight",
         "params": {
           "durationMs": 2600,
           "particleCount": 95
-        }
+        },
+        "interaction": "rainbow-flight",
+        "interactionSymbols": [
+          "🌈",
+          "✦",
+          "🦄"
+        ],
+        "interactionLines": [
+          "独角兽带你追彩虹！",
+          "彩虹桥，出发！"
+        ]
       },
       "tags": [
         "animal",
@@ -72,11 +92,21 @@
       "effects": {
         "reveal": "moonrise",
         "ambient": "golden-rain",
-        "sound": "royal-fanfare",
+        "sound": "castle-glow",
         "params": {
           "durationMs": 3300,
           "particleCount": 130
-        }
+        },
+        "interaction": "castle-glow",
+        "interactionSymbols": [
+          "🌙",
+          "✦",
+          "⭐"
+        ],
+        "interactionLines": [
+          "月亮城堡亮灯啦！",
+          "城堡里有人在向你招手！"
+        ]
       },
       "tags": [
         "magic",
@@ -100,11 +130,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "dolphin-dive",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "dolphin-dive",
+        "interactionSymbols": [
+          "🫧",
+          "💧",
+          "✦"
+        ],
+        "interactionLines": [
+          "啾——跃过泡泡海！",
+          "小海豚又翻了一个跟头！"
+        ]
       },
       "tags": [
         "animal",
@@ -127,11 +167,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "owl-peek",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "owl-peek",
+        "interactionSymbols": [
+          "♪",
+          "✦",
+          "🌙"
+        ],
+        "interactionLines": [
+          "吱吱！你在叫我吗？",
+          "歪歪头，发现你啦！"
+        ]
       },
       "tags": [
         "animal",
@@ -154,11 +204,21 @@
       "effects": {
         "reveal": "rainbow-ring",
         "ambient": "rainbow-trail",
-        "sound": "rainbow-song",
+        "sound": "snow-wobble",
         "params": {
           "durationMs": 2600,
           "particleCount": 95
-        }
+        },
+        "interaction": "snow-wobble",
+        "interactionSymbols": [
+          "❄",
+          "✦",
+          "🍦"
+        ],
+        "interactionLines": [
+          "摇呀摇，我不会倒！",
+          "雪王送你一朵小雪花！"
+        ]
       },
       "tags": [
         "toy",
@@ -181,11 +241,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "bubble-scrub",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "bubble-scrub",
+        "interactionSymbols": [
+          "🫧",
+          "✧",
+          "🫧"
+        ],
+        "interactionLines": [
+          "刷刷刷，洗出泡泡彩虹！",
+          "小泡泡，把烦恼带走！"
+        ]
       },
       "tags": [
         "household",
@@ -208,11 +278,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "coin-jingle",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "coin-jingle",
+        "interactionSymbols": [
+          "🪙",
+          "💛",
+          "✦"
+        ],
+        "interactionLines": [
+          "叮当！存下一颗小愿望！",
+          "小猪的肚子唱起歌啦！"
+        ]
       },
       "tags": [
         "animal",
@@ -235,11 +315,21 @@
       "effects": {
         "reveal": "rainbow-ring",
         "ambient": "rainbow-trail",
-        "sound": "rainbow-song",
+        "sound": "dress-twirl",
         "params": {
           "durationMs": 2600,
           "particleCount": 95
-        }
+        },
+        "interaction": "dress-twirl",
+        "interactionSymbols": [
+          "🌸",
+          "✧",
+          "🪶"
+        ],
+        "interactionLines": [
+          "转个圈，仙鹤飞起来！",
+          "裙子里藏着一阵花香！"
+        ]
       },
       "tags": [
         "outfit",
@@ -262,11 +352,21 @@
       "effects": {
         "reveal": "rainbow-ring",
         "ambient": "rainbow-trail",
-        "sound": "rainbow-song",
+        "sound": "rainbow-flight",
         "params": {
           "durationMs": 2600,
           "particleCount": 95
-        }
+        },
+        "interaction": "rainbow-flight",
+        "interactionSymbols": [
+          "🌈",
+          "✦",
+          "☁"
+        ],
+        "interactionLines": [
+          "披风鼓起来，飞向彩虹！",
+          "追上云朵的小尾巴！"
+        ]
       },
       "tags": [
         "outfit",
@@ -289,11 +389,21 @@
       "effects": {
         "reveal": "moonrise",
         "ambient": "golden-rain",
-        "sound": "royal-fanfare",
+        "sound": "dolphin-dive",
         "params": {
           "durationMs": 3300,
           "particleCount": 130
-        }
+        },
+        "interaction": "dolphin-dive",
+        "interactionSymbols": [
+          "🐚",
+          "🫧",
+          "💎"
+        ],
+        "interactionLines": [
+          "小美人鱼摆摆尾巴！",
+          "海底的珍珠亮起来啦！"
+        ]
       },
       "tags": [
         "outfit",
@@ -316,11 +426,21 @@
       "effects": {
         "reveal": "moonrise",
         "ambient": "golden-rain",
-        "sound": "royal-fanfare",
+        "sound": "gem-sparkle",
         "params": {
           "durationMs": 3300,
           "particleCount": 130
-        }
+        },
+        "interaction": "gem-sparkle",
+        "interactionSymbols": [
+          "💎",
+          "✧",
+          "✦"
+        ],
+        "interactionLines": [
+          "精灵宝石，闪闪发光！",
+          "一颗宝石点亮小翅膀！"
+        ]
       },
       "tags": [
         "magic",
@@ -343,11 +463,21 @@
       "effects": {
         "reveal": "bubble-pop",
         "ambient": "floating-stars",
-        "sound": "bubble-giggle",
+        "sound": "rainbow-toot",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "rainbow-toot",
+        "interactionSymbols": [
+          "💨",
+          "🌈",
+          "😆"
+        ],
+        "interactionLines": [
+          "噗——宝宝自己也笑啦！",
+          "谁放了一个彩虹屁？"
+        ]
       },
       "tags": [
         "baby",
@@ -370,11 +500,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "warm-hug",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "warm-hug",
+        "interactionSymbols": [
+          "💗",
+          "💕",
+          "✿"
+        ],
+        "interactionLines": [
+          "妈妈给你一个暖暖抱抱！",
+          "小宝贝，你是我的小太阳！"
+        ]
       },
       "tags": [
         "family"
@@ -396,11 +536,21 @@
       "effects": {
         "reveal": "bubble-pop",
         "ambient": "rainbow-trail",
-        "sound": "bubble-giggle",
+        "sound": "rainbow-toot",
         "params": {
           "durationMs": 2600,
           "particleCount": 95
-        }
+        },
+        "interaction": "rainbow-toot",
+        "interactionSymbols": [
+          "🌈",
+          "💨",
+          "✦"
+        ],
+        "interactionLines": [
+          "噗噗！超级粑粑发射彩虹屁！",
+          "嘿嘿，彩虹屁云飘走啦！"
+        ]
       },
       "tags": [
         "toilet",
@@ -423,11 +573,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "cat-purr",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "cat-purr",
+        "interactionSymbols": [
+          "🐾",
+          "💗",
+          "♪"
+        ],
+        "interactionLines": [
+          "喵呜～丫丫蹭蹭你！",
+          "呼噜呼噜，丫丫好喜欢你！"
+        ]
       },
       "tags": [
         "animal"
@@ -449,11 +609,21 @@
       "effects": {
         "reveal": "rainbow-ring",
         "ambient": "rainbow-trail",
-        "sound": "rainbow-song",
+        "sound": "wheel-zoom",
         "params": {
           "durationMs": 2600,
           "particleCount": 95
-        }
+        },
+        "interaction": "wheel-zoom",
+        "interactionSymbols": [
+          "🍃",
+          "💨",
+          "✦"
+        ],
+        "interactionLines": [
+          "追风滑板车，嗖——！",
+          "小风精灵，来比赛！"
+        ]
       },
       "tags": [
         "vehicle"
@@ -475,11 +645,21 @@
       "effects": {
         "reveal": "rainbow-ring",
         "ambient": "rainbow-trail",
-        "sound": "rainbow-song",
+        "sound": "wheel-zoom",
         "params": {
           "durationMs": 2600,
           "particleCount": 95
-        }
+        },
+        "interaction": "wheel-zoom",
+        "interactionSymbols": [
+          "🌸",
+          "♪",
+          "🍃"
+        ],
+        "interactionLines": [
+          "叮铃铃，花篮自行车出发！",
+          "一路骑，一路开小花！"
+        ]
       },
       "tags": [
         "vehicle"
@@ -501,11 +681,21 @@
       "effects": {
         "reveal": "moonrise",
         "ambient": "golden-rain",
-        "sound": "royal-fanfare",
+        "sound": "wand-spell",
         "params": {
           "durationMs": 3300,
           "particleCount": 130
-        }
+        },
+        "interaction": "wand-spell",
+        "interactionSymbols": [
+          "✦",
+          "💗",
+          "✧"
+        ],
+        "interactionLines": [
+          "星心魔法，变变变！",
+          "一挥魔法棒，星星蹦出来！"
+        ]
       },
       "tags": [
         "magic",
@@ -528,11 +718,21 @@
       "effects": {
         "reveal": "bubble-pop",
         "ambient": "rainbow-trail",
-        "sound": "rainbow-song",
+        "sound": "bubble-shot",
         "params": {
           "durationMs": 2600,
           "particleCount": 95
-        }
+        },
+        "interaction": "bubble-shot",
+        "interactionSymbols": [
+          "🫧",
+          "🌙",
+          "✦"
+        ],
+        "interactionLines": [
+          "啵！发射一颗月亮泡泡！",
+          "月亮泡泡，飞高高！"
+        ]
       },
       "tags": [
         "moon",
@@ -556,11 +756,21 @@
       "effects": {
         "reveal": "moonrise",
         "ambient": "golden-rain",
-        "sound": "royal-fanfare",
+        "sound": "gem-sparkle",
         "params": {
           "durationMs": 3300,
           "particleCount": 130
-        }
+        },
+        "interaction": "gem-sparkle",
+        "interactionSymbols": [
+          "💎",
+          "⭐",
+          "✧"
+        ],
+        "interactionLines": [
+          "项链里藏着一片星海！",
+          "宝石滴答，亮了一整串！"
+        ]
       },
       "tags": [
         "outfit",
@@ -583,11 +793,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "ear-wiggle",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "ear-wiggle",
+        "interactionSymbols": [
+          "🌸",
+          "🐰",
+          "💗"
+        ],
+        "interactionLines": [
+          "兔耳朵，左摇右摇！",
+          "戴上花花，一起蹦蹦！"
+        ]
       },
       "tags": [
         "outfit"
@@ -609,11 +829,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "wiggle-drive",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "wiggle-drive",
+        "interactionSymbols": [
+          "🍃",
+          "✦",
+          "💨"
+        ],
+        "interactionLines": [
+          "左扭右扭，出发啦！",
+          "扭扭车画了一个小圈圈！"
+        ]
       },
       "tags": [
         "vehicle"
@@ -635,11 +865,21 @@
       "effects": {
         "reveal": "sparkle-bloom",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "alarm-ring",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "alarm-ring",
+        "interactionSymbols": [
+          "♪",
+          "♫",
+          "✦"
+        ],
+        "interactionLines": [
+          "叮铃铃！快乐时间到！",
+          "小闹钟跳起来唱早安！"
+        ]
       },
       "tags": [
         "household",
@@ -662,11 +902,21 @@
       "effects": {
         "reveal": "bubble-pop",
         "ambient": "floating-stars",
-        "sound": "magic-chime",
+        "sound": "whale-spout",
         "params": {
           "durationMs": 2200,
           "particleCount": 65
-        }
+        },
+        "interaction": "whale-spout",
+        "interactionSymbols": [
+          "💧",
+          "🫧",
+          "🐳"
+        ],
+        "interactionLines": [
+          "咕噜咕噜，鲸鲸喷水啦！",
+          "喝口水，吹一个小泡泡！"
+        ]
       },
       "tags": [
         "ocean",
@@ -694,7 +944,10 @@
         "params": {
           "durationMs": 3000,
           "particleCount": 85
-        }
+        },
+        "interactionLines": [
+          "嗝！小恐龙从蛋里钻出来，喷出彩色泡泡。"
+        ]
       },
       "tags": [
         "animal",
@@ -722,7 +975,10 @@
         "params": {
           "durationMs": 3000,
           "particleCount": 85
-        }
+        },
+        "interactionLines": [
+          "戳一戳软软的小云朵，下一场糖果雨。"
+        ]
       },
       "tags": [
         "food",
@@ -750,7 +1006,10 @@
         "params": {
           "durationMs": 3000,
           "particleCount": 85
-        }
+        },
+        "interactionLines": [
+          "软乎乎的果冻兔，压扁一点，弹高一点！"
+        ]
       },
       "tags": [
         "animal"
@@ -777,7 +1036,10 @@
         "params": {
           "durationMs": 3000,
           "particleCount": 85
-        }
+        },
+        "interactionLines": [
+          "小翅膀扑一扑，带着七彩尾巴飞起来。"
+        ]
       },
       "tags": [
         "animal",
@@ -806,7 +1068,10 @@
         "params": {
           "durationMs": 3000,
           "particleCount": 85
-        }
+        },
+        "interactionLines": [
+          "三只小蘑菇，一起唱出森林里的快乐音符。"
+        ]
       },
       "tags": [
         "plant",
@@ -835,7 +1100,10 @@
         "params": {
           "durationMs": 3000,
           "particleCount": 85
-        }
+        },
+        "interactionLines": [
+          "点一点小星星，种出一朵发光的魔法花。"
+        ]
       },
       "tags": [
         "plant",
@@ -863,7 +1131,10 @@
         "params": {
           "durationMs": 3000,
           "particleCount": 85
-        }
+        },
+        "interactionLines": [
+          "三、二、一！带着小兔子去星球上玩。"
+        ]
       },
       "tags": [
         "vehicle",
@@ -892,7 +1163,10 @@
         "params": {
           "durationMs": 3000,
           "particleCount": 85
-        }
+        },
+        "interactionLines": [
+          "左脚跳，右脚跳，两只小袜子偷偷笑。"
+        ]
       },
       "tags": [
         "outfit",

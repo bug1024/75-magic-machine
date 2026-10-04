@@ -36,9 +36,9 @@ test('正常抽奖跨过10次才升级，赠品历史不计数，旧存档与待
   assert.equal(normalizeWorldState({ completedDraws: 1500, sinceEvent: 2, pending: [{ kind: 'event', id: 'courier', giftId: 'cloud-dolphin' }] }, history, rules).completedDraws, 1500);
   assert.deepEqual(normalizeWorldState({ pending: [null, { kind: 'bad' }, { kind: 'event', id: 'unknown' }] }, [], rules).pending, []);
 });
-test('10/20/35次跨越时各升级一次，形态保留，旧队列兼容且门槛严格递增', () => {
-  for (const [count, id] of [[0, 'starlight'], [9, 'starlight'], [10, 'rainbow'], [19, 'rainbow'], [20, 'winged'], [34, 'winged'], [35, 'castle'], [100, 'castle']]) assert.equal(machineLevel(count, rules).id, id);
-  for (const [count, id] of [[9, 'rainbow'], [19, 'winged'], [34, 'castle']]) {
+test('10/20/35/50次跨越时各升级一次，形态保留，旧队列兼容且门槛严格递增', () => {
+  for (const [count, id] of [[0, 'starlight'], [9, 'starlight'], [10, 'rainbow'], [19, 'rainbow'], [20, 'winged'], [34, 'winged'], [35, 'castle'], [49, 'castle'], [50, 'life'], [100, 'life']]) assert.equal(machineLevel(count, rules).id, id);
+  for (const [count, id] of [[9, 'rainbow'], [19, 'winged'], [34, 'castle'], [49, 'life']]) {
     const next = advanceWorld({ ...initial(), completedDraws: count }, rules, 0, 3, () => .99);
     assert.deepEqual(next.pending, [{ kind: 'upgrade', level: id }]);
     next.pending = []; assert.ok(!advanceWorld(next, rules, 0, 3, () => .99).pending.some(item => item.kind === 'upgrade'));
@@ -47,7 +47,7 @@ test('10/20/35次跨越时各升级一次，形态保留，旧队列兼容且门
   const restored = normalizeWorldState({ completedDraws: 35, pending: [{ kind: 'upgrade', level: 'castle' }] }, [], rules);
   assert.equal(restored.pending[0].level, 'castle');
   const custom = normalizeWorldRules({ rainbowAt: 10000, wingedAt: 2, castleAt: -1 });
-  assert.ok(custom.rainbowAt < custom.wingedAt && custom.wingedAt < custom.castleAt);
+  assert.ok(custom.rainbowAt < custom.wingedAt && custom.wingedAt < custom.castleAt && custom.castleAt < custom.lifeAt);
 });
 test('角色插画存在，配置参数受限', async () => {
   for (const event of rules.events) assert.match(await readFile(new URL(`../${event.image}`, import.meta.url), 'utf8'), /viewBox="0 0 360 360"/);
@@ -59,7 +59,7 @@ test('女巫城堡前不出场，城堡后随机首遇、保底、冷却与刷�
   const simultaneous = advanceWorld({ ...initial(), completedDraws: 34, sinceEvent: 7 }, rules, 0, 3, () => 0);
   assert.deepEqual(simultaneous.pending.map(item => item.kind), ['upgrade', 'witch']);
   assert.equal(simultaneous.lastWitchDraw, 35); assert.equal(simultaneous.sinceEvent, 0);
-  const noEvents = { ...rules, enabled: false };
+  const noEvents = { ...rules, enabled: false, lifeAt: 100 };
   let state = { ...initial(), completedDraws: 34 };
   for (let i = 1; i <= 4; i++) {
     state = advanceWorld(state, noEvents, 0, 3, () => .99);
@@ -79,4 +79,15 @@ test('女巫城堡前不出场，城堡后随机首遇、保底、冷却与刷�
   const disabled = { ...rules, witch: { ...rules.witch, enabled: false } };
   assert.ok(!advanceWorld({ ...initial(), completedDraws: 99, witchWait: 100 }, disabled, 0, 3, () => 0).pending.some(item => item.kind === 'witch'));
   assert.match(await readFile(new URL(`../${rules.witch.image}`, import.meta.url), 'utf8'), /viewBox="0 0 360 360"/);
+});
+
+test('生命树升级独占舞台，旧存档恢复最终形态，待处理升级仍可继续', () => {
+ const next = advanceWorld({...initial(),completedDraws:49,sinceEvent:8,witchWait:14},rules,10,3,()=>0);
+ assert.deepEqual(next.pending,[{kind:'upgrade',level:'life'}]);
+ const restored=normalizeWorldState({completedDraws:50,pending:next.pending},[],rules);
+ assert.equal(restored.pending[0].level,'life');
+ assert.equal(machineLevel(normalizeWorldState({completedDraws:70},[],rules).completedDraws,rules).id,'life');
+ const after=advanceWorld({...next,pending:[]},rules,10,3,()=>0);
+ assert.ok(after.pending.some(item=>item.kind==='witch'));
+ assert.ok(!after.pending.some(item=>item.kind==='upgrade'));
 });

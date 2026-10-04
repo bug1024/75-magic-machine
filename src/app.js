@@ -241,10 +241,10 @@
   if (world.state.pending.length && pool.length) resumeWorld();
   const treasurePlay = new TreasurePlay($('treasure-art'), {
     canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
-    feedback: (treasure, kind, count) => {
+    feedback: (treasure, kind, count, event, line) => {
       sound.unlock().then(() => { if (phase === 'result' && currentTreasure === treasure && !world.busy && !document.hidden) sound.treasureSound(kind, count); });
       particles.emit(treasure); particles.shockwave(treasure.appearance.primaryColor);
-      $('announcement').textContent = kind === 'flower-bloom' ? '星星种子开出魔法花啦！' : `${treasure.name}和你一起玩！`;
+      $('announcement').textContent = line;
     }
   });
   garden = new MagicGarden(rawGameRules.weather, savedGarden, treasures, history, {
@@ -253,7 +253,7 @@
     canPlay: () => !garden?.stories?.busy && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
     canStory: () => ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !dialog.open && !rechargeStation.dialog.open,
     canWeather: () => !garden?.stories?.busy && !world.busy && !dialog.open && !rechargeStation.dialog.open,
-    sound: kind => sound.unlock().then(() => { if (!document.hidden && !world.busy) sound.treasureSound(kind); }),
+    sound: (kind, count = 1) => sound.unlock().then(() => { if (!document.hidden && !world.busy) sound.treasureSound(kind, count); }),
     storySound: (kind, time, weather) => sound.story(kind, time, weather),
     weatherSound: kind => sound.weather(kind)
   }, rawGameRules.dayNight, rawGameRules.seasons, rawGameRules.gardenStories);

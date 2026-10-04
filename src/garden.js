@@ -58,6 +58,7 @@ class MagicGarden {
     return true;
   }
   render() {
+    this.players?.forEach(player => player.destroy()); this.players = [];
     this.plots.replaceChildren();
     this.state.slots.forEach((id, index) => {
       const treasure = this.treasures.find(item => item.id === id);
@@ -69,18 +70,19 @@ class MagicGarden {
       else { const placeholder = document.createElement('span'); placeholder.className = 'garden-placeholder'; placeholder.textContent = '＋'; placeholder.setAttribute('aria-hidden', 'true'); art.append(placeholder); }
       if (this.chosen && treasure?.id === this.chosen.id) button.disabled = true;
       button.append(art); const label = document.createElement('span'); label.className = 'garden-name'; label.textContent = treasure?.name || (this.chosen ? '放这里' : '待摆放'); button.append(label);
-      button.onclick = () => {
+      const play = treasure ? new TreasurePlay(button, {
+        canPlay: () => this.callbacks.canPlay() && !this.chosen,
+        feedback: (item, kind, count, event, line) => { this.callbacks.sound(kind, count); document.getElementById('announcement').textContent = line; }
+      }, false) : null;
+      if (play) { const actionLabel = button.getAttribute('aria-label'); play.set(treasure); if (this.chosen) button.setAttribute('aria-label', actionLabel); this.players.push(play); }
+      button.onclick = event => {
         if (!this.callbacks.canPlay()) return;
         if (this.chosen) {
           if (this.available(this.chosen.id) <= 0) { this.choose(null); return; }
           this.state.slots[index] = this.chosen.id; this.chosen = null; this.choose(null); this.callbacks.save();
           this.plots.querySelector(`[data-slot="${index}"]`).focus(); this.callbacks.sound('flower-bloom');
-        } else if (treasure && !button.dataset.playing) {
-          button.dataset.playing = 'true'; this.callbacks.sound(treasure.effects.interaction || 'flower-bloom');
-          if (treasure.effects.interaction === 'flower-bloom' && treasure.appearance.interactionImage) art.querySelector('img').src = treasure.appearance.interactionImage;
-          const sparkle = document.createElement('span'); sparkle.className = 'garden-sparkles'; sparkle.textContent = '✦ ✿ ✦'; button.append(sparkle);
-          setTimeout(() => { delete button.dataset.playing; sparkle.remove(); }, 1500);
-        } else if (!treasure) document.getElementById('collection').click();
+        } else if (treasure) play.play(event);
+        else document.getElementById('collection').click();
       };
       plot.append(button);
       if (treasure) { const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'garden-remove'; remove.textContent = '×'; remove.setAttribute('aria-label', `从花园移走${treasure.name}`); remove.onclick = () => { if (!this.callbacks.canPlay()) return; this.state.slots[index] = null; this.render(); this.callbacks.save(); this.plots.querySelector(`[data-slot="${index}"]`).focus(); }; plot.append(remove); }

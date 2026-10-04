@@ -67,7 +67,8 @@
       "minGap": 8,
       "firstGuaranteeAfter": 4,
       "guaranteeAfter": 14
-    }
+    },
+    "lifeAt": 50
   },
   "weather": {
     "enabled": true,

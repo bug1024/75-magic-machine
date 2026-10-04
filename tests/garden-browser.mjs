@@ -18,7 +18,7 @@ try {
   await page.locator('.garden-slot').nth(2).click();
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('75-magic-machine:v1')).garden.slots[2]), id);
   await page.reload(); assert.equal(await page.locator('.garden-slot').nth(2).locator('img').count(), 1);
-  await page.locator('.garden-slot').nth(2).click(); assert.equal(await page.locator('.garden-slot').nth(2).getAttribute('data-playing'), 'true');
+  await page.locator('.garden-slot').nth(2).click(); assert.equal(await page.locator('.garden-slot').nth(2).getAttribute('data-play'), 'dress-twirl');
   const kinds = new Set();
   // 控制随机数以确定遍历全部天气，不依赖概率或长时间等待。
   await page.evaluate(() => { Math.random = () => 0; });

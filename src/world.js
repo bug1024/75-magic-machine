@@ -21,12 +21,28 @@ class MagicWorld {
     for (const pending of this.state.pending) if (pending.kind === 'witch' || (pending.kind === 'event' && pending.id !== 'ghost')) pending.giftId = this.callbacks.pickGift().id;
     this.render(false);
   }
+  async awakenLifeTree() {
+    const machine = this.$('machine'), banner = this.$('life-upgrade-banner');
+    banner.hidden = false; this.$('life-upgrade-caption').textContent = '听，泥土里的小心跳……';
+    this.$('announcement').textContent = '生命树即将醒来！';
+    this.callbacks.sound('upgrade-life');
+    await this.callbacks.wait(700);
+    this.state.pending.shift(); this.callbacks.save(); this.render();
+    machine.classList.add('life-awakening');
+    try {
+      await this.callbacks.wait(1400); this.$('life-upgrade-caption').textContent = '树根发光，城堡长出新枝叶！';
+      await this.callbacks.wait(1600); this.$('life-upgrade-caption').textContent = '星星果实亮起来，生命树机器解锁！';
+      this.$('announcement').textContent = '生命树机器解锁！四季树冠、星星果实、木琴和风铃的新魔法。';
+      await this.callbacks.wait(1500);
+    } finally { machine.classList.remove('life-awakening'); banner.hidden = true; }
+  }
   async playPending() {
     if (this.busy || !this.state.pending.length) return;
     this.busy = true; document.body.classList.add('world-busy');
     try {
       while (this.state.pending.length) {
         const item = this.state.pending[0];
+        if (item.kind === 'upgrade' && item.level === 'life') { await this.awakenLifeTree(); continue; }
         if (item.kind === 'witch') {
           await this.witch.play(item, () => {
             const result = this.callbacks.apply({ id: 'witch' }, item.giftId);

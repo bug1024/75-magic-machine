@@ -3,7 +3,8 @@ export const MACHINE_LEVELS = [
   { id: 'starlight', name: '星光机器', threshold: null },
   { id: 'rainbow', name: '彩虹机器', threshold: 'rainbowAt' },
   { id: 'winged', name: '飞翼机器', threshold: 'wingedAt' },
-  { id: 'castle', name: '城堡机器', threshold: 'castleAt' }
+  { id: 'castle', name: '城堡机器', threshold: 'castleAt' },
+  { id: 'life', name: '生命树机器', threshold: 'lifeAt' }
 ];
 export function machineLevel(completedDraws, rules) {
   return MACHINE_LEVELS.findLast(level => !level.threshold || completedDraws >= rules[level.threshold]);
@@ -20,9 +21,10 @@ export function normalizeWorldRules(value) {
   const rainbowAt = integer(value?.rainbowAt, 10, 1, 9998);
   const wingedAt = integer(value?.wingedAt, 20, rainbowAt + 1, 9999);
   const castleAt = integer(value?.castleAt, 35, wingedAt + 1, 10000);
+  const lifeAt = integer(value?.lifeAt, 50, castleAt + 1, 10001);
   const witchMinGap = integer(value?.witch?.minGap, 8, 0, 100);
   const witch = { chance: Number.isFinite(value?.witch?.chance) ? Math.max(0, Math.min(1, value.witch.chance)) : .25, minGap: witchMinGap, firstGuaranteeAfter: integer(value?.witch?.firstGuaranteeAfter, 4, 1, 100), guaranteeAfter: integer(value?.witch?.guaranteeAfter, 14, witchMinGap + 1, 200), enabled: value?.witch?.enabled !== false, hits: integer(value?.witch?.hits, 3, 1, 10), visibleMs: integer(value?.witch?.visibleMs, 2800, 1500, 10000), hiddenMs: integer(value?.witch?.hiddenMs, 450, 200, 3000), image: typeof value?.witch?.image === 'string' && /^(assets\/[^\s]+\.svg|data:image\/svg\+xml;base64,[a-z0-9+/=]+)$/i.test(value.witch.image) ? value.witch.image : '' };
-  return { enabled: value?.enabled !== false, chance: Number.isFinite(value?.chance) ? Math.max(0, Math.min(1, value.chance)) : .15, minGap, guaranteeAfter: integer(value?.guaranteeAfter, 8, minGap + 1, 200), rainbowAt, wingedAt, castleAt, events, witch };
+  return { enabled: value?.enabled !== false, chance: Number.isFinite(value?.chance) ? Math.max(0, Math.min(1, value.chance)) : .15, minGap, guaranteeAfter: integer(value?.guaranteeAfter, 8, minGap + 1, 200), rainbowAt, wingedAt, castleAt, lifeAt, events, witch };
 }
 export function normalizeWorldState(saved, history, rules) {
   const natural = (value, fallback) => Number.isSafeInteger(value) && value >= 0 ? value : fallback;
@@ -40,6 +42,8 @@ export function advanceWorld(state, rules, balance, warningThreshold, random = M
   for (const level of MACHINE_LEVELS.filter(level => level.threshold)) {
     if (state.completedDraws < rules[level.threshold] && next.completedDraws >= rules[level.threshold]) next.pending.push({ kind: 'upgrade', level: level.id });
   }
+  // 生命树觉醒当次独占舞台，访客和女巫从下次抽奖继续判定。
+  if (next.pending.some(item => item.kind === 'upgrade' && item.level === 'life')) { next.sinceEvent = 0; next.witchWait = Math.min(Math.max(rules.witch.firstGuaranteeAfter, rules.witch.guaranteeAfter), (state.witchWait || 0) + 1); return next; }
   // 城堡解锁后随机拜访；首次尽快遇见，后续留足抽奖间隔，保底防止久等。
   if (next.completedDraws >= rules.castleAt) {
     next.witchWait = Math.min(Math.max(rules.witch.firstGuaranteeAfter, rules.witch.guaranteeAfter), (state.witchWait || 0) + 1);

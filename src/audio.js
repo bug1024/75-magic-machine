@@ -49,31 +49,34 @@ class MagicAudio {
   }
   kick(delay = 0, strong = false) { this.tone(135, .19, delay, strong ? .28 : .16, 'sine', 45); }
   chord(notes, delay = 0, length = .45) { notes.forEach(note => this.tone(note, length, delay, .045)); }
-  start(level = false) { this.level = level === true ? 'rainbow' : ['rainbow', 'winged', 'castle'].includes(level) ? level : 'starlight'; if (level === 'winged' || level === 'castle') { const notes = level === 'castle' ? [392, 523, 659, 784, 1047, 1319] : [659, 784, 1047, 1319, 1568]; notes.forEach((note, i) => this.tone(note, .25, i * .09, .085)); this.chord(level === 'castle' ? [196, 262, 330] : [330, 392, 523], 0, .55); this.kick(0, true); if (level === 'winged') this.noiseHit(.2, .15, .035, 3000); return; } if (level === true || level === 'rainbow') { [523, 659, 784, 1047, 1319].forEach((note, i) => this.tone(note, .2, i * .075, .085)); this.chord([262, 330, 392], 0, .4); this.kick(0, true); return; } this.kick(0, true); [262, 392, 523, 784].forEach((note, i) => this.tone(note, .22, i * .085)); this.tone(180, .5, 0, .055, 'sine', 1000); }
+  start(level = false) { this.level = level === true ? 'rainbow' : ['rainbow', 'winged', 'castle', 'life'].includes(level) ? level : 'starlight'; if (level === 'life') { this.machineNotes([1, 1.5, 2, 2.5, 3], .28); this.tone(1200, .18, .25, .035, 'sine', 1900); this.tone(1400, .2, .5, .03, 'sine', 2100); return; } if (level === 'winged' || level === 'castle') { const notes = level === 'castle' ? [392, 523, 659, 784, 1047, 1319] : [659, 784, 1047, 1319, 1568]; notes.forEach((note, i) => this.tone(note, .25, i * .09, .085)); this.chord(level === 'castle' ? [196, 262, 330] : [330, 392, 523], 0, .55); this.kick(0, true); if (level === 'winged') this.noiseHit(.2, .15, .035, 3000); return; } if (level === true || level === 'rainbow') { [523, 659, 784, 1047, 1319].forEach((note, i) => this.tone(note, .2, i * .075, .085)); this.chord([262, 330, 392], 0, .4); this.kick(0, true); return; } this.kick(0, true); [262, 392, 523, 784].forEach((note, i) => this.tone(note, .22, i * .085)); this.tone(180, .5, 0, .055, 'sine', 1000); }
   profile() {
-    return { starlight: { root: 262, type: 'triangle', step: .1 }, rainbow: { root: 330, type: 'sine', step: .075 }, winged: { root: 523, type: 'sine', step: .06 }, castle: { root: 196, type: 'square', step: .12 } }[this.level];
+    return { starlight: { root: 262, type: 'triangle', step: .1 }, rainbow: { root: 330, type: 'sine', step: .075 }, winged: { root: 523, type: 'sine', step: .06 }, castle: { root: 196, type: 'square', step: .12 }, life: { root: 392, type: 'sine', step: .085 } }[this.level];
   }
   machineNotes(notes, length = .15, delay = 0) {
     const profile = this.profile(); notes.forEach((ratio, i) => this.tone(profile.root * ratio, length, delay + i * profile.step, profile.type === 'square' ? .035 : .065, profile.type));
   }
   mixing(index) {
     const profile = this.profile();
+    if (this.level === 'life') { this.machineNotes([[1, 2], [1.5, 3], [2, 2.5], [1.25, 2.5]][index % 4], .2); this.tone(1568 + index * 45, .15, .12, .025, 'sine'); return; }
     this.kick(0, this.level === 'castle'); this.noiseHit(.08, .055, .035);
     this.machineNotes([[1, 1.25], [1.25, 1.5], [1.5, 2], [2, 2.5]][index % 4], .12);
     if (this.level === 'winged') { this.noiseHit(.03, .16, .025, 3500); this.tone(profile.root * 3, .2, .12, .025, 'sine'); }
     if (this.level === 'castle') { this.tone(98, .22, .04, .1, 'sine'); this.noiseHit(.16, .13, .055, 900); }
   }
   bounce(index) { const profile = this.profile(); this.tone(profile.root * 1.5 + index * 55, .09, 0, .035, profile.type, profile.root); }
-  land() { this.kick(0, true); const profile = this.profile(); this.tone(profile.root * 1.5, .2, 0, .075, profile.type, profile.root * .65); if (this.level !== 'starlight') this.machineNotes([1, 1.5, 2], .17, .1); }
-  knock(index) { this.kick(); this.machineNotes([1.5 + index * .25, 2 + index * .25], .16, .03); }
+  land() { if (this.level === 'life') { this.machineNotes([.5, 1, 2], .22); return; } this.kick(0, true); const profile = this.profile(); this.tone(profile.root * 1.5, .2, 0, .075, profile.type, profile.root * .65); if (this.level !== 'starlight') this.machineNotes([1, 1.5, 2], .17, .1); }
+  knock(index) { if (this.level === 'life') { this.tone(392 + index * 98, .12, 0, .08, 'sine'); this.tone(1176 + index * 196, .17, .06, .03, 'sine'); return; } this.kick(); this.machineNotes([1.5 + index * .25, 2 + index * .25], .16, .03); }
   charge() {
     const profile = this.profile(); this.tone(profile.root * .6, .6, 0, .075, 'sine', profile.root * 4);
     this.machineNotes([1, 1.25, 1.5, 2], .4, .1);
+    if (this.level === 'life') { this.machineNotes([2, 3, 4], .4, .3); this.tone(1000, .35, .6, .035, 'sine', 2000); }
     if (this.level === 'castle') this.chord([98, 147, 196], .1, .55);
     if (this.level === 'winged') this.noiseHit(.25, .25, .035, 3500);
   }
   levelFinale() {
     if (this.level === 'starlight') return;
+    if (this.level === 'life') { this.machineNotes([1, 1.5, 2, 2.5, 3, 4], .35, .1); [0, .3, .6].forEach((at, i) => this.tone(1200 + i * 150, .17, .8 + at, .035, 'sine', 2000 + i * 150)); return; }
     const notes = this.level === 'castle' ? [1, 1.5, 2, 2, 3, 4] : this.level === 'winged' ? [1, 1.5, 2, 2.5, 3, 4] : [1, 1.25, 1.5, 2, 2.5];
     this.machineNotes(notes, .3, .15);
     if (this.level === 'castle') { this.kick(.15, true); this.kick(.39, true); this.chord([196, 294, 392], .6, .6); }
@@ -83,6 +86,12 @@ class MagicAudio {
     if (kind === 'forest') { this.treasureSound('mushroom-notes'); [523, 659, 784, 1047].forEach((note, i) => this.tone(note, .3, 1.5 + i * .2, .065)); }
     else if (kind === 'ocean') { this.treasureSound('flower-bloom'); for (let i = 0; i < (weather === 'rain' ? 8 : 5); i++) this.tone(350 + i * 110, .15, 1.2 + i * .17, .055, 'sine', 850 + i * 100); }
     else if (kind === 'ball') { this.celebrate(time === 'night' ? 'magic-chime' : 'rainbow-song'); }
+    else if (kind === 'lunar') { this.treasureSound('dolphin-dive'); this.tone(392, 1.1, 1.2, .05, 'sine', 1047); }
+    else if (kind === 'secret') { this.treasureSound('owl-peek'); this.treasureSound('flower-bloom'); }
+    else if (kind === 'race') { this.treasureSound('wheel-zoom'); [523, 659, 784].forEach((n, i) => this.tone(n, .25, 1.6 + i * .2, .06)); }
+    else if (kind === 'hug') this.treasureSound('warm-hug');
+    else if (kind === 'sparkle') this.treasureSound('gem-sparkle');
+    else if (kind === 'picnic') { this.treasureSound('whale-spout'); this.tone(523, .3, 1.6, .06, 'sine'); }
     else this.celebrate('bubble-giggle');
   }
   weather(kind) {
@@ -124,6 +133,7 @@ class MagicAudio {
     if (kind === 'witch-flee') { [660, 880, 660, 988, 784, 523, 392].forEach((note, i) => this.tone(note, .14, i * .2, .065, 'triangle', note * .75)); this.noiseHit(1.4, .3, .055, 1500); return; }
     if (kind === 'witch-win') { this.celebrate('royal-fanfare'); return; }
     if (kind === 'ghost') { this.tone(330, .32, 0, .085, 'triangle', 180); this.tone(150, .22, .8, .07, 'sawtooth', 90); this.tone(440, .17, 1.05, .07); return; }
+    if (kind === 'upgrade-life') { this.level = 'life'; this.machineNotes([.5, 1, 1.5, 2, 2.5, 3, 4], .55); [1.4, 1.8, 2.2, 2.8, 3.2, 3.6].forEach((at, i) => this.tone(784 * [1, 1.25, 1.5][i % 3], .45, at, .055, 'sine')); [2.7, 3.4, 4].forEach(at => this.tone(1300, .25, at, .035, 'sine', 2200)); return; }
     if (kind.startsWith('upgrade')) { if (kind === 'upgrade-winged') this.treasureSound('rainbow-flight'); else this.celebrate(kind === 'upgrade-castle' ? 'royal-fanfare' : 'rainbow-song'); return; }
     const notes = kind === 'fairy' ? [784, 1047, 1319, 1568, 1319] : [523, 659, 784, 1047];
     notes.forEach((note, i) => this.tone(note, .25, i * .14, .08)); this.chord([262, 330, 392], .6, .5);
@@ -134,8 +144,23 @@ class MagicAudio {
       'jelly-hop': [330, 523, 784, 523, 1047], 'rainbow-flight': [523, 659, 784, 1047, 1319, 1568],
       'mushroom-notes': [[523, 659, 784], [659, 784, 1047], [784, 1047, 1319]][(count - 1) % 3],
       'flower-bloom': [523, 784, 1047, 1319, 1568], 'space-trip': [392, 330, 262, 523, 784, 1047],
-      'sock-giggle': [523, 392, 659, 523, 784, 659]
+      'sock-giggle': [523, 392, 659, 523, 784, 659],
+      'dress-twirl': [523, 659, 784, 659, 523], 'castle-glow': [392, 523, 784, 1047],
+      'dolphin-dive': [880, 1319, 1760, 1175], 'owl-peek': [1047, 1047, 784, 1047],
+      'snow-wobble': [392, 523, 392, 659, 523], 'bubble-scrub': [660, 880, 1100, 1320],
+      'coin-jingle': [1568, 2093, 1568, 1319], 'gem-sparkle': [1047, 1568, 2093, 1568],
+      'rainbow-toot': [196, 147, 262, 330], 'warm-hug': [262, 330, 392, 330, 262],
+      'cat-purr': [440, 523, 440, 330], 'wheel-zoom': [262, 392, 523, 784],
+      'wand-spell': [659, 988, 1319, 1760], 'bubble-shot': [784, 1047, 1319],
+      'ear-wiggle': [659, 523, 659, 784], 'wiggle-drive': [330, 262, 392, 330, 523],
+      'alarm-ring': [1047, 784, 1047, 784, 1047], 'whale-spout': [330, 660, 990, 660]
     };
+    if (kind === 'rainbow-toot') { [0, .13, .28].forEach((at, i) => this.tone(110 - i * 18, .17, at, .075, 'sawtooth', 45)); }
+    if (kind === 'dolphin-dive') this.tone(650, .35, 0, .07, 'sine', 1700);
+    if (kind === 'owl-peek') { this.tone(1600, .09, 0, .05, 'sine', 1000); this.tone(1700, .12, .13, .05, 'sine', 1100); }
+    if (kind === 'cat-purr') this.tone(300, .45, 0, .07, 'sine', 160);
+    if (['whale-spout', 'bubble-scrub', 'bubble-shot'].includes(kind)) this.tone(240, .18, 0, .06, 'sine', 900);
+    if (kind === 'wheel-zoom' || kind === 'wiggle-drive') this.noiseHit(0, .3, .04, 650);
     if (kind === 'burp-bubbles') this.tone(160, .27, 0, .08, 'sawtooth', 65);
     if (kind === 'space-trip') { this.noiseHit(.6, .35, .08, 1000); this.tone(160, .6, .6, .06, 'sine', 900); }
     const notes = scores[kind] || scores['flower-bloom'];

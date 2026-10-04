@@ -62,5 +62,5 @@ try {
     }, treasure.effects.sound);
     assert.ok(rendered.peak > .01 && rendered.peak < .98); assert.equal(rendered.voices, 0);
   }
-  assert.deepEqual(errors, []); console.log('通过：8种专属音效实际渲染、无削波、音频节点回收，无浏览器脚本错误');
+  assert.deepEqual(errors, []); console.log('通过：全部宝物音效实际渲染、无削波、音频节点回收，无浏览器脚本错误');
 } finally { await browser.close(); }

@@ -18,7 +18,12 @@
       ],
       "effect": "forest",
       "durationMs": 6500,
-      "energyReward": 1
+      "energyReward": 1,
+      "lines": [
+        "嘘，种子伸了个小懒腰……",
+        "蘑菇敲起拍子，小花跟着唱！",
+        "森林音乐会，把快乐唱给你！"
+      ]
     },
     {
       "id": "ocean-party",
@@ -33,7 +38,12 @@
       ],
       "effect": "ocean",
       "durationMs": 6500,
-      "energyReward": 1
+      "energyReward": 1,
+      "lines": [
+        "海洋伙伴相遇，吹出第一颗泡泡。",
+        "一、二、三！一起跃出泡泡海！",
+        "小鱼也来啦，派对开到云朵上！"
+      ]
     },
     {
       "id": "magic-ball",
@@ -52,7 +62,12 @@
       ],
       "effect": "ball",
       "durationMs": 6500,
-      "energyReward": 1
+      "energyReward": 1,
+      "lines": [
+        "漂亮裙摆遇见了一位魔法伙伴。",
+        "转个圈，星光和蝴蝶都来跳舞！",
+        "今晚的舞会，你是小主角！"
+      ]
     },
     {
       "id": "prank-party",
@@ -71,7 +86,168 @@
       ],
       "effect": "prank",
       "durationMs": 6500,
-      "energyReward": 1
+      "energyReward": 1,
+      "lines": [
+        "宝宝悄悄看了超级粑粑一眼……",
+        "噗——彩虹屁云冒出来啦！",
+        "哈哈哈！整个花园都笑弯了腰！"
+      ]
+    },
+    {
+      "id": "dolphin-moon",
+      "name": "海豚飞上月亮",
+      "icon": "🌙",
+      "hint": "把云朵小海豚 + 月亮城堡放在一起。",
+      "requirements": [
+        {
+          "tag": "ocean",
+          "id": "cloud-dolphin",
+          "count": 1
+        },
+        {
+          "tag": "moon",
+          "id": "moon-castle",
+          "count": 1
+        }
+      ],
+      "effect": "lunar",
+      "durationMs": 8000,
+      "energyReward": 1,
+      "lines": [
+        "小海豚抬头：月亮上有海吗？",
+        "月亮城堡点亮星星，搭起一座泡泡桥！",
+        "啾——小海豚飞上月亮，向你挥挥尾巴！"
+      ]
+    },
+    {
+      "id": "owl-secret-garden",
+      "name": "吱吱的秘密花园",
+      "icon": "🌱",
+      "hint": "把吱吱猫头鹰 + 星星种子放在一起。",
+      "requirements": [
+        {
+          "tag": "night",
+          "id": "zizi-owl",
+          "count": 1
+        },
+        {
+          "tag": "seed",
+          "id": "star-seed",
+          "count": 1
+        }
+      ],
+      "effect": "secret",
+      "durationMs": 8000,
+      "energyReward": 1,
+      "lines": [
+        "吱吱发现了一颗睡着的星星种子。",
+        "吱吱、吱吱！种子听见歌声，慢慢开花。",
+        "一座会发光的小花园，只告诉你！"
+      ]
+    },
+    {
+      "id": "wind-race",
+      "name": "追风小车比赛",
+      "icon": "🛴",
+      "hint": "把追风超级滑板车 + 粉红花篮自行车放在一起。",
+      "requirements": [
+        {
+          "tag": "vehicle",
+          "id": "super-scooter",
+          "count": 1
+        },
+        {
+          "tag": "vehicle",
+          "id": "pink-bicycle",
+          "count": 1
+        }
+      ],
+      "effect": "race",
+      "durationMs": 8000,
+      "energyReward": 1,
+      "lines": [
+        "叮铃铃！两位小车选手来到起跑线。",
+        "三、二、一，出发！追着风精灵跑！",
+        "一起冲过终点！好朋友都是冠军！"
+      ]
+    },
+    {
+      "id": "mom-cat-hug",
+      "name": "妈妈和丫丫的抱抱",
+      "icon": "💗",
+      "hint": "把暖暖妈妈 + 丫丫三花猫放在一起。",
+      "requirements": [
+        {
+          "tag": "family",
+          "id": "loving-mom",
+          "count": 1
+        },
+        {
+          "tag": "animal",
+          "id": "yaya-calico-cat",
+          "count": 1
+        }
+      ],
+      "effect": "hug",
+      "durationMs": 8000,
+      "energyReward": 1,
+      "lines": [
+        "丫丫轻轻叫了一声：喵呜～",
+        "妈妈张开手，丫丫蹭进暖暖的怀抱。",
+        "呼噜呼噜……这个抱抱也送给你！"
+      ]
+    },
+    {
+      "id": "starlight-jewels",
+      "name": "星海宝石许愿夜",
+      "icon": "💎",
+      "hint": "把翅膀精灵宝石 + 星海宝石项链放在一起。",
+      "requirements": [
+        {
+          "tag": "gem",
+          "id": "winged-fairy-gem",
+          "count": 1
+        },
+        {
+          "tag": "gem",
+          "id": "gem-necklace",
+          "count": 1
+        }
+      ],
+      "effect": "sparkle",
+      "durationMs": 8000,
+      "energyReward": 1,
+      "lines": [
+        "精灵宝石听见项链里的小星星。",
+        "一颗、两颗，星光串成了一个圆！",
+        "闭上眼，许一个亮晶晶的小愿望！"
+      ]
+    },
+    {
+      "id": "whale-tea",
+      "name": "鲸鲸泡泡茶会",
+      "icon": "🐳",
+      "hint": "把鲸鲸咕噜水杯 + 噗噗开心宝宝放在一起。",
+      "requirements": [
+        {
+          "tag": "ocean",
+          "id": "whale-cup",
+          "count": 1
+        },
+        {
+          "tag": "baby",
+          "id": "giggle-baby",
+          "count": 1
+        }
+      ],
+      "effect": "picnic",
+      "durationMs": 8000,
+      "energyReward": 1,
+      "lines": [
+        "宝宝邀请鲸鲸来花园喝下午茶。",
+        "咕噜咕噜！鲸鲸倒出一杯泡泡水。",
+        "干杯！一颗小泡泡亲了宝宝的鼻尖！"
+      ]
     }
   ]
 }
