@@ -100,8 +100,6 @@
   },
   "weather": {
     "enabled": true,
-    "firstAfterMs": 25000,
-    "intervalMs": 65000,
     "durationMs": 14000,
     "kinds": [
       "rain",
@@ -131,7 +129,6 @@
   },
   "seasons": {
     "enabled": true,
-    "initial": "spring",
-    "durationMs": 300000
+    "initial": "spring"
   }
 }

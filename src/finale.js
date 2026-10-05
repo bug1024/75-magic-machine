@@ -21,7 +21,7 @@ class MagicFinale {
     finally {
       this.scene.hidden=true;this.busy=false;document.body.classList.remove('finale-active');delete document.body.dataset.finale;
       this.$('finale-partners').replaceChildren();this.$('finale-bits').replaceChildren();this.$('finale-fireworks').replaceChildren();this.$('finale-dragon').hidden=true;
-      this.garden.state.season=this.original.season;this.garden.state.timeOfDay=replay?this.original.time:'night';this.garden.renderSeason();this.garden.renderTime();this.renderGarden();this.callbacks.save();this.callbacks.finished();
+      this.garden.state.season=this.original.season;this.garden.state.timeOfDay=this.original.time;this.garden.renderSeason();this.garden.renderTime();this.renderGarden();this.callbacks.save();this.callbacks.finished();
     }
   }
   enter() {

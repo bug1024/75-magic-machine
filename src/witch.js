@@ -43,12 +43,12 @@ class WitchGame {
     this.target.classList.remove('hit', 'fleeing'); this.target.hidden = false; this.target.disabled = false;
     this.position(); this.target.dataset.slot = this.slot;
     this.state = 'visible'; this.clock = 0; this.stage.dataset.action = 'ready';
-    if (this.item.hits >= Math.floor(this.challengeRules.hits / 2) && !this.item.interferenceUsed) {
-      this.item.interferenceUsed = true;
-      const shield = this.guardians.find(g => g.effects.guardian === 'heart-shield' && !this.item.shieldUsed);
-      if (shield) { this.item.shieldUsed = true; this.stage.classList.add('guardian-shield'); this.$('witch-feedback').textContent = `${shield.name}的爱心护盾挡住了捣蛋迷雾！`; this.callbacks.sound('guardian-shield'); }
-      else { this.fogClock = 2200; this.stage.classList.add('enemy-fog'); this.$('witch-feedback').textContent = '捣蛋迷雾来了，找找它躲在哪里！'; }
-      this.callbacks.save();
+    this.item.damage ||= normalizeDamage();
+    const thresholds=attackThresholds(this.item.opponent,this.challengeRules.hits);
+    if(this.item.damage.attacks < thresholds.length && this.item.hits >= thresholds[this.item.damage.attacks]) {
+      this.state='attack-warning';this.clock=0;this.target.disabled=true;this.stage.dataset.action='warning';
+      this.$('witch-feedback').textContent={bat:'小心！蝙蝠要撒蜘蛛网了！',rock:'小心！石头怪要撞设施了！',dragon:'小心！大龙准备捣蛋了！',witch:'小心！女巫要吸走爱心了！'}[this.item.opponent||'witch'];
+      this.callbacks.sound('broadcast');
     }
     if (this.item.opponent === 'dragon') this.stage.dataset.phase = this.item.hits >= Math.ceil(this.challengeRules.hits / 2) ? 'angry' : 'sleepy';
   }
@@ -96,7 +96,7 @@ class WitchGame {
   }
   nextGuardian() {
     if (this.item.assistHits >= Math.floor(this.challengeRules.hits / 2) || this.item.hits >= this.challengeRules.hits - 1) return null;
-    return this.guardians.find(g => !this.item.usedGuardians.includes(g.id));
+    return this.guardians.find(g => g.id!==this.item.damage?.trapped && !this.item.usedGuardians.includes(g.id));
   }
   showVictory() {
     const reward = this.reward; this.state = 'won'; this.clock = 0; this.target.hidden = true;
@@ -137,6 +137,19 @@ class WitchGame {
     const frame = now => {
       if (!document.hidden) { const delta = Math.min(50, now - previous); this.clock += delta; this.fogClock = Math.max(0, this.fogClock - delta); if (!this.fogClock) this.stage.classList.remove('enemy-fog'); } previous = now;
       if (this.state === 'intro' && this.clock >= 2600) { broadcast.dataset.action = 'sinking'; this.callbacks.sound(`${item.opponent || 'witch'}-arrive`); if (item.hits >= this.challengeRules.hits) this.win(); else this.move(); }
+      else if (this.state === 'attack-warning' && this.clock >= 1200) {
+        this.state='attacking';this.clock=0;
+        const from=this.target.getBoundingClientRect(),to=this.callbacks.damageTarget?.(item,damageKind(item.opponent,item.damage.attacks))||this.$('power-cells').getBoundingClientRect();
+        const shot=document.createElement('span');shot.className='enemy-attack';shot.textContent=item.opponent==='bat'?'🕸':item.opponent==='rock'?'🪨':'💨';shot.style.left=`${from.left}px`;shot.style.top=`${from.top}px`;shot.style.setProperty('--dx',`${to.left-from.left}px`);shot.style.setProperty('--dy',`${to.top-from.top}px`);document.body.append(shot);this.attackShot=shot;
+      }
+      else if(this.state==='attacking' && this.clock>=650){
+        this.attackShot?.remove();this.attackShot=null;
+        const result=this.callbacks.damage?.(item,damageKind(item.opponent,item.damage.attacks));
+        this.$('witch-feedback').textContent=result?.line||'反派在捣蛋！';
+        this.stage.classList.toggle('guardian-shield',!!result?.shield);if(!result?.shield){this.fogClock=1800;this.stage.classList.add('enemy-fog');}else this.callbacks.sound('guardian-shield');
+        this.state='attack-end';this.clock=0;
+      }
+      else if(this.state==='attack-end'&&this.clock>=1200)this.move();
       else if (this.state === 'visible' && this.nextGuardian() && this.clock >= 900) this.shoot(null, this.nextGuardian());
       else if (this.state === 'visible' && this.clock >= this.challengeRules.visibleMs * (this.stage.dataset.phase === 'angry' ? .8 : 1)) { this.state = 'hidden'; this.clock = 0; this.target.hidden = true; this.target.disabled = true; }
       else if (this.state === 'hidden' && this.clock >= this.challengeRules.hiddenMs) this.move();
@@ -148,6 +161,6 @@ class WitchGame {
     };
     this.frameId = requestAnimationFrame(frame);
     try { await done; }
-    finally { cancelAnimationFrame(this.frameId); this.projectile?.remove(); this.projectile = null; this.$('witch-continue').onclick = null; this.state = 'idle'; this.stage.hidden = true; broadcast.hidden = true; this.callbacks.voice?.(''); this.stage.classList.remove('enemy-fog', 'guardian-shield'); this.$('machine').classList.remove('witch-firing'); document.body.classList.remove('witch-active'); }
+    finally { this.attackShot?.remove(); cancelAnimationFrame(this.frameId); this.projectile?.remove(); this.projectile = null; this.$('witch-continue').onclick = null; this.state = 'idle'; this.stage.hidden = true; broadcast.hidden = true; this.callbacks.voice?.(''); this.stage.classList.remove('enemy-fog', 'guardian-shield'); this.$('machine').classList.remove('witch-firing'); document.body.classList.remove('witch-active'); }
   }
 }

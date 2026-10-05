@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "wishes": [
+    { "id": "ocean-friends", "kind": "story", "storyId": "ocean-party", "name": "海洋伙伴想开派对", "line": "请两位不同的海洋伙伴来花园，一起吹泡泡！", "icon": "🐬", "effect": "ocean", "souvenir": "海洋友谊旗", "memoryKind": "wish-ocean", "memoryLine": "友谊旗摇一摇，海洋伙伴一起吹泡泡！" },
+    { "id": "forest-song", "kind": "story", "storyId": "forest-concert", "name": "小花想听一首歌", "line": "请一位植物伙伴和一位音乐伙伴，一起唱首歌！", "icon": "♪", "effect": "forest", "souvenir": "音乐小鸟屋", "memoryKind": "wish-forest", "memoryLine": "啾啾！小鸟学会了伙伴们的歌！" },
+    { "id": "mom-hug", "kind": "story", "storyId": "mom-cat-hug", "name": "妈妈想抱抱丫丫", "line": "请妈妈和丫丫来到花园，送给彼此一个抱抱！", "icon": "💗", "effect": "hug", "souvenir": "爱心野餐毯", "memoryKind": "wish-hug", "memoryLine": "坐在小毯子上，妈妈的抱抱也送给你！" },
+    { "id": "magic-dance", "kind": "story", "storyId": "magic-ball", "name": "蝴蝶想参加舞会", "line": "请一件漂亮装扮和一位魔法伙伴，跳一支舞！", "icon": "🦋", "effect": "ball", "souvenir": "蝴蝶小风车", "memoryKind": "wish-ball", "memoryLine": "呼——蝴蝶风车和你一起转个圈！" },
+    { "id": "weather-friend", "kind": "weather", "name": "陪天气精灵玩一次", "line": "点花园环境里的天气，完成三个小魔法！", "icon": "🌦", "effect": "sparkle", "souvenir": "天气彩虹门", "memoryKind": "wish-weather", "memoryLine": "晴天雨天都是朋友，彩虹门欢迎你！" },
+    { "id": "little-guardian", "kind": "guardian", "name": "一起守护花园", "line": "邀请一位守护伙伴，等反派来时一起守护花园！", "icon": "🛡", "effect": "sparkle", "souvenir": "小小守护旗", "memoryKind": "wish-guardian", "memoryLine": "小旗飘一飘，谢谢你和伙伴一起守护花园！" }
+  ]
+}

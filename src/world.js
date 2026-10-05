@@ -110,6 +110,7 @@ class MagicWorld {
         if (item.kind === 'upgrade' && item.level === 'life') { await this.awakenLifeTree(); continue; }
         if (item.kind === 'witch') {
           await this.witch.play(item, () => {
+            this.callbacks.battleSettled?.(item);
             const result = this.callbacks.apply({ id: item.opponent || 'witch' }, item.giftId);
             this.state.pending.shift(); this.callbacks.save(); this.render();
             return result;

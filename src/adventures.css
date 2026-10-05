@@ -17,3 +17,8 @@ body.gentle :is(.weather-target,.memory-bits i,.garden-keepsake[data-playing] .m
 .garden-memory-message{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);padding:8px 14px;border-radius:15px;background:#254b43e8;pointer-events:none;z-index:9}
 
 .garden-sun{fill:#ffde75}
+
+/* 景物保持一排，数量增长时分页，不增加花园底部高度。 */
+.garden-keepsakes{width:min(760px,calc(100% - 28px));max-width:none;overflow:visible;align-items:center;gap:6px;min-width:0}.keepsake-strip{display:grid;grid-template-columns:repeat(var(--memory-slots,6),minmax(0,1fr));flex:1;min-width:0;align-items:start}.garden-keepsake{width:100%;min-width:0}.memory-page-button{flex:none;width:32px;min-height:42px;border-radius:14px;background:#254b4366;color:#fff1cb;font-size:28px;padding:0}.memory-page-button:disabled{opacity:.3}.memory-name{overflow-wrap:anywhere}.garden-friends{max-width:calc(100% - 24px);margin-inline:auto;gap:4px}.garden-friend{flex:0 1 85px;min-width:0}.garden-friend>span:last-child{display:block;overflow-wrap:anywhere}
+.keepsake-strip{min-height:110px}.garden-keepsake{height:110px;display:flex;flex-direction:column;align-items:stretch}.memory-art{flex:none}.memory-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:26px;line-height:13px}.facility-state{display:block}@media(max-width:650px){.keepsake-strip{min-height:92px}.garden-keepsake{height:92px}.memory-name{min-height:24px;line-height:12px}}
+@media(max-width:650px){main{padding-bottom:72px}.garden-keepsakes{scroll-margin-bottom:80px}}

@@ -3,13 +3,15 @@ class MagicGarden {
   constructor(rules, saved, treasures, history, callbacks, dayNightRules, seasonRules, storyRules) {
     this.rules = normalizeWeatherRules(rules); this.treasures = treasures; this.callbacks = callbacks;
     this.state = normalizeGardenState(saved, treasures, history, callbacks.inventory?.()); this.chosen = null; this.elapsed = 0; this.weather = null;
-    this.dayNightRules = normalizeDayNightRules(dayNightRules); this.dayElapsed = 0;
-    this.seasonRules = normalizeSeasonRules(seasonRules); this.seasonElapsed = 0;
+    this.dayNightRules = normalizeDayNightRules(dayNightRules);
+    this.seasonRules = normalizeSeasonRules(seasonRules);
+    this.environment = this.state.environment;
+    if (this.environment.weatherDueDraw < 0) this.environment.weatherDueDraw = weatherNextDraw(callbacks.draws());
+    this.lastKind = this.environment.lastKind;
     this.state.season ||= this.seasonRules.initial; this.renderSeason();
-    document.getElementById('season').onclick = () => { if (callbacks.canPlay()) this.nextSeason(); };
     this.state.timeOfDay ||= this.dayNightRules.initial; this.renderTime();
-    document.getElementById('day-night').onclick = () => { if (callbacks.canPlay()) this.toggleTime(); };
-    this.nextAt = this.rules.firstAfterMs; this.lastKind = null;
+    document.getElementById('season').onclick = () => { if (callbacks.canPlay()) { this.environment.pendingSeason = null; this.nextSeason(); } };
+    document.getElementById('day-night').onclick = () => { if (callbacks.canPlay()) { this.environment.pendingTime = null; this.environment.dayMs = 0; this.toggleTime(); } };
     this.plots = document.getElementById('garden-plots'); this.layer = document.getElementById('weather-layer');
     this.cancel = document.getElementById('garden-cancel'); this.cancel.onclick = () => this.choose(null);
     document.getElementById('weather').onclick = async () => {
@@ -19,33 +21,41 @@ class MagicGarden {
     this.render();
     this.stories = new GardenStories(this, storyRules);
     if (JSON.stringify(saved?.slots || []) !== JSON.stringify(this.state.slots) && saved?.slots) queueMicrotask(() => callbacks.save());
+    let clockSaved=0;
     const tick = (now, elapsed) => {
-      const active = callbacks.canWeather() && !document.hidden;
+      const active = callbacks.canEnvironment() && !document.hidden;
       document.body.classList.toggle('weather-paused', !active);
-      if (active) {
-        const delta = elapsed; this.elapsed += delta; this.dayElapsed += delta; this.seasonElapsed += delta;
-        if (this.seasonRules.enabled && this.seasonElapsed >= this.seasonRules.durationMs) this.nextSeason();
-        if (this.dayNightRules.enabled && this.dayElapsed >= this.dayNightRules.durationMs) this.toggleTime();
-        if (this.weather && this.elapsed >= this.endsAt) this.endWeather();
-        if (!this.weather && this.rules.enabled && this.elapsed >= this.nextAt) this.startWeather(false);
+      if (!document.hidden && !callbacks.inFinale()) {
+        if (this.dayNightRules.enabled) this.environment = this.state.environment = tickDay(this.environment, elapsed, this.state.timeOfDay, this.dayNightRules.durationMs);
+        const step = callbacks.seasonStep();
+        if (this.seasonRules.enabled && step !== this.environment.seasonStep) { this.environment.seasonStep = step; this.environment.pendingSeason = SEASONS[step % 4]; }
       }
+      if (!active) return;
+      let changed = false;
+      if (this.environment.pendingSeason) { this.state.season = this.environment.pendingSeason; this.environment.pendingSeason = null; this.renderSeason(); changed = true; }
+      if (this.environment.pendingTime) { this.state.timeOfDay = this.environment.pendingTime; this.environment.pendingTime = null; this.renderTime(); changed = true; }
+      this.elapsed += elapsed;
+      if (this.weather && this.elapsed >= this.endsAt) this.endWeather();
+      if (!this.weather && this.rules.enabled && callbacks.draws() >= this.environment.weatherDueDraw) this.startWeather(false);
+      clockSaved+=elapsed;
+      if (changed || clockSaved>=15000) {clockSaved=0;this.callbacks.save();}
     }; new ForegroundLoop(tick, 250);
   }
-  snapshot() { return { adventures: structuredClone(this.state.adventures), discoveredAt: {...this.state.discoveredAt}, discovered: [...this.state.discovered], season: this.state.season, timeOfDay: this.state.timeOfDay, slots: [...this.state.slots] }; }
+  snapshot() { return { workshop: structuredClone(this.state.workshop), environment: structuredClone(this.environment), wishes: structuredClone(this.state.wishes), adventures: structuredClone(this.state.adventures), discoveredAt: {...this.state.discoveredAt}, discovered: [...this.state.discovered], season: this.state.season, timeOfDay: this.state.timeOfDay, slots: [...this.state.slots] }; }
   renderSeason() {
     const seasons = { spring: ['🌸', '春天'], summer: ['🌿', '夏天'], autumn: ['🍁', '秋天'], winter: ['❄', '冬天'] };
     document.body.dataset.season = this.state.season;
     const [icon, name] = seasons[this.state.season], next = seasons[SEASONS[(SEASONS.indexOf(this.state.season) + 1) % 4]][1];
     const button = document.getElementById('season'); button.textContent = icon; button.title = `${name}，点击切换${next}`; button.setAttribute('aria-label', `现在是${name}，切换到${next}`);
   }
-  nextSeason() { this.state.season = SEASONS[(SEASONS.indexOf(this.state.season) + 1) % 4]; this.seasonElapsed = 0; this.renderSeason(); this.callbacks.save(); }
+  nextSeason() { this.state.season = SEASONS[(SEASONS.indexOf(this.state.season) + 1) % 4]; this.renderSeason(); this.callbacks.save(); }
   renderTime() {
     const day = this.state.timeOfDay === 'day'; document.body.dataset.time = this.state.timeOfDay;
     const button = document.getElementById('day-night'); button.textContent = day ? '☀' : '☾'; button.title = day ? '白天，点击切换黑夜' : '黑夜，点击切换白天';
     button.setAttribute('aria-label', day ? '现在是白天，切换到黑夜' : '现在是黑夜，切换到白天');
     button.setAttribute('aria-pressed', String(!day));
   }
-  toggleTime() { this.state.timeOfDay = this.state.timeOfDay === 'day' ? 'night' : 'day'; this.dayElapsed = 0; this.renderTime(); this.callbacks.save(); }
+  toggleTime() { this.state.timeOfDay = this.state.timeOfDay === 'day' ? 'night' : 'day'; this.renderTime(); this.callbacks.save(); }
   used(id) { return this.state.slots.filter(value => value === id).length; }
   available(id) { return Math.max(0, (this.callbacks.inventory?.()[id] || 0) - this.used(id)); }
   choose(treasure) {
@@ -53,7 +63,7 @@ class MagicGarden {
     this.chosen = treasure; this.plots.classList.toggle('placing', !!treasure); this.cancel.hidden = !treasure;
     document.getElementById('garden-selection').textContent = treasure ? `${treasure.name} · 点一块花圃` : '';
     this.render();
-    if (treasure) this.plots.querySelector('.garden-slot:not(:disabled)')?.focus();
+    if (treasure) (this.plots.querySelector('.garden-slot.empty:not(:disabled)') || this.plots.querySelector('.garden-slot:not(:disabled)'))?.focus();
     return true;
   }
   render() {
@@ -76,6 +86,7 @@ class MagicGarden {
       if (treasure?.effects.guardian) { const badge = document.createElement('span'); badge.className = 'guardian-badge'; badge.textContent = '🛡'; badge.title = treasure.effects.guardian === 'heart-shield' ? '守护已生效：每场爱心助攻一次并抵挡一次迷雾，移走后失效' : '守护已生效：每件每场最多助攻一次，总助攻不超过一半血量，移走后失效'; button.append(badge); }
       if (play) { const actionLabel = button.getAttribute('aria-label'); play.set(treasure); if (this.chosen) button.setAttribute('aria-label', actionLabel); this.players.push(play); }
       button.onclick = event => {
+        if(treasure && this.callbacks.trapped?.()===treasure.id)return;
         if (!this.callbacks.canPlay()) return;
         if (this.chosen) {
           if (this.available(this.chosen.id) <= 0) { this.choose(null); return; }
@@ -88,7 +99,11 @@ class MagicGarden {
       if (treasure) { const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'garden-remove'; remove.textContent = '×'; remove.setAttribute('aria-label', `从花园移走${treasure.name}`); remove.onclick = () => { if (!this.callbacks.canPlay()) return; this.state.slots[index] = null; this.render(); this.callbacks.save(); this.plots.querySelector(`[data-slot="${index}"]`).focus(); }; plot.append(remove); }
       this.plots.append(plot);
     });
-    this.stories?.render();
+    this.stories?.render(); this.workshop?.sync(); this.renderDamage();
+  }
+  renderDamage() {
+    const trapped = this.callbacks.trapped?.();
+    this.plots.querySelectorAll('.garden-slot').forEach(slot => { const id = this.state.slots[Number(slot.dataset.slot)]; slot.classList.toggle('treasure-trapped', !!id && id === trapped); });
   }
   startWeather(manual = true) {
     if (!this.rules.enabled || !this.rules.kinds.length) return;
@@ -96,6 +111,7 @@ class MagicGarden {
     const kind = chooseWeather(choices.length ? choices : this.rules.kinds, this.rules.weights);
     if (!kind) return;
     this.callbacks.weatherStarted?.(manual);
+    this.environment.lastKind = kind;
     this.weather = this.lastKind = kind; this.endsAt = this.elapsed + this.rules.durationMs;
     document.body.dataset.weather = kind; this.layer.replaceChildren();
     const labels = { rain: '🌧️ 魔法雨', snow: '❄️ 雪花舞会', wind: '🍃 风精灵', meteors: '🌠 流星雨', icecream: '🍦 冰激凌雨', coins: '🪙 金币雨', sakura: '🌸 樱花雨', storm: '⛈️ 魔法大风暴' };
@@ -107,12 +123,14 @@ class MagicGarden {
       if (kind === 'storm' && i % 5 === 0) { bit.textContent = '🍃'; bit.className = 'storm-leaf'; } this.layer.append(bit);
     }
     this.adventures?.startWeather(kind);
-    this.callbacks.weatherSound(kind);
+    this.callbacks.weatherSound(kind); this.callbacks.save();
   }
   endWeather() {
     this.adventures?.stopWeather();
-    if (this.weather) this.callbacks.weatherFinished?.();
+    const hadWeather = !!this.weather;
+    if (hadWeather) this.callbacks.weatherFinished?.();
     this.weather = null; delete document.body.dataset.weather; this.layer.replaceChildren();
-    this.nextAt = this.elapsed + this.rules.intervalMs; document.getElementById('weather-name').textContent = '⛅️'; document.getElementById('weather').title = '晴天，点击切换天气'; document.getElementById('weather').setAttribute('aria-label', '晴天，点击切换天气');
+    if (hadWeather) this.environment.weatherDueDraw = weatherNextDraw(this.callbacks.draws());
+    document.getElementById('weather-name').textContent = '⛅️'; document.getElementById('weather').title = '晴天，点击切换天气'; document.getElementById('weather').setAttribute('aria-label', '晴天，点击切换天气'); if (hadWeather) this.callbacks.save();
   }
 }

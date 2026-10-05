@@ -23,7 +23,7 @@ class GardenStories {
       }
     }; new ForegroundLoop(tick, () => this.busy ? 100 : 250);
   }
-  match(story) { return matchGardenStory(story, this.garden.state.slots, this.garden.treasures); }
+  match(story) { return matchGardenStory(story, this.garden.state.workshop.tray, this.garden.treasures); }
   closePanel() { const wasOpen = !this.panel.hidden; this.panel.hidden = true; document.getElementById('garden-story-shade').hidden = true; if (wasOpen) this.button.focus(); this.button.setAttribute('aria-expanded', 'false'); }
   render() {
     const grid = document.getElementById('garden-story-list'); grid.replaceChildren();
@@ -34,20 +34,20 @@ class GardenStories {
       const known = this.garden.state.discovered.includes(story.id), ready = !!this.match(story);
       const row = document.createElement('article'); row.className = 'garden-story-card';
       const title = document.createElement('h3'); title.textContent = `${known ? story.icon : '✧'} ${story.name}`;
-      const hint = document.createElement('p'); hint.textContent = known && !ready ? `${story.hint} 把伙伴放回花园就能再看。` : story.hint;
+      const hint = document.createElement('p'); hint.textContent = known && !ready ? `${story.hint} 邀请伙伴到魔法台就能再看。` : story.hint;
       const replay = document.createElement('button'); replay.type = 'button'; replay.dataset.story = story.id;
-      replay.textContent = known ? '再看一次 ↻' : ready ? '发现故事 ✦' : '等待发现'; replay.disabled = !ready || this.busy;
+      replay.textContent = known ? '再看一次 ↻' : ready ? '发现故事 ✦' : '等待发现'; replay.disabled = this.busy;
       const recipe = document.createElement('div'); recipe.className = 'story-recipe'; recipe.setAttribute('aria-label', story.hint);
       const used = new Set(), matched = this.match(story); let roleIndex = 0;
       for (const role of story.requirements) for (let i = 0; i < role.count; i++) {
         const candidates = this.garden.treasures.filter(t => !used.has(t.id) && t.tags.includes(role.tag) && (!role.id || t.id === role.id));
-        const companion = matched ? this.garden.treasures.find(t => t.id === matched[roleIndex]) : candidates.find(t => this.garden.state.slots.includes(t.id)) || candidates[0]; roleIndex++;
+        const companion = matched ? this.garden.treasures.find(t => t.id === matched[roleIndex]) : candidates.find(t => !!this.garden.callbacks.inventory()[t.id]) || candidates[0]; roleIndex++;
         if (recipe.childNodes.length) { const plus = document.createElement('span'); plus.textContent = '+'; recipe.append(plus); }
         const portrait = document.createElement('div'); portrait.className = 'recipe-companion';
-        if (companion) { used.add(companion.id); this.garden.callbacks.art(companion, portrait); portrait.title = `${companion.name}${this.garden.state.slots.includes(companion.id) ? ' · 已摆放' : ' · 待摆放'}${role.id ? '' : '（也可换同类伙伴）'}`; if (!this.garden.state.slots.includes(companion.id)) portrait.classList.add('missing'); }
+        if (companion) { used.add(companion.id); this.garden.callbacks.art(companion, portrait); portrait.title = `${companion.name}${!!this.garden.callbacks.inventory()[companion.id] ? ' · 已拥有' : ' · 待发现'}${role.id ? '' : '（也可换同类伙伴）'}`; if (!!!this.garden.callbacks.inventory()[companion.id]) portrait.classList.add('missing'); }
         else portrait.textContent = '?'; recipe.append(portrait);
       }
-      replay.onclick = () => this.play(story); row.append(title, recipe, hint, replay); grid.append(row);
+      replay.onclick = () => { this.closePanel(); this.garden.workshop.select(story.id); }; row.append(title, recipe, hint, replay); grid.append(row);
     }
   }
   async play(story) {
@@ -99,7 +99,7 @@ class GardenStories {
   finish() {
     // 让孩子有时间看自己的花园，多个组合不会连续抢占舞台。
     this.quietUntil = performance.now() + 10000;
-    this.busy = false; this.garden.adventures?.render(); this.garden.callbacks.storyFinished?.(); this.stage.hidden = true; delete document.body.dataset.story;
+    this.busy = false; this.garden.adventures?.render(); this.garden.callbacks.storyFinished?.(this.current.id); this.stage.hidden = true; delete document.body.dataset.story;
     document.getElementById('garden-story-actors').replaceChildren(); document.getElementById('garden-story-bits').replaceChildren(); this.render();
   }
 }

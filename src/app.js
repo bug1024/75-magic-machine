@@ -13,6 +13,7 @@
   let savedEnergy = null, rechargeStation = null, savedWorld = null, world = null;
   let chamber = null, garden = null, savedGarden = null, finale = null;
   let noticeTimer;
+  let wishCollectionIds = null, wishCollectionLine = null, collectionMode = null, trayIndex = 0;
   let acquiredAt = {}, unread = new Set(), tips = new Set();
   const pacing = new ScenePacing();
   const extraOverlay = () => $('settings-dialog').open || $('environment-dialog').open || !$('garden-story-panel').hidden;
@@ -47,6 +48,7 @@
   const pool = treasures.filter(t => t.enabled && t.weight > 0);
   if (!pool.length) { drawButton.disabled = true; $('draw-hint').textContent = '请先在配置中启用一个宝物'; }
   function save() {
+    garden?.workshop?.sync();
     if (!storageWritable) return;
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify({ version: 2, acquiredAt, unread: [...unread], tips: [...tips], history, inventory, muted, gentle, energy: rechargeStation?.snapshot() ?? normalizeEnergyState(savedEnergy, gameRules), garden: garden?.snapshot() ?? normalizeGardenState(savedGarden, treasures, history, inventory), world: world?.snapshot() ?? normalizeWorldState(savedWorld, history, gameRules.world) }));
@@ -75,13 +77,14 @@
   const sound = new MagicAudio(() => muted);
   function syncDrawAction() {
     if (!['idle', 'result'].includes(phase) || !pool.length) return;
+    const pending = world?.state.pending[0];
     const empty = rechargeStation.balance < gameRules.energy.drawCost;
     energy(rechargeStation.balance / gameRules.energy.max);
-    $('button-text').textContent = empty ? '补充魔法' : phase === 'result' ? '再来一次' : '开启魔法';
-    $('draw-hint').textContent = empty ? '答一道题，点亮两格能量' : phase === 'result' ? (currentTreasure?.effects.interaction ? '点点宝物，和它玩一玩' : '') : '按空格键，或点一下按钮';
+    $('button-text').textContent = pending ? pending.kind === 'upgrade' ? '看看新魔法' : pending.kind === 'witch' ? '守护花园' : pending.kind === 'finale' ? '开启星光庆典' : '迎接魔法伙伴' : empty ? '补充魔法' : phase === 'result' ? '再来一次' : '开启魔法';
+    $('draw-hint').textContent = pending ? '按空格键，或点一下按钮' : empty ? '答一道题，点亮两格能量' : phase === 'result' ? (currentTreasure?.effects.interaction ? '点点宝物，和它玩一玩' : '') : '按空格键，或点一下按钮';
   }
   rechargeStation = new RechargeStation(gameRules, savedEnergy, {
-    canOpen: () => ['idle', 'result'].includes(phase) && !extraOverlay() && !dialog.open && !world?.busy && !finale?.busy && !drawButton.disabled,
+    canOpen: () => ['idle', 'result'].includes(phase) && !extraOverlay() && !dialog.open && !world?.busy && !finale?.busy && !garden?.workshop?.busy && !drawButton.disabled,
     onChange: () => { save(); syncDrawAction(); },
     onReward: full => { sound.unlock().then(() => sound.answerCorrect(full)); },
     onFailure: () => { sound.unlock().then(() => sound.answerWrong()); }
@@ -112,13 +115,27 @@
   // 页面切到后台时暂停流程，不积累声音和突然跨过开奖阶段。
   function wait(ms) {
     return new Promise(resolve => {
-      let elapsed = 0, previous = performance.now();
-      function frame(now) {
-        if (!document.hidden) elapsed += Math.min(50, now - previous);
+      let elapsed = 0, previous = performance.now(), timer = null;
+      const schedule = () => {
+        if (!document.hidden && timer === null) timer = setTimeout(tick, Math.min(50, ms - elapsed));
+      };
+      const tick = () => {
+        timer = null;
+        const now = performance.now();
+        if (!document.hidden) elapsed += now - previous;
         previous = now;
-        if (elapsed >= ms) resolve(); else requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
+        if (elapsed >= ms) {
+          document.removeEventListener('visibilitychange', visibility);
+          resolve();
+        } else schedule();
+      };
+      const visibility = () => {
+        clearTimeout(timer); timer = null;
+        previous = performance.now();
+        schedule();
+      };
+      document.addEventListener('visibilitychange', visibility);
+      schedule();
     });
   }
   function makeArt(treasure, target) {
@@ -248,12 +265,37 @@
     },
     guardianOrigin: id => { const friend = document.querySelector(`[data-friend="${id}"]`); if (friend) return friend.getBoundingClientRect(); const index = garden?.state.slots.indexOf(id); return document.querySelector(`[data-slot="${index}"]`)?.getBoundingClientRect() || $('window').getBoundingClientRect(); },
     guardians: () => [...[...new Set(garden?.state.slots.filter(Boolean) || [])].map(id => treasures.find(t => t.id === id)).filter(t => t?.effects.guardian), ...(finale?.guardianFriends() || [])],
+    damageTarget: (item,requested) => {
+      const state=garden.state.workshop,facility=[...$('garden-keepsakes').querySelectorAll('[data-memory]')].find(b=>!state.broken.includes(b.dataset.memory));
+      const slot=garden.state.slots.findIndex(id=>id&&id!==item.damage?.trapped);
+      const kind=requested==='facility'&&!facility||requested==='trap'&&slot<0?'energy':requested;
+      const mother=kind==='energy'&&!item.shieldUsed&&world.callbacks.guardians().find(t=>t.effects.guardian==='heart-shield'&&t.id!==item.damage?.trapped);
+      if(mother)return world.callbacks.guardianOrigin(mother.id);
+      const target=garden.workshop.flagReady()?document.querySelector('[data-memory="wish-little-guardian"]'):kind==='facility'?facility:kind==='trap'?document.querySelector(`[data-slot="${slot}"]`):$('power-cells');
+      if(target.dataset.memory)garden.adventures.revealMemory(target.dataset.memory);
+      return target.getBoundingClientRect();
+    },
+    damage: (item, requested) => {
+      item.damage ||= normalizeDamage();const damage=item.damage,state=garden.state.workshop;
+      const facilities=[...$('garden-keepsakes').querySelectorAll('[data-memory]')].filter(b=>!state.broken.includes(b.dataset.memory));
+      const slots=garden.state.slots.filter(id=>id&&id!==damage.trapped);
+      const kind=requested==='facility'&&!facilities.length||requested==='trap'&&!slots.length?'energy':requested;
+      damage.attacks++;
+      const mother=kind==='energy'&&world.callbacks.guardians().find(t=>t.effects.guardian==='heart-shield'&&t.id!==damage.trapped&&!item.shieldUsed);
+      if(mother){item.shieldUsed=true;save();return {shield:true,line:`${mother.name}挡住了黑雾！`};}
+      if(garden.workshop.flagReady()){state.flagReadyAt=world.state.completedDraws+3;damage.flagUsed=true;save();return {shield:true,line:'守护旗挡住了这次捣蛋！'};}
+      if(kind==='trap'){damage.trapped=slots[0];garden.renderDamage();save();return {line:'伙伴被蜘蛛网困住了！打跑反派就能救回来！'};}
+      if(kind==='facility'){damage.facility=facilities[0].dataset.memory;state.broken.push(damage.facility);garden.adventures.render();save();return {line:'设施被撞倒了！获胜后点它扶正！'};}
+      const taken=Math.min(1,rechargeStation.balance);damage.energyTaken+=taken;rechargeStation.change(-taken,false);save();return {line:taken?'黑雾吸走了一颗爱心！胜利后会回来。':'黑雾扑了个空！零能量也能继续守护。'};
+    },
+    battleSettled: item => {const taken=item.damage?.energyTaken||0;if(item.damage){item.damage.energyTaken=0;item.damage.trapped=null;}if(item.manual)garden.state.workshop.challengeReadyAt=world.state.completedDraws+3;garden.state.workshop.guardWon=true;garden.renderDamage();if(taken)rechargeStation.change(taken,false);garden.adventures.render();},
     eternal: () => world.state.finale.complete, finale: () => finale.play(),
     voice: text => { if (!globalThis.speechSynthesis) return; speechSynthesis.cancel(); if (!muted && text) { const speech = new SpeechSynthesisUtterance(text); speech.lang = 'zh-CN'; speech.rate = .9; speech.pitch = 1.2; speechSynthesis.speak(speech); } },
     wait, save, art: makeArt, sound: kind => { sound.stopWarning(); sound.encounter(kind); },
     apply: (event, giftId) => {
       if (event.id === 'ghost' && rechargeStation.balance <= gameRules.energy.warningThreshold) return { description: '小幽灵打了个饱嗝！', detail: '它没有拿走你的能量。' };
       if (['witch', 'bat', 'rock', 'dragon', 'courier', 'mermaid'].includes(event.id) || (event.id === 'fairy' && rechargeStation.full && event.energyDelta !== 1)) {
+        if (['witch', 'bat', 'rock', 'dragon'].includes(event.id) && garden.state.slots.some(id => treasures.find(t => t.id === id)?.effects.guardian)) garden.state.workshop.guardWon = true;
         const gift = pool.find(treasure => treasure.id === giftId) || drawTreasure(treasures, Math.random, { equalProbability: cheatMode });
         acquired(gift); acquirePower(gift); inventory[gift.id] = (inventory[gift.id] || 0) + 1; history.push(treasureRecord(gift, 'event', event.id)); history = history.slice(-1000); updateCount();
         return { gift, description: `额外礼物：${gift.name}`, detail: gift.effects.onAcquire === 'refill-energy' ? '能量补满十格！爱心已经放进宝藏。' : '已经放进你的宝藏里！' };
@@ -265,9 +307,10 @@
   });
   async function resumeWorld() {
     drawButton.disabled = true; $('collection').disabled = true; $('cheat').disabled = true; rechargeStation.setLocked(true);
+    garden?.workshop?.close();
     try { await world.playPending(); }
     catch { notice('魔法伙伴歇了一会儿，刷新后会继续拜访。'); }
-    finally { pacing.quiet(6000); drawButton.disabled = false; $('collection').disabled = false; $('cheat').disabled = false; rechargeStation.setLocked(false); syncDrawAction(); }
+    finally { pacing.quiet(6000); drawButton.disabled = false; $('collection').disabled = false; $('cheat').disabled = false; rechargeStation.setLocked(false); garden.workshop.sync();garden.adventures.render();syncDrawAction(); }
   }
   const treasurePlay = new TreasurePlay($('treasure-art'), {
     canPlay: () => !garden?.stories?.busy && phase === 'result' && !drawButton.disabled && !world.busy && !finale?.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
@@ -281,10 +324,15 @@
   garden = new MagicGarden(rawGameRules.weather, savedGarden, treasures, history, {
     inventory: () => inventory, reward: amount => { rechargeStation.change(amount, false); syncDrawAction(); },
     art: makeArt, save, unlock: () => sound.unlock(),
-    canPlay: () => !garden?.stories?.busy && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !finale?.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
+    canPlay: () => !garden?.workshop?.busy && !garden?.stories?.busy && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !finale?.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open && !document.hidden,
     canStory: () => ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !finale?.busy && !$('settings-dialog').open && !$('environment-dialog').open && !dialog.open && !rechargeStation.dialog.open,
-    canAutoStory: () => quietReady() && !world.state.pending.length && !garden?.weather,
-    storyFinished: () => pacing.quiet(6000),
+    canAutoStory: () => false,
+    draws: () => world.state.completedDraws,
+    inFinale: () => !!finale?.busy,
+    seasonStep: () => seasonStepFor(world.state.completedDraws, MACHINE_LEVELS.findIndex(level => level.id === machine.dataset.level), world.state.finale.complete),
+    trapped: () => world.state.pending.find(item => item.kind === 'witch')?.damage?.trapped,
+    canEnvironment: () => !world.state.pending.length && garden?.callbacks.canPlay(),
+    storyFinished: id => { pacing.quiet(6000); garden.workshop?.sync(); save(); },
     weatherFinished: () => pacing.quiet(4000),
     canWeather: () => !world.state.pending.length && (!!garden?.weather || quietReady()) && ['idle', 'result'].includes(phase) && !drawButton.disabled && !garden?.stories?.busy && !world.busy && !finale?.busy && !extraOverlay() && !dialog.open && !rechargeStation.dialog.open,
     sound: (kind, count = 1, reaction, treasure) => sound.unlock().then(() => { if (!document.hidden && !world.busy && !finale?.busy) treasure ? sound.interact(treasure, count, reaction) : sound.treasureSound(kind, count); }),
@@ -292,6 +340,15 @@
     weatherSound: kind => sound.weather(kind)
   }, rawGameRules.dayNight, rawGameRules.seasons, rawGameRules.gardenStories);
   garden.adventures = new GardenAdventures(garden, rawGameRules.adventures || []);
+  garden.workshop = new MagicWorkshop(garden, rawGameRules.wishes || [], {
+    save, wait, craftSound: stage => { if(stage==='gather')sound.story('lunar',garden.state.timeOfDay,null);else if(stage==='fusion')sound.story('sparkle',garden.state.timeOfDay,null);else sound.celebrate('royal-fanfare',false); }, canUse: () => !world.state.pending.length, draws: () => world.state.completedDraws,
+    voice: text => world.callbacks.voice(text),
+    invite: (ids, line, index) => { collectionMode='craft';trayIndex=index;wishCollectionIds=new Set(ids);wishCollectionLine=line;$('collection-filter').value='owned';renderCollection();dialog.showModal(); },
+    focus: () => { collectionMode='focus';$('collection-filter').value='missing';renderCollection();dialog.showModal(); },
+    canChallenge: enemy => canChallenge(world.state, gameRules.world, world.state.completedDraws, garden.state.workshop.challengeReadyAt, enemy),
+    challenge: enemy => { if(!canChallenge(world.state,gameRules.world,world.state.completedDraws,garden.state.workshop.challengeReadyAt,enemy))return;garden.endWeather();world.state.lastWitchDraw=world.state.completedDraws;world.state.witchWait=0;world.state.seenOpponents=[...new Set([...world.state.seenOpponents,enemy])];world.state.pending.push({kind:'witch',opponent:enemy,manual:true,hits:0,assistHits:0,usedGuardians:[],damage:normalizeDamage(),giftId:world.callbacks.pickGift(enemy).id});save();resumeWorld(); }
+  });
+  garden.adventures.render();garden.stories.render();
   finale = new MagicFinale(world, garden, treasures, {
     dragonArt: rawGameRules.guardianDragon, inventory: () => inventory, save, art: makeArt, unlock: () => sound.unlock(),
     canPlay: () => garden.callbacks.canPlay(),
@@ -302,17 +359,21 @@
     replay: async () => { if (!garden.callbacks.canPlay()) return; drawButton.disabled = true; rechargeStation.setLocked(true); try { await finale.play(true); } finally { drawButton.disabled=false; rechargeStation.setLocked(false); syncDrawAction(); } }
   });
   const paceTick = (now, elapsed) => {
-    const active = !document.hidden && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !finale?.busy && !garden.stories.busy && !dialog.open && !rechargeStation.dialog.open && !extraOverlay();
+    const active = !document.hidden && ['idle', 'result'].includes(phase) && !drawButton.disabled && !world.busy && !finale?.busy && !garden.workshop.busy && !garden.stories.busy && !dialog.open && !rechargeStation.dialog.open && !extraOverlay();
     pacing.advance(elapsed, active);
     if (active && pacing.ready && world.state.pending.length && pool.length) { garden.endWeather(); resumeWorld(); }
     }; new ForegroundLoop(paceTick, () => pacing.remaining || world.state.pending.length ? 100 : 500);
   // 抽中结果先选定；小球翻腾与开壳只负责演出，不改变权重或二次抽取。
   async function draw() {
-    if (garden?.stories?.busy || !['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || finale?.busy || extraOverlay() || !pool.length) return;
+    if (garden?.workshop?.busy || garden?.stories?.busy || !['idle', 'result'].includes(phase) || dialog.open || rechargeStation.dialog.open || world?.busy || finale?.busy || extraOverlay() || !pool.length) return;
+    // 已排队的演出优先于下一抽；孩子主动继续时无需等欣赏倒计时。
+    // 必须在能量检查前处理，零能量也能升级、接受仙子补能和守护花园。
+    if (world.state.pending.length) { if (garden.weather) garden.endWeather(); await resumeWorld(); return; }
+    garden.workshop.close();
     if (rechargeStation.balance < gameRules.energy.drawCost) { rechargeStation.open(); return; }
     if (!world.state.finale.complete && world.state.completedDraws + 1 === FINALE_AT) { await finalDraw(); return; }
     if (garden.weather) garden.endWeather();
-    const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode, inventory, recentIds: history.filter(r => r.source !== 'event' && r.source !== 'finale').slice(-3).reverse().map(r => r.prizeId) });
+    const winner = drawTreasure(treasures, Math.random, { equalProbability: cheatMode, inventory, focusId: garden.workshop.focus(), recentIds: history.filter(r => r.source !== 'event' && r.source !== 'finale').slice(-3).reverse().map(r => r.prizeId) });
     treasurePlay.reset(); garden.choose(null); garden.stories.closePanel();
     rechargeStation.consume(); rechargeStation.setLocked(true);
     let awarded = false;
@@ -362,7 +423,7 @@
       currentTreasure = winner; machine.dataset.reveal = winner.effects.reveal;
       showTreasure(winner, true); setPhase('celebrating');
       $('button-text').textContent = '找到宝物啦！'; $('draw-hint').textContent = '这份魔法，属于你！';
-      acquired(winner); acquirePower(winner); inventory[winner.id] = (inventory[winner.id] || 0) + 1; history.push(treasureRecord(winner)); awarded = true; history = history.slice(-1000); world.completedDraw(); save(); updateCount();
+      acquired(winner); acquirePower(winner); inventory[winner.id] = (inventory[winner.id] || 0) + 1; history.push(treasureRecord(winner)); awarded = true; history = history.slice(-1000); world.completedDraw(); garden.workshop.normalDraw();garden.adventures.render(); save(); updateCount();
       $('announcement').textContent = `恭喜 75，获得${RARITIES[winner.rarity].label}：${winner.name}。${winner.description}`;
       sound.celebrate(winner.effects.sound, true); particles.shockwave(winner.appearance.primaryColor); particles.emit(winner);
       spellPop(winner.rarity === 'super' ? '超级宝物！' : winner.rarity === 'rare' ? '彩虹魔法！' : '找到宝物啦！');
@@ -379,13 +440,13 @@
       notice('机器歇了一小会儿，再按一下试试。');
     } finally {
       rechargeStation.setLocked(false); syncDrawAction();
-      drawButton.disabled = false; drawButton.classList.remove('pressed'); $('collection').disabled = false; $('cheat').disabled = false; $('jackpot').classList.remove('show'); $('spell-pop').classList.remove('pop');
+      drawButton.disabled = false; drawButton.classList.remove('pressed'); $('collection').disabled = false; $('cheat').disabled = false; $('jackpot').classList.remove('show'); $('spell-pop').classList.remove('pop');garden.workshop.sync();
     }
   }
   async function finalDraw() {
     treasurePlay.reset(); garden.choose(null); garden.endWeather(); particles.clear();
     rechargeStation.consume(); rechargeStation.setLocked(true); drawButton.disabled=true; $('collection').disabled=true;
-    world.completedDraw(); save();
+    world.completedDraw(); garden.workshop.normalDraw();garden.adventures.render(); save();
     setPhase('charging', pool[0]); $('button-text').textContent='第75次，魔法醒来！'; $('prize-name').textContent='小球变成星星啦！'; $('prize-description').textContent='花园正在准备一份特别的惊喜。'; $('treasure-art').hidden=true;
     try { await sound.unlock(); sound.start('life'); await wait(1200); setPhase('idle'); await resumeWorld(); }
     finally { setPhase('idle'); drawButton.disabled=false; $('collection').disabled=false; rechargeStation.setLocked(false); syncDrawAction(); }
@@ -451,10 +512,12 @@
     });
     const filter = $('collection-filter').value;
     const items = collectionOrder([...treasures, ...archived], inventory, acquiredAt, $('collection-sort').value).filter(t => filter === 'all' || (filter === 'owned' ? !!inventory[t.id] : !inventory[t.id]));
+    if (wishCollectionIds) items.sort((a, b) => Number(wishCollectionIds.has(b.id)) - Number(wishCollectionIds.has(a.id)) || Number(!!inventory[b.id]) - Number(!!inventory[a.id]));
     for (const treasure of items) {
       const records = history.filter(r => r.prizeId === treasure.id), latest = records.at(-1);
       const owned = inventory[treasure.id] || 0, used = garden.used(treasure.id);
       const card = document.createElement('article'); card.dataset.treasure = treasure.id; card.className = `treasure-card${owned ? '' : ' uncollected'}`;
+      if (wishCollectionIds?.has(treasure.id)) { card.classList.add('wish-candidate'); card.append(textElement('span', owned ? '💌 心愿伙伴' : '💌 想找的伙伴', 'wish-card-badge')); }
       if (owned && unread.has(treasure.id)) { const badge = textElement('button', 'NEW', 'new-badge'); badge.type = 'button'; badge.setAttribute('aria-label', `标记${treasure.name}已看`); badge.onclick = () => { unread.delete(treasure.id); save(); badge.remove(); }; card.append(badge); }
       const art = document.createElement('div'); makeArt(treasure, art);
       // 收藏插画直接放入网格，保留图片失败时的图标降级。
@@ -464,22 +527,24 @@
       const recentDate = acquiredAt[treasure.id] || latest?.timestamp;
       if (recentDate) card.append(textElement('time', `最近获得 · ${new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(recentDate)}`, 'last-date'));
       if (owned && treasures.some(item => item.id === treasure.id)) {
-        const place = textElement('button', owned > used ? '放进花园' : '已全部摆放', 'place-treasure'); place.type = 'button'; place.disabled = owned <= used || garden.stories.busy;
-        place.onclick = () => { if (garden.stories.busy || garden.available(treasure.id) <= 0) return; unread.delete(treasure.id); save(); dialog.close(); garden.choose(treasure); tip('garden-place', '点花园里的空位置，伙伴就住进来啦！不同伙伴放在一起，还会发现小故事。'); }; card.append(place);
+        const place = textElement('button', owned > used ? wishCollectionIds?.has(treasure.id) ? '邀请到花园' : '放进花园' : '已全部摆放', 'place-treasure'); place.type = 'button'; place.disabled = (collectionMode !== 'craft' && owned <= used) || garden.stories.busy; if(collectionMode==='craft')place.textContent='邀请到魔法台';
+        place.onclick = () => { if(world.busy||world.state.pending.length||garden.workshop.busy)return;if(collectionMode==='craft'){garden.workshop.put(treasure.id,trayIndex);dialog.close();return;} if (garden.stories.busy || garden.available(treasure.id) <= 0) return; unread.delete(treasure.id); save(); dialog.close(); garden.choose(treasure); tip('garden-place', '点花园里的空位置，伙伴就住进来啦！不同伙伴放在一起，还会发现小故事。'); }; card.append(place);
       }
+      if(collectionMode==='focus'&&!owned&&treasure.enabled&&treasure.weight>0){const select=textElement('button','许愿 · 接下来5抽机会加倍','place-treasure');select.type='button';select.onclick=()=>{garden.state.workshop.focusId=treasure.id;garden.state.workshop.focusRemaining=5;save();dialog.close();};card.append(select);}
       $('collection-grid').append(card);
     }
     if (!items.length) $('collection-grid').append(textElement('p', filter === 'missing' ? '宝藏已经收集齐啦！' : '这里暂时没有宝物。'));
+    if (wishCollectionLine) $('collection-summary').textContent = `${wishCollectionLine} ${$('collection-summary').textContent}`;
     $('collection-summary').textContent += storageAvailable ? '' : ' 本次收藏暂未保存到浏览器。';
   }
   $('collection-filter').onchange = renderCollection; $('collection-sort').onchange = renderCollection;
-  $('collection').addEventListener('click', () => { renderCollection(); dialog.showModal(); });
+  $('collection').addEventListener('click', () => { if(garden.workshop.busy||world.busy||garden.stories.busy)return;collectionMode=null;renderCollection(); dialog.showModal(); });
   $('close-collection').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } });
-  dialog.addEventListener('close', () => { if (garden?.chosen) garden.plots.querySelector('.garden-slot').focus(); else $('collection').focus(); });
+  dialog.addEventListener('close', () => { wishCollectionIds = null; wishCollectionLine = null; collectionMode = null; if (garden?.chosen) garden.plots.querySelector('.garden-slot').focus(); else $('collection').focus(); });
   for (const id of ['settings', 'environment']) {
     const panel = $(`${id}-dialog`);
-    $(id).onclick = () => { if (!world.busy && !finale?.busy && !garden.stories.busy && ['idle', 'result'].includes(phase)) panel.showModal(); };
+    $(id).onclick = () => { if (!world.busy && !finale?.busy && !garden.workshop.busy && !garden.stories.busy && ['idle', 'result'].includes(phase)) panel.showModal(); };
     panel.querySelector('[data-close]').onclick = () => panel.close();
     panel.addEventListener('click', event => { if (event.target === panel) { const r = panel.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) panel.close(); } });
     panel.addEventListener('close', () => $(id).focus());

@@ -11,7 +11,8 @@ class GardenAdventures {
       this.game.inert = !active;
       if (active) { this.clock += elapsed; if (this.playing && this.clock >= 4000) this.stopWeather(); }
     }, () => this.active ? 250 : 1000);
-    this.render();
+    this.memoryPage=0;this.render();
+    this.shelfResize=new ResizeObserver(()=>this.layoutMemories());this.shelfResize.observe(this.shelf);
   }
   render() {
     this.shelf.replaceChildren();
@@ -19,16 +20,47 @@ class GardenAdventures {
     for (const kind of this.garden.state.adventures.weatherWins) {
       const rule = this.rules.find(rule=>rule.kind===kind); if (rule) memories.push({id:`weather-${kind}`,name:rule.souvenir,icon:rule.icon,line:`${rule.souvenir}记得你和伙伴一起玩的那一天！`,effect:rule.effect,kind});
     }
+    memories.push(...(this.garden.workshop?.memories() || []));
     this.shelf.hidden = !memories.length;
+    const previous=document.createElement('button'),next=document.createElement('button'),strip=document.createElement('div');
+    previous.type=next.type='button';previous.className=next.className='memory-page-button';previous.textContent='‹';next.textContent='›';previous.setAttribute('aria-label','上一页花园景物');next.setAttribute('aria-label','下一页花园景物');
+    strip.className='keepsake-strip';this.memoryStrip=strip;this.memoryPrevious=previous;this.memoryNext=next;
+    previous.onclick=()=>{this.memoryPage--;this.layoutMemories();};next.onclick=()=>{this.memoryPage++;this.layoutMemories();};
+    this.shelf.append(previous,strip,next);
     for (const memory of memories) {
       const button=document.createElement('button');button.type='button';button.className='garden-keepsake';button.dataset.memory=memory.id;button.setAttribute('aria-label',`和${memory.name}玩一玩`);button.title=memory.name;
       const art=document.createElement('span');art.className='memory-art';art.innerHTML=this.art(memory.kind,memory.icon);
       const name=document.createElement('span');name.textContent=memory.name;name.className='memory-name';button.append(art,name);
-      button.onclick=()=>this.playMemory(button,memory);this.shelf.append(button);
+      this.garden.workshop?.facility(memory,button);button.onclick=()=>{if(!this.garden.workshop?.useFacility(memory,button))this.playMemory(button,memory);};strip.append(button);
     }
+    this.layoutMemories();
+  }
+  layoutMemories() {
+    if(this.shelf.hidden||!this.memoryStrip)return;
+    const width=this.shelf.clientWidth,itemWidth=innerWidth<=650?70:105;
+    const capacity=Math.max(2,Math.min(6,Math.floor((width-76)/itemWidth)));
+    this.memoryCapacity=capacity;
+    const buttons=[...this.memoryStrip.children],pages=Math.max(1,Math.ceil(buttons.length/capacity));
+    this.memoryPage=Math.max(0,Math.min(this.memoryPage,pages-1));
+    this.memoryStrip.style.setProperty('--memory-slots',Math.min(capacity,buttons.length));
+    buttons.forEach((button,index)=>{button.hidden=Math.floor(index/capacity)!==this.memoryPage;});
+    this.memoryPrevious.hidden=this.memoryNext.hidden=pages===1;
+    this.memoryPrevious.disabled=this.memoryPage===0;this.memoryNext.disabled=this.memoryPage===pages-1;
+    this.memoryStrip.setAttribute('aria-label',`花园景物，第${this.memoryPage+1}页，共${pages}页`);
+  }
+  revealMemory(id) {
+    const buttons=[...this.memoryStrip.children],index=buttons.findIndex(b=>b.dataset.memory===id);
+    if(index<0)return;
+    this.memoryPage=Math.floor(index/this.memoryCapacity);this.layoutMemories();
   }
   art(kind, icon) {
     const shapes = {
+      'wish-ocean':'<path d="M30 80V15h7v65" fill="#e4c3a4"/><path d="M37 15h72l-18 20 18 20H37Z" fill="#9eddeb" stroke="#e3fcff" stroke-width="3"/><path d="M56 36q10-16 30-1q-14 13-30 1l-7 6V29Z" fill="#8698de"/>',
+      'wish-forest':'<path d="M64 80V48" stroke="#e0bba0" stroke-width="8"/><path d="M31 25h66v35H31Z" fill="#e6d19b"/><path d="m21 28 43-24 43 24Z" fill="#d59fc4" stroke="#ffedc2" stroke-width="3"/><circle cx="64" cy="37" r="10" fill="#8a709f"/><path d="M45 58h38" stroke="#85b994" stroke-width="5"/>',
+      'wish-hug':'<path d="M25 34h78l14 40H11Z" fill="#e9a9c5" stroke="#fff0cc" stroke-width="3"/><path d="M27 43h76M23 57h84M44 35l-7 38m44-38 7 38" stroke="#ffe2cf" stroke-width="3"/><path d="M64 44c-13-14-24 4 0 18c24-14 13-32 0-18Z" fill="#f273a4"/>',
+      'wish-ball':'<path d="M64 34v49" stroke="#e3c19f" stroke-width="7"/><path d="M64 34 33 5v29Zm0 0L94 5v29Zm0 0 30 30H64Zm0 0L33 64V34Z" fill="#cbade8" stroke="#fff0ca" stroke-width="3"/><path d="M55 33q-22-22-21-3q0 17 21 11m18-8q22-22 21-3q0 17-21 11" fill="#ffb4d6"/><circle cx="64" cy="35" r="6" fill="#ffe08b"/>',
+      'wish-weather':'<path d="M22 77V48a42 42 0 0 1 84 0v29" stroke="#f6adbf" stroke-width="11" fill="none"/><path d="M30 77V48a34 34 0 0 1 68 0v29" stroke="#ffdfa0" stroke-width="8" fill="none"/><path d="M37 77V48a27 27 0 0 1 54 0v29" stroke="#addeda" stroke-width="6" fill="none"/>',
+      'wish-guardian':'<path d="M38 80V10" stroke="#e2c59d" stroke-width="7"/><path d="M42 12h63l-12 22 12 23H42Z" fill="#b69ade" stroke="#ffefbf" stroke-width="3"/><path d="m71 22 15 5v12q0 9-15 16q-15-7-15-16V27Z" fill="#ffdf95"/><path d="m64 37 5 5 11-12" stroke="#af77aa" stroke-width="4" fill="none"/>',
       forest:'<path d="M38 79V38m25 41V27m26 52V43" stroke="#63b983" stroke-width="5"/><g fill="#ffbfda"><circle cx="38" cy="36" r="14"/><circle cx="89" cy="39" r="13"/></g><circle cx="63" cy="25" r="16" fill="#ffe695"/><g fill="#bd70a5"><circle cx="38" cy="36" r="5"/><circle cx="63" cy="25" r="5"/><circle cx="89" cy="39" r="5"/></g>',
       ocean:'<ellipse cx="64" cy="61" rx="52" ry="24" fill="#62c8dc" stroke="#b2f1ed" stroke-width="5"/><path d="M26 60q10-7 20 0t20 0t20 0t16 0" stroke="#e0ffff" stroke-width="3" fill="none"/><path d="M51 44q17-17 30-2q-16 17-30 2l-11 9v-19Z" fill="#76a4dd"/>',
       lunar:'<path d="M15 76Q64 6 113 76" fill="none" stroke="#8acfea" stroke-width="12"/><path d="M15 76Q64 6 113 76" fill="none" stroke="#fff3c2" stroke-width="3" stroke-dasharray="5 8"/><path d="M91 13q-15 20 8 31q-26 9-28-11q0-17 20-20Z" fill="#ffe89d"/>',

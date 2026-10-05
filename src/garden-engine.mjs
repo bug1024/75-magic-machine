@@ -1,4 +1,6 @@
 import { normalizeAdventureState } from './adventure-engine.mjs';
+import { normalizeWishState } from './wish-engine.mjs';
+import { normalizeMechanics, normalizeEnvironment } from './mechanics-engine.mjs';
 export const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
 export const WEATHER_KINDS = ['rain', 'snow', 'wind', 'meteors', 'icecream', 'coins', 'sakura', 'storm'];
 export function normalizeWeatherRules(raw = {}) {
@@ -9,7 +11,7 @@ export function normalizeGardenState(raw, treasures, history, inventory = null) 
   const owned = inventory || history.reduce((counts, record) => { counts[record.prizeId] = (counts[record.prizeId] || 0) + 1; return counts; }, Object.create(null));
   const used = Object.create(null);
   const known = new Set(treasures.map(treasure => treasure.id));
-  return { adventures: normalizeAdventureState(raw?.adventures), discoveredAt: Object.fromEntries(Object.entries(raw?.discoveredAt || {}).filter(([id, time]) => /^[a-z0-9-]{1,64}$/.test(id) && Number.isFinite(time) && time > 0)), discovered: Array.isArray(raw?.discovered) ? [...new Set(raw.discovered.filter(id => typeof id === 'string' && /^[a-z0-9-]{1,64}$/.test(id)))].slice(0, 256) : [], season: SEASONS.includes(raw?.season) ? raw.season : null, timeOfDay: raw?.timeOfDay === 'night' ? 'night' : raw?.timeOfDay === 'day' ? 'day' : null, slots: Array.from({ length: 6 }, (_, index) => {
+  return { workshop: normalizeMechanics(raw?.workshop, treasures, owned), environment: normalizeEnvironment(raw?.environment), wishes: normalizeWishState(raw?.wishes), adventures: normalizeAdventureState(raw?.adventures), discoveredAt: Object.fromEntries(Object.entries(raw?.discoveredAt || {}).filter(([id, time]) => /^[a-z0-9-]{1,64}$/.test(id) && Number.isFinite(time) && time > 0)), discovered: Array.isArray(raw?.discovered) ? [...new Set(raw.discovered.filter(id => typeof id === 'string' && /^[a-z0-9-]{1,64}$/.test(id)))].slice(0, 256) : [], season: SEASONS.includes(raw?.season) ? raw.season : null, timeOfDay: raw?.timeOfDay === 'night' ? 'night' : raw?.timeOfDay === 'day' ? 'day' : null, slots: Array.from({ length: 6 }, (_, index) => {
     const id = raw?.slots?.[index];
     if (typeof id !== 'string' || !known.has(id) || (used[id] || 0) >= (owned[id] || 0)) return null;
     used[id] = (used[id] || 0) + 1; return id;
